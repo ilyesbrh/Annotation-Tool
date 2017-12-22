@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="527.0" prefWidth="423.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="copytowindowsphotodisplay.EditPopFXMLController">
+   <children>
+      <JFXButton fx:id="demande" buttonType="RAISED" defaultButton="true" layoutX="302.0" layoutY="463.0" onAction="#Demande" prefHeight="56.0" prefWidth="101.0" ripplerFill="BLACK" style="-fx-background-color: #217346;" text="Save" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </JFXButton>
+      <Label layoutX="12.0" layoutY="219.0" prefHeight="47.0" prefWidth="218.0" text="Dir">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="21.0" layoutY="253.0" prefHeight="47.0" prefWidth="218.0" text="where you want to put this project ?" textFill="#9a9a9a">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <JFXToggleButton fx:id="Enfant" contentDisplay="RIGHT" layoutX="335.0" layoutY="303.0" prefHeight="58.0" prefWidth="88.0" text=" " toggleColor="#2b974b" toggleLineColor="#3bff73" unToggleColor="#4c38e8" />
+      <Label layoutX="12.0" layoutY="300.0" prefHeight="34.0" prefWidth="124.0" text="Auto Save">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
+      <Label layoutX="10.0" layoutY="316.0" prefHeight="47.0" prefWidth="225.0" text="auto save whene working" textFill="#9a9a9a">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <JFXToggleButton fx:id="Fumeur" contentDisplay="RIGHT" layoutX="335.0" layoutY="364.0" prefHeight="58.0" prefWidth="88.0" text=" " toggleColor="#b94731" toggleLineColor="#ff450d" unToggleColor="#4c38e8" />
+      <Label layoutX="12.0" layoutY="361.0" prefHeight="34.0" prefWidth="164.0" text="Save Images">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
+      <Label layoutX="10.0" layoutY="377.0" prefHeight="47.0" prefWidth="225.0" text="create Copy of labled images" textFill="#9a9a9a">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <FontAwesomeIconView fx:id="NoteIcon" fill="#ff4949" glyphName="FROWN_ALT" layoutX="171.0" layoutY="495.0" size="30" visible="false" wrappingWidth="19.0" />
+      <JFXTextField labelFloat="true" layoutX="45.0" layoutY="172.0" prefHeight="47.0" prefWidth="271.0" promptText="Project Name" />
+      <JFXButton layoutX="294.0" layoutY="242.0" prefHeight="56.0" prefWidth="124.0" text="Browse">
+         <graphic>
+            <FontAwesomeIconView glyphName="FOLDER_ALT" size="25" />
+         </graphic>
+         <font>
+            <Font name="System Bold" size="19.0" />
+         </font>
+      </JFXButton>
+      <ImageView fitHeight="145.0" fitWidth="184.0" layoutX="89.0" layoutY="27.0" pickOnBounds="true" />
+      <JFXButton contentDisplay="CENTER" layoutX="249.0" layoutY="9.0" prefHeight="36.0" prefWidth="31.0" style="-fx-background-color: aqua;" text=" ">
+         <graphic>
+            <FontAwesomeIconView glyphName="PHOTO" size="20" />
+         </graphic>
+      </JFXButton>
+      <JFXButton fx:id="demande1" buttonType="RAISED" defaultButton="true" layoutX="6.0" layoutY="463.0" onAction="#Demande" prefHeight="56.0" prefWidth="101.0" ripplerFill="BLACK" style="-fx-background-color: red;" text="Delete" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </JFXButton>
+      <JFXButton layoutX="209.0" layoutY="479.0" prefHeight="36.0" prefWidth="88.0" text="Cancel" underline="true" />
+   </children>
+</AnchorPane>

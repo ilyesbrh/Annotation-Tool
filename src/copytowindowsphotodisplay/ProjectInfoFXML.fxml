@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="474.0" prefWidth="451.0" style="-fx-background-color: #7289da;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="imageview" fitHeight="197.0" fitWidth="197.0" layoutX="122.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../Pictures/Divers/300px-TSM_Logo.jpg" />
+         </image>
+      </ImageView>
+      <Label fx:id="name" alignment="CENTER" layoutX="133.0" layoutY="265.0" prefHeight="30.0" prefWidth="174.0" text="Project Name" textFill="#fcfcfc">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="41.0" layoutY="378.0" prefHeight="27.0" prefWidth="68.0" text="Classes " textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Label>
+      <Label alignment="CENTER" layoutX="139.0" layoutY="405.0" prefHeight="21.0" prefWidth="56.0" text="Images " textFill="#fcfcfc" />
+      <Label alignment="CENTER" layoutX="197.0" layoutY="405.0" prefHeight="21.0" prefWidth="76.0" text="Classified " textFill="#fcfcfc" />
+      <Label alignment="CENTER" layoutX="277.0" layoutY="405.0" prefHeight="21.0" prefWidth="56.0" text="Labled " textFill="#fcfcfc" />
+      <Label fx:id="classNumber" layoutX="54.0" layoutY="288.0" text="6" textFill="WHITE">
+         <font>
+            <Font name="Tahoma" size="70.0" />
+         </font>
+      </Label>
+      <Label fx:id="imageNumber" layoutX="150.0" layoutY="339.0" text="6" textFill="#fcfcfc">
+         <font>
+            <Font name="System Bold" size="49.0" />
+         </font>
+      </Label>
+      <Label fx:id="classifiedNumber" layoutX="220.0" layoutY="339.0" text="6" textFill="#fcfcfc">
+         <font>
+            <Font name="System Bold" size="49.0" />
+         </font>
+      </Label>
+      <Label fx:id="labledNumber" layoutX="290.0" layoutY="339.0" text="6" textFill="#fcfcfc">
+         <font>
+            <Font name="System Bold" size="49.0" />
+         </font>
+      </Label>
+      <JFXButton contentDisplay="CENTER" layoutX="14.0" layoutY="14.0" onAction="#Setting" prefHeight="53.0" prefWidth="56.0" text=" ">
+         <graphic>
+            <FontAwesomeIconView fill="WHITE" glyphName="WRENCH" size="40" wrappingWidth="31.0" />
+         </graphic>
+      </JFXButton>
+      <ProgressIndicator fx:id="Progress" layoutX="345.0" layoutY="317.0" prefHeight="106.0" prefWidth="92.0" progress="0.0" />
+      <JFXButton alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" layoutX="381.0" layoutY="14.0" onAction="#Open" prefHeight="53.0" prefWidth="56.0" style="-fx-background-color: #4fdb69;" text=" ">
+         <graphic>
+            <FontAwesomeIconView fill="WHITE" glyphName="CODE_FORK" size="40" wrappingWidth="22.0" />
+         </graphic>
+      </JFXButton>
+   </children>
+</AnchorPane>
