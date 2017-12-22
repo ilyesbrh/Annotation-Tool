@@ -2,7 +2,7 @@
 
 Project Title
 
-this project is use to Labling Images and save IT in a csv File
+this project is use to Lable Images and save IT in a csv File
 
 Library used in :
 
