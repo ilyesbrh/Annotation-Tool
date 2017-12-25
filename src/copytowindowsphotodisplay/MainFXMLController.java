@@ -82,7 +82,7 @@ public class MainFXMLController implements Initializable {
         
         FXMLLoader loader = new FXMLLoader(getClass().getResource("AllImagesFXML.fxml"));
 
-        AllImagesFXMLController controller = new AllImagesFXMLController(project);
+        AllImagesFXMLController controller = new AllImagesFXMLController(project,DialogPane);
 
         loader.setController(controller);
         

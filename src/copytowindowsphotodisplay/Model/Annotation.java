@@ -30,7 +30,7 @@ public class Annotation {
         
         this.classe=x;
         this.image=y;
-        AnnotationDir = new File(x.getClassDir(),image.Name+".txt");
+        AnnotationDir = new File(x.getClassDir(),image.getName()+".txt");
         
         if(!x.IMAGES.contains(y)) x.IMAGES.add(y);
         y.ANNOTATIONS.add(this);

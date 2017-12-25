@@ -173,8 +173,8 @@ public class Project {
         // Loading Image
         Image image = LoadProjectImage(ProjectDir);
 
-        Boolean autoSave = null;
-        Boolean saveImages = null;
+        Boolean autoSave = true;
+        Boolean saveImages = true;
 
         // extracting project files Directory
         File SettingFile = new File(ProjectDir, "Settings");
@@ -186,17 +186,21 @@ public class Project {
         Scanner sc = new Scanner(configFile);
 
         // 1 -> AUTO SAVE
-        if (sc.hasNextLine()) {
+        
+        try {
+            if (sc.hasNextLine()) {
+                
+                final String nextLine = sc.nextLine();
+                autoSave = Boolean.getBoolean(nextLine);
+            }
 
-            final String nextLine = sc.nextLine();
-            autoSave = Boolean.getBoolean(nextLine);
-        }
-
-        // 2 -> SAVE IMAGES
-        if (sc.hasNextLine()) {
-
-            final String nextLine = sc.nextLine();
-            saveImages = Boolean.getBoolean(nextLine);
+            // 2 -> SAVE IMAGES
+            if (sc.hasNextLine()) {
+                
+                final String nextLine = sc.nextLine();
+                saveImages = Boolean.getBoolean(nextLine);
+            }
+        } catch (Exception e) {
         }
 
         //Creating Project
@@ -207,12 +211,12 @@ public class Project {
 
     }
 
-    public static boolean isProject(File URL) {
+    public static boolean isProject(File project) {
 
         int cpt = 0;
-        File SettingFile = new File(URL,"Settings");
-        File ImagesFile = new File(URL,"Images");
-        File ClassFile = new File(URL,"Classified");
+        File SettingFile = new File(project,"Settings");
+        File ImagesFile = new File(project,"Images");
+        File ClassFile = new File(project,"Classified");
         
         if(!SettingFile.exists()) return false;
         System.out.println("setings");

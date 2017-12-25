@@ -17,27 +17,26 @@ public class Images {
 
     public final ArrayList<Annotation> ANNOTATIONS = new ArrayList<>();
 
-    String Name;
+    private String Name;
 
-    File Dir;
+    private File Dir;
 
-    Project project;
+    private Project project;
 
     public Images(File Dir, Project project) {
 
-        this.Name = Dir.getName().split(".")[0];
+       
+        this.Name = Dir.getName().split("\\.")[0];
         this.Dir = Dir;
         this.project = project;
 
-        if (project.getSaveImages()) {
+        File ImagesDir = new File(project.getDirectory(), "Images");
 
-            File ImagesDir = new File(project.getDirectory(), "Images");
-
-            if (ImagesDir.toURI().toString() != Dir.getParentFile().toURI().toString()) {
-                this.Dir = Project.saveImageToFile(new Image(Dir.toURI().toString()), ImagesDir, Name);
-            }
-
+        if (ImagesDir.toURI().toString() != Dir.getParentFile().toURI().toString()) {
+            this.Dir = Project.saveImageToFile(new Image(Dir.toURI().toString()), ImagesDir, Name);
         }
+
+        
         project.IMAGES.add(this);
 
     }
@@ -60,7 +59,7 @@ public class Images {
 
     }
 
-    boolean isLabled() {
+    public boolean isLabled() {
 
         for (Annotation x : ANNOTATIONS) {
             if (x.isLabled()) {
@@ -70,7 +69,7 @@ public class Images {
         return false;
     }
 
-    boolean isClassified(Class x) {
+    public boolean isClassified(Class x) {
 
         for (Annotation Y : ANNOTATIONS) {
             if (Y.getClasse().equals(x)) {
@@ -81,7 +80,7 @@ public class Images {
         return false;
     }
 
-    boolean isClassified() {
+    public boolean isClassified() {
 
         return !ANNOTATIONS.isEmpty();
     }
@@ -125,4 +124,29 @@ public class Images {
 
         }
     }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String Name) {
+        this.Name = Name;
+    }
+
+    public File getDir() {
+        return Dir;
+    }
+
+    public void setDir(File Dir) {
+        this.Dir = Dir;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+    
 }

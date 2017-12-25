@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.GridView?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1203.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane prefHeight="800.0" prefWidth="1203.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane prefHeight="59.0" prefWidth="1203.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -20,7 +20,7 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </JFXButton>
-            <JFXButton contentDisplay="CENTER" layoutX="14.0" layoutY="8.0" prefHeight="50.0" prefWidth="49.0" style="-fx-background-color: #7289da;" text=" " textFill="WHITE" AnchorPane.leftAnchor="14.0">
+            <JFXButton alignment="CENTER" contentDisplay="RIGHT" layoutX="120.0" layoutY="6.0" onAction="#NewImages" prefHeight="50.0" prefWidth="122.0" style="-fx-background-color: #7289da;" text=" Import" textFill="WHITE" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="6.0">
                <graphic>
                   <FontAwesomeIconView fill="WHITE" glyphName="PHOTO" size="25" />
                </graphic>
@@ -35,12 +35,12 @@
                   <Font name="System Bold" size="19.0" />
                </font></JFXButton>
             <JFXButton layoutX="930.0" layoutY="17.0" prefHeight="31.0" prefWidth="84.0" text="Select All" textFill="#0dcd24" AnchorPane.rightAnchor="189.0" />
-            <Label layoutX="847.0" layoutY="27.0" prefHeight="21.0" prefWidth="29.0" style="-fx-background-color: ;" text="OFF" textFill="RED" AnchorPane.rightAnchor="327.0">
+            <Label layoutX="847.0" layoutY="27.0" prefHeight="21.0" prefWidth="29.0" text="OFF" textFill="RED" AnchorPane.rightAnchor="327.0">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
          </children></AnchorPane>
-      <GridView layoutY="73.0" prefHeight="728.0" prefWidth="1203.0" style="-: ;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0" />
+      <GridView fx:id="ImagesGrid" layoutY="73.0" prefHeight="728.0" prefWidth="1203.0" style="-: ;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0" />
    </children>
 </AnchorPane>

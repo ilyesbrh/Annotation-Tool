@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="LeftDrawerAnchor" cache="true" prefHeight="322.0" prefWidth="389.0" style="-fx-background-color: rgb(0, 191, 255);" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label focusTraversable="false" layoutX="67.0" layoutY="49.0" prefHeight="58.0" prefWidth="248.0" text="New  Images" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="40.0" />
+         </font>
+      </Label>
+      <JFXButton buttonType="RAISED" contentDisplay="CENTER" layoutX="248.0" layoutY="194.0" onAction="#DirOpen" prefHeight="61.0" prefWidth="67.0" ripplerFill="#6b6b6b" style="-fx-background-color: a8d0e7;" text=" ">
+         <graphic>
+            <FontAwesomeIconView fill="WHITE" fontSmoothingType="LCD" glyphName="FOLDER_OPEN" size="25" wrappingWidth="21.714284896850586" />
+         </graphic>
+      </JFXButton>
+      <JFXButton buttonType="RAISED" contentDisplay="CENTER" layoutX="67.0" layoutY="194.0" onAction="#ImagesOpen" prefHeight="61.0" prefWidth="67.0" ripplerFill="#6b6b6b" style="-fx-background-color: a8d0e7;" text=" ">
+         <graphic>
+            <FontAwesomeIconView fill="WHITE" fontSmoothingType="LCD" glyphName="PICTURE_ALT" size="40" wrappingWidth="37.714284896850586" />
+         </graphic>
+      </JFXButton>
+   </children>
+</AnchorPane>
