@@ -15,6 +15,7 @@ import javafx.scene.image.Image;
  */
 public class Images {
 
+
     public final ArrayList<Annotation> ANNOTATIONS = new ArrayList<>();
 
     private String Name;
@@ -24,41 +25,58 @@ public class Images {
     private Project project;
 
     public Images(File Dir, Project project) {
+        System.out.println(Dir.toURI().toString());
+        int pos = Dir.getName().lastIndexOf(".");
+        System.out.println(pos);
+        if (pos == -1) {
+            return;
+        }
+        String name = Dir.getName().substring(0, pos);
+        System.out.println(name);    
+        for (Images i : project.IMAGES) {
 
-       
-        this.Name = Dir.getName().split("\\.")[0];
+            if (i.Name.equals(name)) {
+                return;
+            }
+
+        }
+
+        this.Name = name;
         this.Dir = Dir;
         this.project = project;
 
-        File ImagesDir = new File(project.getDirectory(), "Images");
-
-        if (ImagesDir.toURI().toString() != Dir.getParentFile().toURI().toString()) {
-            this.Dir = Project.saveImageToFile(new Image(Dir.toURI().toString()), ImagesDir, Name);
-        }
-
-        
         project.IMAGES.add(this);
-
     }
-    public Images(Project project , String name) {
+
+    public Images(Project project, String name) {
 
         for (Images i : project.IMAGES) {
-            
-            if(i.Name == name) return;
-            
-        }
-        
-        this.Name = name;
-        
-        File ImagesDir = new File(project.getDirectory(), "Images");
-        this.Dir = new File(ImagesDir, name) ;
-        
-        this.project = project;
-        
-        project.IMAGES.add(this);
 
+            if (i.Name.equals(name)) {
+                return;
+            }
+
+        }
+
+        this.Name = name;
+        this.project = project;
+        this.Dir = new File(project.ImagesDir, name+".jpg");
+
+        project.IMAGES.add(this);
     }
 
+    public void Save() {
+
+        Project.saveImageToFile(new Image(Dir.toURI().toString()), project.ImagesDir, Name);
+    }
+    static void Load(Project aThis, File imgFile) {
+        
+        int pos = imgFile.getName().lastIndexOf(".");
+            if (pos == -1) {
+                return;
+            }
+        new Images(aThis, imgFile.getName().substring(0 , pos ));
+    }
     public boolean isLabled() {
 
         for (Annotation x : ANNOTATIONS) {
@@ -85,46 +103,6 @@ public class Images {
         return !ANNOTATIONS.isEmpty();
     }
 
-    //Supposed to exists in Images of Project
-    public static void LoadImageFromClass(Class x, String name) {
-
-
-        Images targetImage = null;
-        for (Images i : x.getProject().IMAGES) {
-
-            if (i.Name.equals(name)) {
-
-                targetImage = i;
-                break;
-            }
-        }
-
-
-        if (targetImage == null) {
-            
-            File imagesDir = new File(x.getProject().getDirectory(), "Images");
-            File imageDir = new File(imagesDir, name + ".jpg");
-            targetImage = new Images(imageDir, x.getProject());
-        }
-
-        File Anotation = new File(x.getClassDir(), name + ".txt");
-        Annotation note = new Annotation(x, targetImage);
-
-    }
-    public void SaveImage() {
-
-        if (project.getSaveImages()) {
-
-            File images = new File(project.getDirectory(), "Images");
-
-            for (Images x : project.IMAGES) {
-
-                Project.saveImageToFile(new Image(Dir.toURI().toString()), images, x.Name);
-            }
-
-        }
-    }
-
     public String getName() {
         return Name;
     }
@@ -148,5 +126,5 @@ public class Images {
     public void setProject(Project project) {
         this.project = project;
     }
-    
+
 }

@@ -14,12 +14,41 @@ import java.util.ArrayList;
  */
 public class Class {
 
-    public final ArrayList<Images> IMAGES=new ArrayList<>();
-    public final ArrayList<Annotation> ANNOTATIONS =new ArrayList<>();
-    
+    public final ArrayList<Images> IMAGES = new ArrayList<>();
+    public final ArrayList<Annotation> ANNOTATIONS = new ArrayList<>();
+
     private String Name;
     private Project project;
     private File ClassDir;
+
+    public Class(String name, Project parent) {
+
+        Name = name;
+
+        project = parent;
+
+        parent.CLASSES.add(this);
+
+    }
+
+    public void Save() {
+
+        Project.SavingDir(project.ClassifiedDir, Name);
+
+        for (Annotation x : ANNOTATIONS) {
+
+            x.save();
+        }
+    }
+
+    public static Class Load(String name, Project project) {
+
+        Class x = new Class(name, project);
+        x.loadClassAnnotations();
+        
+        return x;
+    }
+
 
     public File getClassDir() {
         return ClassDir;
@@ -27,18 +56,6 @@ public class Class {
 
     public void setClassDir(File ClassDir) {
         this.ClassDir = ClassDir;
-    }
-    
-    public Class(String name,Project parent) {
-        
-        Name=name;
-        
-        project=parent;
-        
-        ClassDir=new File(project.getDirectory(),"Classified");
-        
-        parent.CLASSES.add(this);
-        
     }
 
     public String getName() {
@@ -58,46 +75,28 @@ public class Class {
     }
 
     public Integer getLabledNumber() {
-        
-        int cpt=0;
-        for(Images x:IMAGES){
-            if(x.isLabled()) cpt++;
+
+        int cpt = 0;
+        for (Images x : IMAGES) {
+            if (x.isLabled()) {
+                cpt++;
+            }
         }
         return cpt;
     }
-    
-    public static Class Load(String name,Project project) {
-
-        Class x=new Class(name, project);
-        
-        x.LoadClassImages();
-        
-        return x;
-    }
-    public void LoadClassImages() {
+    public void loadClassAnnotations() {
         
         for (File Img : ClassDir.listFiles()) {
 
-            String[] name = Img.getName().split(".");
-
-            if (name[1].equals("txt")) {
-                
-                Images.LoadImageFromClass(this, name[0]);   
+            int pos = Img.getName().lastIndexOf(".");
+            if (pos == -1) {
+                return;
             }
-        }
-    }
-    
-
-    public void save() {
-        
-        File ClassesDir= new File(project.getDirectory(),"Classified");
-        
-        File dir= new File(ClassesDir,Name);
-        if(!dir.exists()) dir.mkdir();
-        
-        for(Annotation x: ANNOTATIONS){
+            String ext = Img.getName().substring(pos + 1);
+            String name = Img.getName().substring(0, pos);
             
-            x.save();
+            Annotation.LoadAnnotationFromClass(this, name);
+
         }
     }
 }

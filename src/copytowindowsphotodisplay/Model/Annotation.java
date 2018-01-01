@@ -16,28 +16,43 @@ import javafx.scene.shape.Shape;
  * @author DaMi
  */
 public class Annotation {
-    
-    public final ArrayList<Shape> Pixels=new ArrayList<>();
-    
+
+    public final ArrayList<Shape> Pixels = new ArrayList<>();
+
     private Class classe;
     private Images image;
-    private File AnnotationDir;
-    
-    
+    private File AnnotationFile;
 
-    public Annotation(Class x,Images y) {
-      
-        
-        this.classe=x;
-        this.image=y;
-        AnnotationDir = new File(x.getClassDir(),image.getName()+".txt");
-        
-        if(!x.IMAGES.contains(y)) x.IMAGES.add(y);
+    public Annotation(Class x, Images y) {
+
+        this.classe = x;
+        this.image = y;
+        AnnotationFile = new File(x.getClassDir(), image.getName() + ".txt");
+
+        if (!x.IMAGES.contains(y)) {
+            x.IMAGES.add(y);
+        }
         y.ANNOTATIONS.add(this);
         x.ANNOTATIONS.add(this);
-        
+
     }
     
+    public void save() {
+
+        try {
+
+            Project.SavingFile(classe.getClassDir(), image.getName() + ".txt");
+
+            FileWriter w = new FileWriter(AnnotationFile);
+            w.append("test");
+            w.close();
+        } catch (IOException ex) {
+        }
+    }
+    public void Load() {
+        
+    }
+
     public Class getClasse() {
         return classe;
     }
@@ -55,30 +70,38 @@ public class Annotation {
     }
 
     public File getAnnotationDir() {
-        return AnnotationDir;
+        return AnnotationFile;
     }
 
     public void setAnnotationDir(File AnnotationDir) {
-        this.AnnotationDir = AnnotationDir;
-    }
-
-    public void save() {
-        
-        try {
-            FileWriter w=new FileWriter(AnnotationDir);
-            
-           
-            
-        } catch (IOException ex) {
-        }
-    }
-    public void Load(){
-        
+        this.AnnotationFile = AnnotationDir;
     }
 
     public boolean isLabled() {
         
-        return false;
+        return !Pixels.isEmpty();
+    }
+    public static void LoadAnnotationFromClass(Class x, String name) {
+
+        Images targetImage = null;
+        for (Images i : x.getProject().IMAGES) {
+
+            if (i.getName().equals(name)) {
+
+                targetImage = i;
+                break;
+            }
+        }
+
+        if (targetImage == null) {
+
+            File imageFile = new File(x.getProject().ImagesDir, name + ".jpg");
+            targetImage = new Images(imageFile, x.getProject());
+        }
+
+        Annotation annotation = new Annotation(x, targetImage);
+        annotation.Load();
+
     }
 
 }

@@ -44,18 +44,15 @@ public class NewImagesFXMLController implements Initializable {
     }
 
     @FXML
-    private void DirOpen(ActionEvent event) {
+    private void DirOpen(ActionEvent event) throws FileNotFoundException {
         
-        try {
-            List<File> openDirectoryImagesChooser = openDirectoryImagesChooser();
-            for (File file : openDirectoryImagesChooser) {
-              
-                new Images(file, project);
-                
-            }
-            
-        } catch (FileNotFoundException ex) {
+        List<File> openDirectoryImagesChooser = openDirectoryImagesChooser();
+        for (File file : openDirectoryImagesChooser) {
+
+            new Images(file, project);
+
         }
+
         
     }
 
