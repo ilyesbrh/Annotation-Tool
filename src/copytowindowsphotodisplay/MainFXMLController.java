@@ -92,7 +92,7 @@ public class MainFXMLController implements Initializable {
     private void ClassesPopUpINI() {
         try {
             // New Project PopUp INI
-            ClassesFXMLController newController=new ClassesFXMLController(project);
+            ClassesFXMLController newController=new ClassesFXMLController(project,DialogPane);
             
             FXMLLoader Newload=new FXMLLoader(getClass().getResource("ClassesFXML.fxml"));
             Newload.setController(newController);
@@ -104,6 +104,7 @@ public class MainFXMLController implements Initializable {
             
         } catch (IOException ex) {
             Logger.getLogger(ProjectUIController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("ERROR");
         }
     }    
 

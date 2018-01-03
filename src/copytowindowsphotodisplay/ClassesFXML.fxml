@@ -14,7 +14,7 @@
       <JFXListView fx:id="ImagesListView" layoutY="75.0" onMouseClicked="#showpop" prefHeight="428.0" prefWidth="338.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="75.0" />
       <JFXButton alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="566.0" layoutY="80.0" onAction="#EditClassName" prefHeight="38.0" prefWidth="21.0" style="-fx-background-color: a8d0e7;" text=" ">
          <graphic>
-            <FontAwesomeIconView fontSmoothingType="LCD" glyphName="EDIT" size="20" wrappingWidth="15.0" />
+            <FontAwesomeIconView fx:id="Icon" fontSmoothingType="LCD" glyphName="EDIT" size="20" wrappingWidth="15.0" />
          </graphic>
       </JFXButton>
       <JFXButton alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" graphicTextGap="0.0" layoutY="14.0" onAction="#AddClass" prefHeight="57.0" prefWidth="338.0" style="-fx-background-color: a8d0e7;" text="Add Class" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="14.0">
