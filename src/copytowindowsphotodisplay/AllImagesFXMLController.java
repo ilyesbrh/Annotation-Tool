@@ -17,8 +17,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
@@ -81,6 +86,7 @@ public class AllImagesFXMLController implements Initializable {
         Gridview.setHorizontalCellSpacing(20);
         Gridview.setCellHeight(200);
         Gridview.setCellWidth(200);
+        Gridview.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         
         Gridview.setCellFactory(new Callback<GridView<Images>, GridCell<Images>>() {
             

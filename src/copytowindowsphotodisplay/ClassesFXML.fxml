@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="503.0" prefWidth="652.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" >
+   <children>
+      <JFXListView fx:id="ImagesListView" layoutY="75.0" onMouseClicked="#showpop" prefHeight="428.0" prefWidth="338.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="75.0" />
+      <JFXButton alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="566.0" layoutY="80.0" onAction="#EditClassName" prefHeight="38.0" prefWidth="21.0" style="-fx-background-color: a8d0e7;" text=" ">
+         <graphic>
+            <FontAwesomeIconView fontSmoothingType="LCD" glyphName="EDIT" size="20" wrappingWidth="15.0" />
+         </graphic>
+      </JFXButton>
+      <JFXButton alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" graphicTextGap="0.0" layoutY="14.0" onAction="#AddClass" prefHeight="57.0" prefWidth="338.0" style="-fx-background-color: a8d0e7;" text="Add Class" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="14.0">
+         <font>
+            <Font name="System Bold Italic" size="27.0" />
+         </font>
+      </JFXButton>
+      <Label alignment="CENTER" layoutX="387.0" layoutY="251.0" prefHeight="21.0" prefWidth="56.0" text="Images " />
+      <Label alignment="CENTER" layoutX="508.0" layoutY="251.0" prefHeight="21.0" prefWidth="76.0" text="Labled" />
+      <Label fx:id="imageNumber" layoutX="400.0" layoutY="169.0" text="6">
+         <font>
+            <Font name="System Bold" size="49.0" />
+         </font>
+      </Label>
+      <Label fx:id="LabledNumber" layoutX="525.0" layoutY="169.0" text="6">
+         <font>
+            <Font name="System Bold" size="49.0" />
+         </font>
+      </Label>
+      <ProgressIndicator fx:id="Progress" layoutX="436.0" layoutY="342.0" prefHeight="106.0" prefWidth="92.0" progress="0.0" />
+      <Label layoutX="473.0" layoutY="172.0" text="/">
+         <font>
+            <Font size="45.0" />
+         </font>
+      </Label>
+      <Label layoutX="469.0" layoutY="279.0" text="=">
+         <font>
+            <Font size="38.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="Name" editable="false" labelFloat="true" layoutX="367.0" layoutY="80.0" prefHeight="38.0" prefWidth="182.0" promptText="ClassName" />
+   </children>
+</AnchorPane>

@@ -5,6 +5,7 @@
  */
 package copytowindowsphotodisplay;
 
+import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDrawer;
 import copytowindowsphotodisplay.Model.Project;
 import java.io.IOException;
@@ -40,12 +41,14 @@ public class MainFXMLController implements Initializable {
     private AnchorPane ContentPane;
 
     Project project;
+    private JFXDialog Jfxdialog;
 
     public MainFXMLController() {
     }
     
     public MainFXMLController(Project project) {
         this.project = project;
+        
     }
     
     
@@ -61,6 +64,47 @@ public class MainFXMLController implements Initializable {
             Drawer.setVisible(false);
             
         });
+        ClassesPopUpINI();
+        ALLImagesINI();
+    }    
+
+    private void ALLImagesINI() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("AllImagesFXML.fxml"));
+        
+        AllImagesFXMLController controller = new AllImagesFXMLController(project,DialogPane);
+
+        loader.setController(controller);
+        
+        Parent load = null;
+        try {
+            load = (Parent) loader.load();
+            AnchorPane.setBottomAnchor(load, 0.0);
+            AnchorPane.setLeftAnchor(load, 0.0);
+            AnchorPane.setTopAnchor(load, 0.0);
+            AnchorPane.setRightAnchor(load, 0.0);
+
+            ContentPane.getChildren().add(load);
+        } catch (IOException ex) {
+            Logger.getLogger(MainFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }    
+
+    private void ClassesPopUpINI() {
+        try {
+            // New Project PopUp INI
+            ClassesFXMLController newController=new ClassesFXMLController(project);
+            
+            FXMLLoader Newload=new FXMLLoader(getClass().getResource("ClassesFXML.fxml"));
+            Newload.setController(newController);
+            
+            AnchorPane load = Newload.load();
+            JFXDialog  NewProject = new JFXDialog(DialogPane, load, JFXDialog.DialogTransition.CENTER);    
+            this.Jfxdialog=NewProject;
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(ProjectUIController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }    
 
     @FXML
@@ -78,38 +122,20 @@ public class MainFXMLController implements Initializable {
     }
 
     @FXML
-    private void AllImagesPane(ActionEvent event) {
-        
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("AllImagesFXML.fxml"));
-
-        AllImagesFXMLController controller = new AllImagesFXMLController(project,DialogPane);
-
-        loader.setController(controller);
-        
-        Parent load = null;
-        try {
-            load = (Parent) loader.load();
-            AnchorPane.setBottomAnchor(load, 0.0);
-            AnchorPane.setLeftAnchor(load, 0.0);
-            AnchorPane.setTopAnchor(load, 0.0);
-            AnchorPane.setRightAnchor(load, 0.0);
-
-            ContentPane.getChildren().add(load);
-        } catch (IOException ex) {
-            Logger.getLogger(MainFXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-    }
-
-    @FXML
     private void ClassesPane(ActionEvent event) throws IOException {
         
-        
+        Jfxdialog.show();
     }
 
     @FXML
     private void LabledTablePane(ActionEvent event) {
+    }
+    @FXML
+    private void SaveProject(ActionEvent event) {
+        try {
+            project.Save();
+        } catch (IOException ex) {
+        }
     }
     
 }

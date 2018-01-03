@@ -71,7 +71,7 @@ public class ImageViewFXMLController implements Initializable {
         if(image.isLabled()) Labled.setVisible(true);
         else                 Labled.setVisible(false);
         
-        Image img=new Image(image.getDir().toURI().toString(),100, 100, false, true, true);
+        Image img=new Image(image.getDir().toURI().toString(),200, 200, false, true, true);
         imageView.setImage(img);
         
         
