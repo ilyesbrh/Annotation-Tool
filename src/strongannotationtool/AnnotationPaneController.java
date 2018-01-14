@@ -7,7 +7,7 @@ package strongannotationtool;
 
 import strongannotationtool.Shapes.CustomGrid;
 import com.jfoenix.controls.JFXSlider;
-import copytowindowsphotodisplay.Model.Annotation;
+import copytowindowsphotodisplay.Model.Images;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -18,8 +18,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -37,11 +35,20 @@ public class AnnotationPaneController implements Initializable {
     @FXML
     private JFXSlider Slider;
 
-    Annotation annotation;
+    Images image;
     
     private  final CustomGrid grid=new CustomGrid();
     
-    double ZoomFactor;
+    Double ZoomFactor;
+
+    public AnnotationPaneController( Images image) {
+        
+        this.image = image;
+        
+    }
+    
+    
+    
     
     /**
      * Initializes the controller class.
@@ -51,32 +58,15 @@ public class AnnotationPaneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        Image image = new Image(new FileChooser().showOpenDialog(new Stage()).toURI().toString(),0,0,false,false);
-        
+        Image image = new Image(this.image.getDir().toURI().toString(),0,0,false,false);
         img.setImage(image);
+        GridINI();
+        SliderINI(image);
+        imageParentINI(image);
         
-        Slider.valueProperty().addListener((o,old,New) -> {
-            
-            if (Slider.getValue() == 0) {
-                double width = imgParent.getWidth() / image.getWidth();
-                double height = imgParent.getHeight() / image.getHeight();
-                
-                if (width < height) {
-                    
-                    ZoomFactor = width;
-                    
-                } else {
-                    
-                    ZoomFactor = height;
-                    
-                }
-            }else
-                ZoomFactor = New.doubleValue()/100;
-            
-            refreshImage(ZoomFactor);
-            RefreshGrid();
-        });
-        
+    }    
+
+    private void imageParentINI(Image image) {
         imgParent.widthProperty().addListener((observable, oldValue, newValue) -> {
             
             if (Slider.getValue() == 0) {
@@ -114,12 +104,41 @@ public class AnnotationPaneController implements Initializable {
                     
                 }
             }
-            
+
             refreshImage(ZoomFactor);
             RefreshGrid();
             
         });
+    }    
+
+    private void SliderINI(Image image) {
+        Slider.valueProperty().addListener((o,old,New) -> {
+            
+            if (Slider.getValue() == 0) {
+                double width = imgParent.getWidth() / image.getWidth();
+                double height = imgParent.getHeight() / image.getHeight();
+                
+                if (width < height) {
+                    
+                    ZoomFactor = width;
+                    
+                } else {
+                    
+                    ZoomFactor = height;
+                    
+                }
+            }else
+                ZoomFactor = New.doubleValue()/100;
+            
+            refreshImage(ZoomFactor);
+            RefreshGrid();
+        });
+        //Slider INI
         
+        Slider.setValue(0.0);
+    }    
+
+    private void GridINI() {
         // Grid INI
         
         grid.setFillColor(Color.TRANSPARENT);
@@ -130,11 +149,6 @@ public class AnnotationPaneController implements Initializable {
         grid.setWidth(img.getFitWidth());
         grid.setHeight(img.getFitHeight());
         grid.addGrid(imgParent);
-        
-        //Slider INI 
-        
-        Slider.setValue(0);
-        
     }    
 
     public void RefreshGrid() {

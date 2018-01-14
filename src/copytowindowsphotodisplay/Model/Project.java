@@ -34,15 +34,16 @@ public class Project {
     private String Name;
 
     private File Directory;
-    public File ClassifiedDir;
-    public File ImagesDir;
+    private File ClassifiedDir;
+    private File ImagesDir;
 
     //next version nchlh
     private Boolean AutoSave;
     private Boolean SaveImages;
 
     public Project(String Name, Image image, File directory, Boolean AutoSave, Boolean SaveImages) throws IOException {
-
+        
+        
         Directory = new File(directory, Name);
 
         ImagesDir = new File(directory, "Images");
@@ -65,6 +66,31 @@ public class Project {
         /*this.AutoSave = AutoSave;
         this.SaveImages = SaveImages;*/
     }
+    public Project(Image image, File directory, Boolean AutoSave, Boolean SaveImages) throws IOException {
+        
+        Directory = directory;
+
+        ImagesDir = new File(directory, "Images");
+
+        ClassifiedDir = new File(directory, "Classified");
+
+        this.Name = directory.getName();
+
+        this.image = image;
+
+        for (Project p : LIST_OF_PROJECTS) {
+
+            if (this.Name.equals(p.Name)) {
+                return;
+            }
+        }
+
+        LIST_OF_PROJECTS.add(this);
+
+        /*this.AutoSave = AutoSave;
+        this.SaveImages = SaveImages;*/
+        
+    }
 
     public void Save() throws IOException {
 
@@ -72,7 +98,7 @@ public class Project {
             Directory.mkdir();
         }
         // saving Image of project
-        saveImageToFile(image, Directory, "Image.jpg");
+        saveImageToFile(image, Directory, "Image");
 
         Project.SavingFile(Directory, "config.xml");
 
@@ -126,7 +152,6 @@ public class Project {
             return;
         }
         String Name = ProjectDir.getName();
-
         for (Project project : LIST_OF_PROJECTS) {
 
             if (project.Name.equals(Name)) {
@@ -137,7 +162,7 @@ public class Project {
         Image image = LoadProjectImage(ProjectDir);
 
         //Creating Project
-        Project project = new Project(Name, image, ProjectDir, false, false);
+        Project project = new Project( image, ProjectDir, false, false);
         project.LoadProjectImages();
         project.LoadClasses();
         /*
@@ -170,26 +195,29 @@ public class Project {
 
     public static boolean isProject(File project) {
 
-        int cpt = 0;
         File ImagesFile = new File(project, "Images");
         File ClassFile = new File(project, "Classified");
         File Image = new File(project, "Image.jpg");
-        File Config = new File(project, "config.txt");
-
+        File Config = new File(project, "config.xml");
+        System.out.println("fot ");
         if (!ImagesFile.exists()) {
             return false;
         }
+        System.out.println("fot ");
         if (!ClassFile.exists()) {
             return false;
         }
+        System.out.println("fot ");
 
         if (!Image.exists()) {
             return false;
         }
+        System.out.println("fot ");
 
         if (!Config.exists()) {
             return false;
         }
+        System.out.println("fot ");
 
         return true;
     }
@@ -223,6 +251,22 @@ public class Project {
 
         }
 
+    }
+    
+    public File getClassifiedDir() {
+        return ClassifiedDir;
+    }
+
+    public void setClassifiedDir(File ClassifiedDir) {
+        this.ClassifiedDir = ClassifiedDir;
+    }
+
+    public File getImagesDir() {
+        return ImagesDir;
+    }
+
+    public void setImagesDir(File ImagesDir) {
+        this.ImagesDir = ImagesDir;
     }
 
     public Integer getClassNumber() {

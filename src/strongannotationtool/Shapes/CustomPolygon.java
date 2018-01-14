@@ -103,6 +103,7 @@ public class CustomPolygon extends Polygon {
         
         this.Parent= null;
         parent.getChildren().remove(this);
+        parent.getChildren().removeAll(circleListe);
         UnBind();
         
     }

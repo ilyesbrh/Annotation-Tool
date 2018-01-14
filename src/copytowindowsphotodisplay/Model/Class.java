@@ -27,13 +27,15 @@ public class Class {
 
         project = parent;
 
+        setClassDir(new File(parent.getClassifiedDir(), name));
+       
         parent.CLASSES.add(this);
 
     }
 
     public void Save() {
 
-        Project.SavingDir(project.ClassifiedDir, Name);
+        Project.SavingDir(project.getClassifiedDir(), Name);
 
         for (Annotation x : ANNOTATIONS) {
 
@@ -99,4 +101,10 @@ public class Class {
 
         }
     }
+
+    @Override
+    public String toString() {
+        return Name ;
+    }
+    
 }

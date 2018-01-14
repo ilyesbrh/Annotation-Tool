@@ -60,14 +60,14 @@ public class Images {
 
         this.Name = name;
         this.project = project;
-        this.Dir = new File(project.ImagesDir, name+".jpg");
+        this.Dir = new File(project.getImagesDir(), name+".jpg");
 
         project.IMAGES.add(this);
     }
 
     public void Save() {
 
-        Project.saveImageToFile(new Image(Dir.toURI().toString()), project.ImagesDir, Name);
+        Project.saveImageToFile(new Image(Dir.toURI().toString()), project.getImagesDir(), Name);
     }
     static void Load(Project aThis, File imgFile) {
         

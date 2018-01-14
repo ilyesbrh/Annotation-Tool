@@ -17,7 +17,7 @@ import javafx.scene.shape.Shape;
  */
 public class Annotation {
 
-    public final ArrayList<Shape> Pixels = new ArrayList<>();
+    public final ArrayList<Shape> Shapes = new ArrayList<>();
 
     private Class classe;
     private Images image;
@@ -79,7 +79,7 @@ public class Annotation {
 
     public boolean isLabled() {
         
-        return !Pixels.isEmpty();
+        return !Shapes.isEmpty();
     }
     public static void LoadAnnotationFromClass(Class x, String name) {
 
@@ -95,7 +95,7 @@ public class Annotation {
 
         if (targetImage == null) {
 
-            File imageFile = new File(x.getProject().ImagesDir, name + ".jpg");
+            File imageFile = new File(x.getProject().getImagesDir(), name + ".jpg");
             targetImage = new Images(imageFile, x.getProject());
         }
 

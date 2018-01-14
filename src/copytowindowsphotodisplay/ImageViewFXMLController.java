@@ -5,20 +5,28 @@
  */
 package copytowindowsphotodisplay;
 
+import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXRippler;
 import copytowindowsphotodisplay.Model.Images;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import strongannotationtool.AnnotationPaneController;
 
 /**
  * FXML Controller class
@@ -83,7 +91,11 @@ public class ImageViewFXMLController implements Initializable {
         // open Project
         RippleAnchor.setOnMouseClicked((event) -> {
             
-        OpenStrongAnnotation();
+            try {
+                OpenStrongAnnotation();
+            } catch (IOException ex) {
+                Logger.getLogger(ImageViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             
         });
@@ -103,8 +115,17 @@ public class ImageViewFXMLController implements Initializable {
         
     }
 
-    private void OpenStrongAnnotation() {
+    private void OpenStrongAnnotation() throws IOException {
         
+        AnnotationPaneController newController=new AnnotationPaneController(image);
+            
+        FXMLLoader Newload=new FXMLLoader(getClass().getResource("/strongannotationtool/AnnotationPane.fxml"));
+        Newload.setController(newController);
+
+        AnchorPane load = Newload.load();
+        Stage s=new Stage();
+        s.setScene(new Scene(load));
+        s.showAndWait();
     }
     
 }
