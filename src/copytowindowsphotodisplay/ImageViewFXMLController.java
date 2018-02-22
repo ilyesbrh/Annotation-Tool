@@ -5,7 +5,6 @@
  */
 package copytowindowsphotodisplay;
 
-import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXRippler;
 import copytowindowsphotodisplay.Model.Images;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -56,11 +55,10 @@ public class ImageViewFXMLController implements Initializable {
     
     private StackPane NoteStack;
 
-    ImageViewFXMLController(Images item, StackPane NoteStack) {
-        
+
+    ImageViewFXMLController(StackPane NoteStack) {
+
         this.NoteStack=NoteStack;
-        this.image=item;
-        
     }
 
     /**
@@ -69,21 +67,6 @@ public class ImageViewFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        Name.setText(image.getName());
-        
-        Selected.setVisible(false);
-        
-        if(image.isClassified()) Classified.setVisible(true);
-        else                     Classified.setVisible(false);
-        
-        if(image.isLabled()) Labled.setVisible(true);
-        else                 Labled.setVisible(false);
-        
-        Image img=new Image(image.getDir().toURI().toString(),200, 200, false, true, true);
-        imageView.setImage(img);
-        
-        
-        
         JFXRippler ripple=new JFXRippler(RippleAnchor);
         
         ImageViewPane.getChildren().add(ImageViewPane.getChildren().size()-1,ripple);
@@ -109,6 +92,24 @@ public class ImageViewFXMLController implements Initializable {
             MouseEntred.setStrokeWidth(0);
         });
     }    
+    public void UpdateItem(Images item){
+        
+        this.image=item;
+        
+        Name.setText(image.getName());
+        
+        Selected.setVisible(false);
+        
+        if(image.isClassified()) Classified.setVisible(true);
+        else                     Classified.setVisible(false);
+        
+        if(image.isLabled()) Labled.setVisible(true);
+        else                 Labled.setVisible(false);
+        
+        Image img=new Image(image.getDir().toURI().toString(),200, 200, false, false, false);
+        imageView.setImage(img);
+        
+    }
 
     @FXML
     private void ImageInfo(ActionEvent event) {
@@ -117,15 +118,19 @@ public class ImageViewFXMLController implements Initializable {
 
     private void OpenStrongAnnotation() throws IOException {
         
-        AnnotationPaneController newController=new AnnotationPaneController(image);
+        AnnotationPaneController newController=new AnnotationPaneController();
             
         FXMLLoader Newload=new FXMLLoader(getClass().getResource("/strongannotationtool/AnnotationPane.fxml"));
         Newload.setController(newController);
 
         AnchorPane load = Newload.load();
+        
+        newController.setimage(image);
+        
         Stage s=new Stage();
         s.setScene(new Scene(load));
-        s.showAndWait();
+        
+        s.show();
     }
     
 }

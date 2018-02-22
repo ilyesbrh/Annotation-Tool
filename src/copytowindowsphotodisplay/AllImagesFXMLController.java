@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.CacheHint;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -81,6 +82,7 @@ public class AllImagesFXMLController implements Initializable {
     }
     private void GridViewINI(GridView<Images> Gridview) {
         
+        Gridview.setCacheHint(CacheHint.SPEED);
         Gridview.setItems(project.IMAGES);
         Gridview.setVerticalCellSpacing(20);
         Gridview.setHorizontalCellSpacing(20);
@@ -90,22 +92,44 @@ public class AllImagesFXMLController implements Initializable {
         
         Gridview.setCellFactory(new Callback<GridView<Images>, GridCell<Images>>() {
             
-            @Override public GridCell<Images> call(GridView<Images> arg0) {
+            @Override 
+            public GridCell<Images> call(GridView<Images> arg0) {
                 
-                return new cell(Gridview,DialogPane);
+                cell cell = new cell(Gridview,DialogPane);
+                cell.setCacheHint(CacheHint.SPEED);
+                return cell ;
             }
         });
     }
     public class cell extends GridCell<Images>{
 
         private final GridView<Images> Grid;
+        private ImageViewFXMLController controller;
 
-        private final StackPane NoteStack;
-        
         private cell(GridView<Images> arg0 ,StackPane NoteStack) {
             
             Grid=arg0;
-            this.NoteStack = NoteStack;
+           
+            try {
+                
+                
+                FXMLLoader loader=new FXMLLoader(getClass().getResource("ImageViewFXML.fxml"));
+                
+                
+               controller =new  ImageViewFXMLController(NoteStack);
+                
+                loader.setController(controller);
+                
+                AnchorPane root = loader.load();
+                
+                /*
+                root.setPrefHeight(Grid.getCellHeight());
+                root.setPrefWidth(Grid.getCellWidth());
+                */
+                setGraphic(root);
+                
+            } catch (IOException ex) {
+            }
         }
 
         @Override
@@ -117,23 +141,16 @@ public class AllImagesFXMLController implements Initializable {
                 
                 super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
                 
-                
-                FXMLLoader loader=new FXMLLoader(getClass().getResource("ImageViewFXML.fxml"));
-                
-                ImageViewFXMLController controller =new  ImageViewFXMLController( item, NoteStack);
-                
-                loader.setController(controller);
-                
-                AnchorPane root = loader.load();
+                controller.UpdateItem(item);
                 
                 /*
                 root.setPrefHeight(Grid.getCellHeight());
                 root.setPrefWidth(Grid.getCellWidth());
                 */
                 
-                setGraphic(root);
                 
-            } catch (IOException ex) {
+                
+            } catch (Exception ex) {
             }
         }
 

@@ -3,97 +3,58 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXDrawer?>
-<?import com.jfoenix.controls.JFXSlider?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.image.ImageView?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import jfxtras.labs.scene.control.Magnifier?>
 
-<AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="748.0" prefWidth="947.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="748.0" prefWidth="947.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
-      <AnchorPane fx:id="imgParent" layoutX="95.0" layoutY="46.0" prefHeight="628.0" prefWidth="914.0" AnchorPane.bottomAnchor="73.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="46.0">
+      <AnchorPane fx:id="imgParent" layoutX="6.0" layoutY="55.0" prefHeight="657.0" prefWidth="936.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="55.0">
          <children>
-            <ImageView fx:id="img" fitHeight="628.0" fitWidth="914.0" onMouseDragged="#ImgMouseDragged" onMousePressed="#ImgMousePressed" onMouseReleased="#ImgMouseReleased">
-               <viewport>
-                  <Rectangle2D />
-               </viewport>
-            </ImageView>
+            <Magnifier fx:id="magnifier" active="false" resizableOnScroll="true" scalableOnScroll="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
-      <JFXButton contentDisplay="CENTER" layoutX="678.0" layoutY="689.0" prefHeight="51.0" prefWidth="55.0" text=" " AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="214.0">
+      <JFXButton contentDisplay="CENTER" layoutX="492.0" layoutY="699.0" onAction="#NextImage" prefHeight="51.0" prefWidth="55.0" text=" " AnchorPane.bottomAnchor="-2.0" AnchorPane.rightAnchor="400.0">
          <graphic>
             <FontAwesomeIconView glyphName="ARROW_RIGHT" size="40" text="" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="CENTER" layoutX="278.0" layoutY="684.0" prefHeight="51.0" prefWidth="55.0" text=" " AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="278.0">
+      <JFXButton contentDisplay="CENTER" layoutX="303.0" layoutY="699.0" onAction="#prevImage" prefHeight="51.0" prefWidth="55.0" text=" " AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="303.0">
          <graphic>
             <FontAwesomeIconView glyphName="ARROW_LEFT" size="40" />
          </graphic>
       </JFXButton>
-      <AnchorPane layoutX="750.0" layoutY="683.0" prefHeight="62.0" prefWidth="118.0" style="-fx-background-color: AQUA;" AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="79.0">
-         <children>
-            <JFXButton contentDisplay="CENTER" layoutX="10.0" layoutY="13.0" prefHeight="37.0" prefWidth="45.0" text=" ">
-               <graphic>
-                  <FontAwesomeIconView glyphName="SQUARE_ALT" size="29" wrappingWidth="19.64285659790039" />
-               </graphic>
-            </JFXButton>
-            <JFXButton contentDisplay="CENTER" layoutX="62.0" layoutY="13.0" prefHeight="37.0" prefWidth="45.0" text=" ">
-               <graphic>
-                  <FontAwesomeIconView glyphName="CONNECTDEVELOP" size="25" />
-               </graphic>
-            </JFXButton>
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="72.0" layoutY="682.0" prefHeight="62.0" prefWidth="189.0" style="-fx-background-color: GRAY;" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="72.0">
-         <children>
-            <JFXButton alignment="CENTER" contentDisplay="CENTER" layoutX="74.0" layoutY="13.0" prefHeight="37.0" prefWidth="34.0" text=" ">
-               <graphic>
-                  <FontAwesomeIconView fill="WHITE" glyphName="TH" size="25" wrappingWidth="19.64285659790039" />
-               </graphic>
-            </JFXButton>
-            <JFXButton contentDisplay="CENTER" layoutX="131.0" layoutY="13.0" prefHeight="37.0" prefWidth="34.0" text=" ">
-               <graphic>
-                  <FontAwesomeIconView fill="WHITE" glyphName="MAGIC" size="25" wrappingWidth="19.64285659790039" />
-               </graphic>
-            </JFXButton>
-            <JFXButton contentDisplay="CENTER" layoutX="18.0" layoutY="11.0" prefHeight="37.0" prefWidth="34.0" text=" ">
-               <graphic>
-                  <FontAwesomeIconView fill="WHITE" glyphName="ARROWS" size="30" wrappingWidth="26.64285659790039" />
-               </graphic>
-            </JFXButton>
-         </children>
-      </AnchorPane>
-      <JFXSlider fx:id="Slider" blockIncrement="0.0" layoutX="363.0" layoutY="697.0" majorTickUnit="100.0" max="300.0" minorTickCount="4" prefHeight="51.0" prefWidth="227.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="363.0" AnchorPane.rightAnchor="357.0" />
-      <JFXButton contentDisplay="CENTER" layoutX="963.0" layoutY="693.0" prefHeight="28.0" prefWidth="46.0" text=" " AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
+      <JFXButton contentDisplay="CENTER" layoutX="892.0" layoutY="3.0" onAction="#OptionPop" prefHeight="37.0" prefWidth="45.0" text=" " AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="3.0">
          <graphic>
-            <FontAwesomeIconView glyphName="EXPAND" size="30" text="" />
-         </graphic>
-      </JFXButton>
-      <JFXButton contentDisplay="CENTER" layoutX="20.0" layoutY="3.0" prefHeight="37.0" prefWidth="45.0" text=" " AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="3.0">
-         <graphic>
-            <FontAwesomeIconView glyphName="LIST_UL" size="32" />
-         </graphic>
-      </JFXButton>
-      <JFXButton contentDisplay="CENTER" layoutX="888.0" layoutY="3.0" prefHeight="37.0" prefWidth="45.0" text=" " AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="3.0">
-         <graphic>
-            <FontAwesomeIconView glyphName="ELLIPSIS_V" size="32" />
+            <FontAwesomeIconView glyphName="ELLIPSIS_V" size="32" wrappingWidth="6.857142925262451" />
          </graphic>
       </JFXButton>
       <JFXDrawer defaultDrawerSize="250.0" prefHeight="748.0" prefWidth="250.0" visible="false" />
-      <JFXComboBox layoutX="600.0" layoutY="9.0" prefHeight="31.0" prefWidth="250.0" AnchorPane.rightAnchor="97.0" AnchorPane.topAnchor="9.0" />
-      <JFXButton contentDisplay="CENTER" layoutX="19.0" layoutY="688.0" prefHeight="37.0" prefWidth="45.0" text=" " AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="19.0">
+      <JFXComboBox fx:id="ClassSelecor" layoutX="474.0" layoutY="4.0" prefHeight="41.0" prefWidth="267.0" AnchorPane.rightAnchor="206.0" AnchorPane.topAnchor="4.0" />
+      <JFXButton contentDisplay="CENTER" layoutX="7.0" layoutY="700.0" onAction="#SettingPop" prefHeight="48.0" prefWidth="45.0" text=" " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="7.0">
          <graphic>
             <FontAwesomeIconView glyphName="SLIDERS" size="32" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="CENTER" layoutX="518.0" layoutY="3.0" prefHeight="37.0" prefWidth="45.0" text=" " AnchorPane.rightAnchor="383.0" AnchorPane.topAnchor="3.0">
+      <JFXButton contentDisplay="CENTER" layoutX="401.0" layoutY="4.0" onAction="#AddClassPop" prefHeight="37.0" prefWidth="48.0" text=" " AnchorPane.rightAnchor="498.0" AnchorPane.topAnchor="4.0">
          <graphic>
-            <FontAwesomeIconView glyphName="PLUS" size="32" />
+            <MaterialDesignIconView glyphName="PLAYLIST_PLUS" size="38" wrappingWidth="28.0" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="CENTER" layoutX="600.0" layoutY="693.0" prefHeight="37.0" prefWidth="45.0" text=" " AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="297.0">
+      <JFXButton alignment="CENTER" buttonType="RAISED" layoutY="3.0" onAction="#GridMode" prefHeight="43.0" prefWidth="141.0" ripplerFill="#4e2cd3" style="-fx-background-color: red;" text="Grid Mode" textFill="WHITE">
          <graphic>
-            <FontAwesomeIconView glyphName="SEARCH_PLUS" size="32" />
+            <FontAwesomeIconView fill="WHITE" glyphName="TH" size="25" wrappingWidth="26.64285659790039" />
+         </graphic>
+      </JFXButton>
+      <JFXButton buttonType="RAISED" contentDisplay="CENTER" layoutX="152.0" layoutY="3.0" onAction="#LOOP" prefHeight="41.0" prefWidth="45.0" style="-fx-background-color: red;" text=" ">
+         <graphic>
+            <FontAwesomeIconView fill="WHITE" glyphName="NEUTER" size="32" wrappingWidth="22.85714340209961" />
+         </graphic>
+      </JFXButton>
+      <JFXButton alignment="CENTER" layoutX="759.0" layoutY="4.0" onAction="#remove" prefHeight="29.0" prefWidth="45.0" text=" ">
+         <graphic>
+            <MaterialDesignIconView fill="#eb0000" glyphName="MINUS_CIRCLE_OUTLINE" size="38" wrappingWidth="29.0" />
          </graphic>
       </JFXButton>
    </children>

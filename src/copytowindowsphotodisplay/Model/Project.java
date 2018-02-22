@@ -199,25 +199,22 @@ public class Project {
         File ClassFile = new File(project, "Classified");
         File Image = new File(project, "Image.jpg");
         File Config = new File(project, "config.xml");
-        System.out.println("fot ");
+        
         if (!ImagesFile.exists()) {
             return false;
         }
-        System.out.println("fot ");
+        
         if (!ClassFile.exists()) {
             return false;
         }
-        System.out.println("fot ");
 
         if (!Image.exists()) {
             return false;
         }
-        System.out.println("fot ");
 
         if (!Config.exists()) {
             return false;
         }
-        System.out.println("fot ");
 
         return true;
     }

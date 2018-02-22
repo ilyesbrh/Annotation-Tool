@@ -7,6 +7,8 @@ package copytowindowsphotodisplay.Model;
 
 import java.io.File;
 import java.util.ArrayList;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
@@ -17,13 +19,13 @@ public class Class {
     public final ArrayList<Images> IMAGES = new ArrayList<>();
     public final ArrayList<Annotation> ANNOTATIONS = new ArrayList<>();
 
-    private String Name;
+    public StringProperty Name;
     private Project project;
     private File ClassDir;
 
     public Class(String name, Project parent) {
 
-        Name = name;
+        Name =new SimpleStringProperty(name);
 
         project = parent;
 
@@ -35,7 +37,7 @@ public class Class {
 
     public void Save() {
 
-        Project.SavingDir(project.getClassifiedDir(), Name);
+        Project.SavingDir(project.getClassifiedDir(), Name.get());
 
         for (Annotation x : ANNOTATIONS) {
 
@@ -61,11 +63,11 @@ public class Class {
     }
 
     public String getName() {
-        return Name;
+        return Name.get();
     }
 
     public void setName(String Name) {
-        this.Name = Name;
+        this.Name.set(Name);
     }
 
     public Project getProject() {
@@ -104,7 +106,7 @@ public class Class {
 
     @Override
     public String toString() {
-        return Name ;
+        return Name.get() ;
     }
     
 }

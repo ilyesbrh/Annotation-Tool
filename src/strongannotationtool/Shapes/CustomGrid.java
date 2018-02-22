@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
  *
  * @author brhilyes
  */
-public class CustomGrid {
+public class CustomGrid{
 
     private AnchorPane parent;
 
@@ -29,6 +29,7 @@ public class CustomGrid {
 
     private Color StrokeColor = Color.BLACK;
     private Color FillColor = Color.gray(0.6, 0.6);
+    
     private boolean changed = false;
 
     public CustomRectangle[][] getRectGrid() {
@@ -120,6 +121,12 @@ public class CustomGrid {
                 RectGrid[i][j] = new CustomRectangle(StartX + rectWidth * j, StartY + rectHeight * i, rectWidth, rectHeight, FillColor, false);
 
                 RectGrid[i][j].setStroke(StrokeColor);
+                
+                RectGrid[i][j].setMouseTransparent(true);
+                
+                RectGrid[i][j].setOnMouseClicked( e-> {
+                    System.err.println(e.getX());
+                });
 
                 parent.getChildren().add(RectGrid[i][j]);
 
@@ -197,4 +204,5 @@ public class CustomGrid {
         }
         parent = null;
     }
+
 }

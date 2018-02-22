@@ -7,7 +7,6 @@ package copytowindowsphotodisplay;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 import copytowindowsphotodisplay.Model.Class;

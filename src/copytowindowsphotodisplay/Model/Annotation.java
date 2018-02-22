@@ -36,7 +36,13 @@ public class Annotation {
         x.ANNOTATIONS.add(this);
 
     }
-    
+    public void remove() {
+        
+        classe.ANNOTATIONS.remove(this);
+        image.ANNOTATIONS.remove(this);
+        AnnotationFile.delete();
+        
+    }
     public void save() {
 
         try {
@@ -103,5 +109,18 @@ public class Annotation {
         annotation.Load();
 
     }
+    public static Annotation findAnnotation(Class x, Images y) {
+
+        
+        for (Annotation i : x.ANNOTATIONS) {
+
+            if (i.image.equals(y)) {
+
+                return i;
+            }
+        }
+        return null;
+    }
+    
 
 }

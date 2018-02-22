@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -127,4 +128,10 @@ public class Images {
         this.project = project;
     }
 
+    @Override
+    public String toString() {
+        return this.Name; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
 }
