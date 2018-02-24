@@ -148,8 +148,6 @@ public class AllImagesFXMLController implements Initializable {
                 root.setPrefWidth(Grid.getCellWidth());
                 */
                 
-                
-                
             } catch (Exception ex) {
             }
         }

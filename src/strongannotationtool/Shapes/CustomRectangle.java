@@ -20,6 +20,9 @@ public class CustomRectangle extends Rectangle {
     private boolean selected;
     private Color color;
 
+    public CustomRectangle() {
+        
+    }
     public CustomRectangle(double x, double y, double width, double height) {
 
         super(width, height ,Color.TRANSPARENT );

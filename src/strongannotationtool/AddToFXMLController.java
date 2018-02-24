@@ -25,15 +25,15 @@ public class AddToFXMLController implements Initializable {
     @FXML
     private VBox vbox;
 
+    AnnotationPaneController annot;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        AnnotationPaneController annot = (AnnotationPaneController) rb.getObject("");
 
-        this.image = annot.image;
+        this.image = annot.image.get();
 
         for (copytowindowsphotodisplay.Model.Class x : image.getProject().CLASSES) {
 
@@ -61,6 +61,10 @@ public class AddToFXMLController implements Initializable {
         }
 
         // TODO
+    }
+
+    public void setAnnotationControler(AnnotationPaneController aThis) {
+        annot=aThis;
     }
 
 }

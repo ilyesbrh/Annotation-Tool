@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import jfxtras.labs.scene.control.Magnifier?>
 
-<AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="748.0" prefWidth="947.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="748.0" prefWidth="947.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane fx:id="imgParent" layoutX="6.0" layoutY="55.0" prefHeight="657.0" prefWidth="936.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="55.0">
          <children>
@@ -54,7 +54,7 @@
       </JFXButton>
       <JFXButton alignment="CENTER" layoutX="759.0" layoutY="4.0" onAction="#remove" prefHeight="29.0" prefWidth="45.0" text=" ">
          <graphic>
-            <MaterialDesignIconView fill="#eb0000" glyphName="MINUS_CIRCLE_OUTLINE" size="38" wrappingWidth="29.0" />
+            <MaterialDesignIconView fill="#eb0000" glyphName="MINUS_CIRCLE_OUTLINE" size="38" wrappingWidth="26.0" />
          </graphic>
       </JFXButton>
    </children>
