@@ -66,6 +66,8 @@ public class AnnotationPaneController implements Initializable {
     //State
     private boolean GridOn = false;
     private boolean loopOn = false;
+    private DrawableShape onCreate;
+    private String ShapeMode = "Rectangle";
 
     //design
     private final ImageView img;
@@ -89,17 +91,16 @@ public class AnnotationPaneController implements Initializable {
 
         //this.grid.addGrid(MagnifierPane);
         // circle menu GridOff
-        menuItem = new MenuItem[5];
-        menuItem[0] = createItem(MaterialDesignIcon.RECORD, Color.web("#96ceb4"), "Point",CirclePopUpMenu);
-        menuItem[1] = createItem(MaterialDesignIcon.CHECKBOX_BLANK_CIRCLE_OUTLINE, Color.web("#96ceb4"), "Circle",CirclePopUpMenu);
-        menuItem[2] = createItem(MaterialDesignIcon.OCTAGON_OUTLINE, Color.web("#96ceb4"), "Polygone",CirclePopUpMenu);
-        menuItem[3] = createItem(MaterialDesignIcon.PENCIL, Color.web("#96ceb4"), "Pen",CirclePopUpMenu);
-        menuItem[4] = createItem(MaterialDesignIcon.CHECKBOX_BLANK_OUTLINE, Color.web("#96ceb4"), "Rectangle",CirclePopUpMenu);
+        menuItem = new MenuItem[3];
+        //menuItem[] = createItem(MaterialDesignIcon.RECORD, Color.web("#96ceb4"), "Point", CirclePopUpMenu);
+        menuItem[0] = createItem(MaterialDesignIcon.CHECKBOX_BLANK_CIRCLE_OUTLINE, Color.web("#96ceb4"), "Circle", CirclePopUpMenu);
+        menuItem[1] = createItem(MaterialDesignIcon.OCTAGON_OUTLINE, Color.web("#96ceb4"), "Polygone", CirclePopUpMenu);
+        //menuItem[] = createItem(MaterialDesignIcon.PENCIL, Color.web("#96ceb4"), "Pen", CirclePopUpMenu);
+        menuItem[2] = createItem(MaterialDesignIcon.CHECKBOX_BLANK_OUTLINE, Color.web("#96ceb4"), "Rectangle", CirclePopUpMenu);
 
         // circle menu X
         //menuItem1 = new MenuItem[1];
         //menuItem1[0] = createItem(MaterialDesignIcon.PLUS, Color.ALICEBLUE, "test");
-
     }
 
     /**
@@ -109,81 +110,160 @@ public class AnnotationPaneController implements Initializable {
      * @param rb
      */
     //.......... events
-    
-    private DrawableShape onCreate;
-    private DrawableShape onMouse;
-    private String ShapeMode ="Rectangle";
-    
     EventHandler<MouseEvent> MouseEvents = (MouseEvent event) -> {
-
-        if(event.getX()<0 || event.getX()> imgParent.getWidth()) return;
-        if(event.getY()<0 || event.getY()> imgParent.getHeight()) return;
-        
+        if (!isEventIn(event)) {
+            //return;
+        }
         if (GridOn) {
-            if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
-                if (event.getButton().compareTo(MouseButton.SECONDARY) == 0) {
-                    CirclePopUpMenu.show(event);
-                }
-                if (event.getButton().compareTo(MouseButton.PRIMARY) == 0) {
-                    CirclePopUpMenu.hide();
-                }
-            }
-
-        } else {
-
-            if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
-                if (event.getButton().compareTo(MouseButton.SECONDARY) == 0) {
-                    CirclePopUpMenu.show(event);
-                }
-                if (event.getButton().compareTo(MouseButton.PRIMARY) == 0) {
-                    CirclePopUpMenu.hide();
-                }
-            } else if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
-                
-                if(onCreate == null){
-                    
-                    if("Rectangle".equals(ShapeMode)){
-                        
-                        try {
-                            onCreate = new DrawRectangle(event.getX(), event.getY(), event.getX() + 1, event.getY() + 1);
-                            onCreate.AddTo(imgParent);
-                        } catch (IOException iOException) {
-                        }
-                        
-                    }
-                    
-                }
-
-            }
-            else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-                
-                if(onCreate != null){
-                    
-                   DrawRectangle DRect=null;
-                   if("Rectangle".equals(ShapeMode)){
-                        
-                       if(onCreate instanceof DrawRectangle)
-                            DRect = (DrawRectangle) onCreate;
-                       else
-                            System.err.println("not instance of drawable rectangle");
-                       DRect.SetPoints(DRect.getLayoutX(), DRect.getLayoutY(), event.getX(), event.getY());
-                    }
-                    
-                }
-                
-
-            }
-            else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
-
-                
-                onCreate=null;
-            }
+            GridOn(event);
+        }
+        if (!GridOn) {
+            GridOff(event);
         }
     };
 
+    private boolean isEventIn(MouseEvent event) {
+        if (event.getX() < 0 || event.getX() > imgParent.getWidth()) {
+            return false;
+        }
+        if (event.getY() < 0 || event.getY() > imgParent.getHeight()) {
+            return false;
+        }
+        return true;
+    }
+
+    private void GridOn(MouseEvent event) {
+        if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+            if (event.getButton().compareTo(MouseButton.SECONDARY) == 0) {
+                SecendBtnPressed_GridOff(event);
+            }
+            if (event.getButton().compareTo(MouseButton.PRIMARY) == 0) {
+                CirclePopUpMenu.hide();
+            }
+        }
+    }
+
+    private void GridOff(MouseEvent event) {
+
+        if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
+
+            MousePressed_GridOff(event);
+
+        } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+
+            MouseDragged_GridOff(event);
+
+        } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
+
+            MouseRelease_GriddOff(event);
+        }
+    }
+
+    private void MousePressed_GridOff(MouseEvent event) {
+
+        if (event.getButton().compareTo(MouseButton.PRIMARY) == 0) {
+            PrimaryBtnPressed_GridOff(event);
+        }
+        if (event.getButton().compareTo(MouseButton.SECONDARY) == 0) {
+            SecendBtnPressed_GridOff(event);
+        }
+    }
+
+    private void MouseDragged_GridOff(MouseEvent event) {
+
+        if (event.getButton().compareTo(MouseButton.PRIMARY) == 0) {
+            PrimaryBtnDragged_GridOff(event);
+        }
+        if (event.getButton().compareTo(MouseButton.SECONDARY) == 0) {
+
+        }
+    }
+
+    private void MouseRelease_GriddOff(MouseEvent event) {
+
+        if (event.getButton().compareTo(MouseButton.PRIMARY) == 0) {
+            PrimaryBtnRelease_GridOff(event);
+        }
+        if (event.getButton().compareTo(MouseButton.SECONDARY) == 0) {
+
+        }
+    }
+
+    private void PrimaryBtnPressed_GridOff(MouseEvent event) {
+        CirclePopUpMenu.hide();
+        if (onCreate == null) {
+
+            if ("Rectangle".equals(ShapeMode)) {
+                RectOnPress(event);
+            }
+        }
+    }
+
+    private void PrimaryBtnDragged_GridOff(MouseEvent event) {
+
+        if (onCreate != null) {
+
+            if ("Rectangle".equals(ShapeMode)) {
+
+                RectOnDrag(event);
+            }
+        }
+    }
+
+    private void PrimaryBtnRelease_GridOff(MouseEvent event) {
+        
+        if (onCreate != null) {
+
+            if ("Rectangle".equals(ShapeMode)) {
+
+                RectOnRelease(event);
+            }
+        }
+    }
+
+    private void RectOnRelease(MouseEvent event) {
+        onCreate = null;
+    }
+
+    private void SecendBtnPressed_GridOff(MouseEvent event) {
+        CirclePopUpMenu.show(event);
+    }
+
+    private void RectOnPress(MouseEvent event) {
+        try {
+            onCreate = new DrawRectangle(event.getX(), event.getY(), event.getX() + 1, event.getY() + 1);
+            onCreate.AddTo(imgParent);
+        } catch (IOException iOException) {
+        }
+    }
+
+    private void RectOnDrag(MouseEvent event) {
+        DrawRectangle DRect = null;
+        if (onCreate instanceof DrawRectangle) {
+            DRect = (DrawRectangle) onCreate;
+        } else {
+            System.err.println("not instance of drawable rectangle");
+        }
+        double x = 0, y = 0;
+        if (event.getX() < 0) {
+            x = 0;
+        } else if (event.getX() > imgParent.getWidth()) {
+            x = imgParent.getWidth();
+        } else {
+            x = event.getX();
+        }
+        if (event.getY() < 0) {
+            y = 0;
+        } else if (event.getY() > imgParent.getHeight()) {
+            x = imgParent.getHeight();
+        } else {
+            y = event.getY();
+        }
+        DRect.SetPoints(DRect.getLayoutX(), DRect.getLayoutY(), x, y);
+    }
+
     @Override
-    public void initialize(URL url, ResourceBundle rb
-    ) {
+    public void initialize(URL url, ResourceBundle rb) {
 
         CirclePopUpMenu = new CirclePopupMenu(magnifier, MouseButton.NONE);
         CirclePopUpMenu.getItems().addAll(menuItem);
@@ -199,10 +279,8 @@ public class AnnotationPaneController implements Initializable {
 
         GridINI();
         imageParentINI();
-
     }
-
-    private MenuItem createItem(MaterialDesignIcon PLUS, Paint p, String S,CirclePopupMenu cpu) {
+    private MenuItem createItem(MaterialDesignIcon PLUS, Paint p, String S, CirclePopupMenu cpu) {
         MaterialDesignIconView materialDesignIconView;
         JFXButton jfxButton;
         materialDesignIconView = new MaterialDesignIconView(PLUS);
@@ -215,14 +293,13 @@ public class AnnotationPaneController implements Initializable {
         jfxButton.setShape(new Circle(49));
         jfxButton.setBackground(new Background(new BackgroundFill(p, CornerRadii.EMPTY, Insets.EMPTY)));
         jfxButton.setButtonType(JFXButton.ButtonType.RAISED);
-        MenuItem menuItem= new MenuItem(S, jfxButton);
+        MenuItem menuItem = new MenuItem(S, jfxButton);
         menuItem.setOnAction((event) -> {
-            ShapeMode=S;
+            ShapeMode = S;
             cpu.hide();
         });
         return menuItem;
     }
-
     private void imageParentINI() {
         imgParent.widthProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -239,7 +316,6 @@ public class AnnotationPaneController implements Initializable {
 
         });
     }
-
     private void GridINI() {
         // Grid INI
 
@@ -250,9 +326,7 @@ public class AnnotationPaneController implements Initializable {
         grid.setStartY(img.getLayoutY());
         grid.setWidth(img.getFitWidth());
         grid.setHeight(img.getFitHeight());
-
     }
-
     public void RefreshGrid() {
         grid.setStartX(img.getLayoutX());
         grid.setStartY(img.getLayoutY());
@@ -260,80 +334,6 @@ public class AnnotationPaneController implements Initializable {
         grid.setHeight(img.getFitHeight());
         grid.update();
     }
-
-    @FXML
-    private void prevImage(ActionEvent event) {
-    }
-
-    @FXML
-    private void NextImage(ActionEvent event) {
-    }
-
-    @FXML
-    private void OptionPop(ActionEvent event) {
-    }
-
-    @FXML
-    private void SettingPop(ActionEvent event) {
-    }
-
-    @FXML
-    private void remove(ActionEvent event) {
-        if (!ClassSelecor.getItems().isEmpty()) {
-            Class selectedItem = ClassSelecor.getSelectionModel().getSelectedItem();
-            ClassSelecor.getItems().remove(selectedItem);
-            Annotation findAnnotation = Annotation.findAnnotation(selectedItem, image.get());
-            findAnnotation.remove();
-        }
-    }
-
-    @FXML
-    private void AddClassPop(ActionEvent event) throws IOException {
-
-        final AnnotationPaneController x = this;
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("AddToFXML.fxml"));
-        AddToFXMLController controller = loader.getController();
-        controller.setAnnotationControler(this);
-        this.fXPopup = new JFXPopup(loader.load());
-
-        JFXButton source = (JFXButton) event.getSource();
-        fXPopup.show(root, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.RIGHT, 50, 50);
-    }
-
-    @FXML
-    private void GridMode(ActionEvent event) {
-
-        GridOn = !GridOn;
-
-        JFXButton source = (JFXButton) event.getSource();
-        if (GridOn) {
-
-            grid.addGrid(MagnifierPane);
-            RefreshGrid();
-            source.setStyle("-fx-background-color: blue;");
-        } else {
-            grid.removeGrid();
-            source.setStyle("-fx-background-color: red;");
-        }
-
-    }
-
-    @FXML
-    private void LOOP(ActionEvent event) {
-
-        loopOn = !loopOn;
-
-        JFXButton source = (JFXButton) event.getSource();
-        if (loopOn) {
-            source.setStyle("-fx-background-color: blue;");
-        } else {
-            source.setStyle("-fx-background-color: red;");
-        }
-        magnifier.setActive(loopOn);
-
-    }
-
     /**
      * ***************creation du obj
      *
@@ -360,4 +360,68 @@ public class AnnotationPaneController implements Initializable {
         }
     }
 
+    @FXML
+    private void prevImage(ActionEvent event) {
+    }
+    @FXML
+    private void NextImage(ActionEvent event) {
+    }
+    @FXML
+    private void OptionPop(ActionEvent event) {
+    }
+    @FXML
+    private void SettingPop(ActionEvent event) {
+    }
+    @FXML
+    private void remove(ActionEvent event) {
+        if (!ClassSelecor.getItems().isEmpty()) {
+            Class selectedItem = ClassSelecor.getSelectionModel().getSelectedItem();
+            ClassSelecor.getItems().remove(selectedItem);
+            Annotation findAnnotation = Annotation.findAnnotation(selectedItem, image.get());
+            findAnnotation.remove();
+        }
+    }
+    @FXML
+    private void AddClassPop(ActionEvent event) throws IOException {
+
+        final AnnotationPaneController x = this;
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("AddToFXML.fxml"));
+        this.fXPopup = new JFXPopup(loader.load());
+        AddToFXMLController controller = loader.getController();
+        controller.setAnnotationControler(this);
+
+        JFXButton source = (JFXButton) event.getSource();
+        fXPopup.show(root, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.RIGHT, 50, 50);
+    }
+    @FXML
+    private void GridMode(ActionEvent event) {
+
+        GridOn = !GridOn;
+
+        JFXButton source = (JFXButton) event.getSource();
+        if (GridOn) {
+
+            grid.addGrid(MagnifierPane);
+            RefreshGrid();
+            source.setStyle("-fx-background-color: blue;");
+        } else {
+            grid.removeGrid();
+            source.setStyle("-fx-background-color: red;");
+        }
+    }
+    @FXML
+    private void LOOP(ActionEvent event) {
+
+        loopOn = !loopOn;
+
+        JFXButton source = (JFXButton) event.getSource();
+        if (loopOn) {
+            source.setStyle("-fx-background-color: #40E0D0;");
+        } else {
+            source.setStyle("-fx-background-color: white;");
+        }
+        magnifier.setActive(loopOn);
+
+    }
 }
