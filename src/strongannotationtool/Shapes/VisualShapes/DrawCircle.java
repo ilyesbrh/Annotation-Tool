@@ -5,7 +5,6 @@
  */
 package strongannotationtool.Shapes.VisualShapes;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPopup;
 import copytowindowsphotodisplay.Model.Annotation;
 import copytowindowsphotodisplay.Model.Images;
@@ -16,24 +15,23 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import strongannotationtool.Shapes.CustomRectangle;
+import javafx.scene.shape.Ellipse;
 
 /**
  *
  * @author ilies
  */
-public class DrawRectangle extends CustomRectangle implements DrawableShape {
-
-        
+public class DrawCircle extends Ellipse implements DrawableShape{
+    
     //Info
-    
-        //Image
-    
-        Images image;
-    
-        //Scale
-        public double xK;
-        public double yK;
+
+     //Image
+
+     Images image;
+     
+     //Scale
+     public double xK;
+     public double yK;
 
     //Nodes
     private Circle ci;
@@ -41,28 +39,30 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
     //state
     private double X;
     private double Y;
-    private double layoutX;
-    private double layoutY;
+    double centerX;
+    double centerY;
     //UI
     public JFXPopup OptionPopup;
     public JFXPopup AddToPopup;
     
-    public DrawRectangle(double x, double y, double i, double j,double xk,double yk,Images image) throws IOException {
+    public DrawCircle(double x, double y, double rx, double ry,double xk,double yk,Images image) throws IOException {
 
         this.image=image;
-        xK=xk;
-        yK=yk;
+        xK = xk;
+        yK = yk;
+        ci = new Circle(6, Color.rgb(114, 137, 218, 0.6));
         
-        ci = new Circle(10, Color.rgb(114, 137, 218, 0.6));
-        JFXButton btn = new JFXButton("", this);
+        setLayoutX(0);
+        setLayoutY(0);
+        
         ci.setEffect(new DropShadow());
 
         setFill(Color.web("blue", 0.4));
-        SetPoints(x, y, i, j);
+        
+        SetPoints(x, y, rx, ry);
         
 
-        ci.setLayoutX(this.getLayoutX() + this.getWidth());
-        ci.setLayoutY(this.getLayoutY() + this.getHeight());
+        RefreshCircle();
 
         //Rectangle Actions
         
@@ -77,20 +77,19 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
             AddShapeToController controller2 = loaderAddTo.getController();
             controller2.setImage(image,this);
             
-        } catch (Exception e) {
-        }
+        } catch (IOException e) {}
         
         setOnMouseClicked((event) -> {
 
             if (event.getButton() == MouseButton.SECONDARY) {
 
                 
-                OptionPopup.show(this);
+                OptionPopup.show(Parent, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, getCenterX(),getCenterY());
 
             }
             if(event.getClickCount()==2){
                 
-                AddToPopup.show(this);
+                AddToPopup.show(Parent, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, getCenterX(),getCenterY());
                 
             }
 
@@ -98,19 +97,28 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
 
         setOnMousePressed((event) -> {
 
-            X = event.getScreenX();
-            Y = event.getScreenY();
-            layoutX = getLayoutX();
-            layoutY = getLayoutY();
+            if (event.getButton() != MouseButton.SECONDARY) {
+
+                X = event.getScreenX();
+                Y = event.getScreenY();
+                centerX = getCenterX();
+                centerY = getCenterY();
+                System.out.println("center X :"+centerX);
+                System.out.println("center Y :"+centerY);
+            }
+            
         });
 
         setOnMouseDragged((event) -> {
 
-            double deltaX = X - event.getScreenX();
-            double deltaY = Y - event.getScreenY();
+            if (event.getButton() != MouseButton.SECONDARY) {
 
-            MoveTo(layoutX - deltaX, layoutY - deltaY);
-
+                double deltaX = event.getScreenX() - X ;
+                double deltaY = event.getScreenY() - Y ;
+                
+                MoveTo(centerX + deltaX, centerY+ deltaY);
+                
+            }
         });
         setOnMouseReleased((event) -> {
 
@@ -119,18 +127,18 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         //Circle Actions
         ci.setOnMousePressed((event) -> {
 
-            ci.setRadius(5);
+            ci.setRadius(3);
 
         });
         ci.setOnMouseDragged((event) -> {
 
-            double Rx = event.getX() + ci.getLayoutX();
-            double Ry = event.getY() + ci.getLayoutY();
+            double Rx = event.getX() + ci.getCenterX();
+            double Ry = event.getY() + ci.getCenterY();
 
-            ci.setLayoutX(Rx);
-            ci.setLayoutY(Ry);
+            ci.setCenterX(Rx);
+            ci.setCenterY(Ry);
 
-            SetPoints(this.getLayoutX(), this.getLayoutY(), ci.getLayoutX(), ci.getLayoutY());
+            SetPoints(this.getCenterX(), this.getCenterY(), ci.getCenterX(), ci.getCenterY());
 
         });
         ci.setOnMouseReleased((event) -> {
@@ -142,73 +150,59 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
                 return;
             }
 
-            ci.setRadius(10);
-            ci.setLayoutX(this.getLayoutX() + this.getWidth());
-            ci.setLayoutY(this.getLayoutY() + this.getHeight());
+            ci.setRadius(6);
+            
+            SetPoints(this.getCenterX(), this.getCenterY(), ci.getCenterX(), ci.getCenterY());
 
-            SetPoints(this.getLayoutX(), this.getLayoutY(), ci.getLayoutX(), ci.getLayoutY());
+            RefreshCircle();
         });
     }
 
     public void SetPoints(double x, double y, double i, double j) {
 
-        if (x > i) {
-            this.setLayoutX(i);
-            this.setWidth(x - i);
-        } else {
-            this.setLayoutX(x);
-            this.setWidth(i - x);
-        }
-        if (y > j) {
-            this.setLayoutY(j);
-            this.setHeight(y - j);
-        } else {
-            this.setLayoutY(y);
-            this.setHeight(j - y);
-        }
-        ci.setLayoutX(getLayoutX() + getWidth());
-        ci.setLayoutY(getLayoutY() + getHeight());
+        this.setCenterX(x);
+        this.setCenterY(y);
+        this.setRadiusX(Math.abs(x - i));
+        this.setRadiusY(Math.abs(j - y));
 
     }
 
     @Override
     public void AddTo(AnchorPane p) {
         
-        if(!p.getChildren().contains(this))
-            p.getChildren().add(this);
-        if(!p.getChildren().contains(ci))
-            p.getChildren().add(ci);
+        p.getChildren().add(this);
+        p.getChildren().add(ci);
         this.Parent = p;
     }
 
     @Override
     public void MoveTo(double X, double Y) {
 
-        if (X < 0) {
-            X=0;
+        /*if (X < 0) {
+        return;
         }
-        if (X + getWidth() > Parent.getWidth()) {
-            X =Parent.getWidth() -getWidth();
+        if (X + getRadiusX()> Parent.getWidth()) {
+        return;
         }
-
+        
         if (Y < 0) {
-            Y=0;
+        return;
         }
-        if (Y + getHeight() > Parent.getHeight()) {
-            Y =Parent.getHeight()-getHeight();
-        }
-
-        this.setLayoutX(X);
-        this.setLayoutY(Y);
-
-        ci.setLayoutX(getLayoutX() + getWidth());
-        ci.setLayoutY(getLayoutY() + getHeight());
+        if (Y + getRadiusY() > Parent.getHeight()) {
+        return;
+        }*/
+        
+        setCenterX(X);
+        setCenterY(Y);
+        
+        RefreshCircle();
 
     }
 
     @Override
     public void ScaleTo(double xK, double yK) {
-    /* Old_K * ow = W
+    
+        /* Old_K * ow = W
         new_K * nw = W
         new_K * nw = Old_K * ow
 
@@ -220,21 +214,21 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         this.xK =xK;
         this.yK =yK;
         
-        setLayoutX(getLayoutX() * DX);
-        setLayoutY(getLayoutY() * DY);
-        setWidth(getWidth() * DX);
-        setHeight(getHeight() * DY);
-
-        ci.setLayoutX(getLayoutX() + getWidth());
-        ci.setLayoutY(getLayoutY() + getHeight());
+        setCenterX(getCenterX()* DX);
+        setCenterY(getCenterY()* DY);
+        setRadiusX(getRadiusX()* DX);
+        setRadiusY(getRadiusY()* DY);
+        
+        
+        RefreshCircle();
 
     }
 
     @Override
     public void remove(AnchorPane p) {
-        
         p.getChildren().remove(this);
         p.getChildren().remove(ci);
+
         for (Annotation annotation : image.ANNOTATIONS) {
             
             annotation.Shapes.remove(this);
@@ -242,4 +236,26 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         }
     }
 
+    public void RefreshCircle() {
+        
+        double centerX = getCenterX();
+        double centerY = getCenterY();
+        double a = getRadiusX();
+        double b = getRadiusY();
+        double O = Math.PI/4;
+        double Tan_O = Math.tan(O);
+        double X;
+        double Y;
+        if(-Math.PI/2 <O || O<Math.PI/2){
+         X= a*b/Math.sqrt((b*b)+(a*a*Tan_O*Tan_O));
+         Y= a*b/Math.sqrt((a*a)+((b*b)/(Tan_O*Tan_O)));
+            }
+        else{
+         X= -a*b/Math.sqrt((b*b)+(a*a*Tan_O*Tan_O));
+         Y= -a*b/Math.sqrt((a*a)+((b*b)/(Tan_O*Tan_O)));
+            }
+
+        ci.setCenterX(X+centerX);
+        ci.setCenterY(Y+centerY);
+    }
 }

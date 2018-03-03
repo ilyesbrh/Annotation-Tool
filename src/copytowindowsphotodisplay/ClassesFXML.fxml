@@ -24,14 +24,14 @@
       </JFXButton>
       <Label alignment="CENTER" layoutX="374.0" layoutY="251.0" prefHeight="21.0" prefWidth="56.0" text="Images " />
       <Label alignment="CENTER" layoutX="511.0" layoutY="251.0" prefHeight="21.0" prefWidth="76.0" text="Labled" />
-      <Label fx:id="imageNumber" alignment="CENTER" contentDisplay="CENTER" layoutX="368.0" layoutY="169.0" prefHeight="71.0" prefWidth="68.0" text="0">
+      <Label fx:id="imageNumber" alignment="CENTER" contentDisplay="CENTER" layoutX="342.0" layoutY="169.0" prefHeight="71.0" prefWidth="118.0" text="0">
          <font>
-            <Font name="System Bold" size="49.0" />
+            <Font name="System Bold" size="40.0" />
          </font>
       </Label>
-      <Label fx:id="LabledNumber" alignment="CENTER" contentDisplay="CENTER" layoutX="508.0" layoutY="169.0" prefHeight="71.0" prefWidth="82.0" text="0">
+      <Label fx:id="LabledNumber" alignment="CENTER" contentDisplay="CENTER" layoutX="481.0" layoutY="169.0" prefHeight="71.0" prefWidth="136.0" text="0">
          <font>
-            <Font name="System Bold" size="49.0" />
+            <Font name="System Bold" size="40.0" />
          </font>
       </Label>
       <ProgressIndicator fx:id="Progress" layoutX="427.0" layoutY="343.0" prefHeight="106.0" prefWidth="92.0" progress="0.0" />

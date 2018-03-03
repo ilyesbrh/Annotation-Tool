@@ -19,11 +19,11 @@ public class Annotation {
 
     public final ArrayList<Shape> Shapes = new ArrayList<>();
 
-    private Class classe;
+    private CLASS classe;
     private Images image;
     private File AnnotationFile;
 
-    public Annotation(Class x, Images y) {
+    public Annotation(CLASS x, Images y) {
 
         this.classe = x;
         this.image = y;
@@ -59,11 +59,11 @@ public class Annotation {
         
     }
 
-    public Class getClasse() {
+    public CLASS getClasse() {
         return classe;
     }
 
-    public void setClasse(Class classe) {
+    public void setClasse(CLASS classe) {
         this.classe = classe;
     }
 
@@ -87,7 +87,7 @@ public class Annotation {
         
         return !Shapes.isEmpty();
     }
-    public static void LoadAnnotationFromClass(Class x, String name) {
+    public static void LoadAnnotationFromClass(CLASS x, String name) {
 
         Images targetImage = null;
         for (Images i : x.getProject().IMAGES) {
@@ -109,7 +109,7 @@ public class Annotation {
         annotation.Load();
 
     }
-    public static Annotation findAnnotation(Class x, Images y) {
+    public static Annotation findAnnotation(CLASS x, Images y) {
 
         
         for (Annotation i : x.ANNOTATIONS) {

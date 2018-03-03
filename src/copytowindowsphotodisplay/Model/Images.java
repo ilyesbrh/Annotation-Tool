@@ -88,7 +88,7 @@ public class Images {
         return false;
     }
 
-    public boolean isClassified(Class x) {
+    public boolean isClassified(CLASS x) {
 
         for (Annotation Y : ANNOTATIONS) {
             if (Y.getClasse().equals(x)) {

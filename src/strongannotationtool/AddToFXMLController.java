@@ -25,17 +25,20 @@ public class AddToFXMLController implements Initializable {
     @FXML
     private VBox vbox;
 
-    AnnotationPaneController annot;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        // TODO
+    }
 
+    public void setAnnotationControler(AnnotationPaneController annot) {
+        
         this.image = annot.image.get();
 
-        for (copytowindowsphotodisplay.Model.Class x : image.getProject().CLASSES) {
+        for (copytowindowsphotodisplay.Model.CLASS x : image.getProject().CLASSES) {
 
             JFXCheckBox box = new JFXCheckBox(x.getName());
             
@@ -59,12 +62,6 @@ public class AddToFXMLController implements Initializable {
                 
             });
         }
-
-        // TODO
-    }
-
-    public void setAnnotationControler(AnnotationPaneController aThis) {
-        annot=aThis;
     }
 
 }

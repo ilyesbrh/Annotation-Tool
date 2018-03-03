@@ -25,7 +25,7 @@ public class Project {
 
     public static final ObservableList<Project> LIST_OF_PROJECTS = FXCollections.observableArrayList();
 
-    public final ObservableList<Class> CLASSES = FXCollections.observableArrayList();
+    public final ObservableList<CLASS> CLASSES = FXCollections.observableArrayList();
 
     public final ObservableList<Images> IMAGES = FXCollections.observableArrayList();
 
@@ -106,7 +106,7 @@ public class Project {
 
         Project.SavingDir(Directory, "Classified");
 
-        for (Class x : CLASSES) {
+        for (CLASS x : CLASSES) {
 
             x.Save();
 
@@ -244,7 +244,7 @@ public class Project {
         //loading Classes
         for (File x : ClassifiedDir.listFiles()) {
 
-            Class.Load(x.getName(), this);
+            CLASS.Load(x.getName(), this);
 
         }
 

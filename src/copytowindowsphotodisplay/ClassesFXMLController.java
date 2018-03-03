@@ -9,7 +9,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
-import copytowindowsphotodisplay.Model.Class;
+import copytowindowsphotodisplay.Model.CLASS;
 import copytowindowsphotodisplay.Model.Project;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.io.File;
@@ -40,7 +40,7 @@ import javafx.scene.paint.Color;
 public class ClassesFXMLController implements Initializable {
 
     @FXML
-    private JFXListView<copytowindowsphotodisplay.Model.Class> ImagesListView;
+    private JFXListView<copytowindowsphotodisplay.Model.CLASS> ImagesListView;
     @FXML
     private Label imageNumber;
     @FXML
@@ -53,7 +53,7 @@ public class ClassesFXMLController implements Initializable {
     @FXML
     private FontAwesomeIconView Icon;
     
-    private Class selectedItem;
+    private CLASS selectedItem;
     private final StackPane notePane;
     
     /**
@@ -129,12 +129,12 @@ public class ClassesFXMLController implements Initializable {
         NewProject.show();
     }
 
-    public class Cell extends ListCell<Class>{
+    public class Cell extends ListCell<CLASS>{
 
         public Cell() {
         }
         @Override
-        protected void updateItem(Class item, boolean empty) {
+        protected void updateItem(CLASS item, boolean empty) {
             super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
             if(!empty) textProperty().bind(item.Name);
         }

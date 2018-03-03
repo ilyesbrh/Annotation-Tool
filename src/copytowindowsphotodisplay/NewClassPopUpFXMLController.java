@@ -47,7 +47,7 @@ public class NewClassPopUpFXMLController implements Initializable {
             
             boolean equals=false;
                      
-            for (copytowindowsphotodisplay.Model.Class C : project.CLASSES) {
+            for (copytowindowsphotodisplay.Model.CLASS C : project.CLASSES) {
                 
                 if(C.getName().equals(newValue))
                 equals = true;
@@ -71,7 +71,7 @@ public class NewClassPopUpFXMLController implements Initializable {
     @FXML
     private void addClass(ActionEvent event) {
         
-        new copytowindowsphotodisplay.Model.Class(ClassNameField.getText(), project);
+        new copytowindowsphotodisplay.Model.CLASS(ClassNameField.getText(), project);
         
     }
     
