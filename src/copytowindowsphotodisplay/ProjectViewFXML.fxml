@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="ProjectViewPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #0075FF;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="ProjectViewPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7289da;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fx:id="Imageview" fitHeight="145.0" fitWidth="153.0" layoutX="24.0" layoutY="7.0" pickOnBounds="true" />
       <Label fx:id="Name" alignment="CENTER" layoutX="-1.0" layoutY="159.0" prefHeight="32.0" prefWidth="200.0" text="Label" textFill="WHITE">

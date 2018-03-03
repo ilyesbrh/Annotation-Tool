@@ -41,11 +41,11 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
     //state
     private double X;
     private double Y;
-    private double layoutX;
-    private double layoutY;
     //UI
     public JFXPopup OptionPopup;
     public JFXPopup AddToPopup;
+    private double CenterX;
+    private double CenterY;
     
     public DrawRectangle(double x, double y, double i, double j,double xk,double yk,Images image) throws IOException {
 
@@ -100,8 +100,8 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
 
             X = event.getScreenX();
             Y = event.getScreenY();
-            layoutX = getLayoutX();
-            layoutY = getLayoutY();
+            CenterX = getLayoutX();
+            CenterY = getLayoutY();
         });
 
         setOnMouseDragged((event) -> {
@@ -109,7 +109,7 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
             double deltaX = X - event.getScreenX();
             double deltaY = Y - event.getScreenY();
 
-            MoveTo(layoutX - deltaX, layoutY - deltaY);
+            MoveTo(CenterX - deltaX, CenterY - deltaY);
 
         });
         setOnMouseReleased((event) -> {
@@ -135,14 +135,7 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         });
         ci.setOnMouseReleased((event) -> {
 
-            if (event.getX() + ci.getLayoutX() < 0 || event.getX() > Parent.getWidth()) {
-                return;
-            }
-            if (event.getY() + ci.getLayoutY() < 0 || event.getY() > Parent.getHeight()) {
-                return;
-            }
-
-            ci.setRadius(10);
+            ci.setRadius(6);
             ci.setLayoutX(this.getLayoutX() + this.getWidth());
             ci.setLayoutY(this.getLayoutY() + this.getHeight());
 
@@ -188,14 +181,14 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
             X=0;
         }
         if (X + getWidth() > Parent.getWidth()) {
-            X =Parent.getWidth() -getWidth();
+            X= Parent.getWidth() - getWidth();
         }
 
         if (Y < 0) {
             Y=0;
         }
         if (Y + getHeight() > Parent.getHeight()) {
-            Y =Parent.getHeight()-getHeight();
+            Y=Parent.getHeight() - getHeight();
         }
 
         this.setLayoutX(X);
@@ -208,7 +201,8 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
 
     @Override
     public void ScaleTo(double xK, double yK) {
-    /* Old_K * ow = W
+    
+    /*  Old_K * ow = W
         new_K * nw = W
         new_K * nw = Old_K * ow
 

@@ -118,9 +118,7 @@ public class AnnotationPaneController implements Initializable {
      */
     //.......... events
     EventHandler<MouseEvent> MouseEvents = (MouseEvent event) -> {
-        if (!isEventIn(event)) {
-            //return;
-        }
+        
         if (GridOn) {
             GridOn(event);
         }
@@ -128,16 +126,6 @@ public class AnnotationPaneController implements Initializable {
             GridOff(event);
         }
     };
-
-    private boolean isEventIn(MouseEvent event) {
-        if (event.getX() < 0 || event.getX() > imgParent.getWidth()) {
-            return false;
-        }
-        if (event.getY() < 0 || event.getY() > imgParent.getHeight()) {
-            return false;
-        }
-        return true;
-    }
 
     private void GridOn(MouseEvent event) {
         if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
@@ -301,7 +289,7 @@ public class AnnotationPaneController implements Initializable {
             
             onCreate = new DrawCircle(event.getX(), event.getY(), event.getX() + 1, event.getY() + 1,xk,yk,this.image.getValue());
             onCreate.AddTo(imgParent);
-        } catch (IOException iOException) {
+        } catch (IOException exception) {
         }
     }
 

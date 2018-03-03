@@ -60,8 +60,6 @@ public class DrawCircle extends Ellipse implements DrawableShape{
         setFill(Color.web("blue", 0.4));
         
         SetPoints(x, y, rx, ry);
-        
-
         RefreshCircle();
 
         //Rectangle Actions
@@ -103,8 +101,7 @@ public class DrawCircle extends Ellipse implements DrawableShape{
                 Y = event.getScreenY();
                 centerX = getCenterX();
                 centerY = getCenterY();
-                System.out.println("center X :"+centerX);
-                System.out.println("center Y :"+centerY);
+                
             }
             
         });
@@ -128,45 +125,92 @@ public class DrawCircle extends Ellipse implements DrawableShape{
         ci.setOnMousePressed((event) -> {
 
             ci.setRadius(3);
+            X = event.getScreenX();
+            Y = event.getScreenY();
+            centerX = ci.getCenterX();
+            centerY = ci.getCenterY();
 
         });
         ci.setOnMouseDragged((event) -> {
+            
+            double deltaX = X - event.getScreenX();
+            double deltaY = Y - event.getScreenY();
 
-            double Rx = event.getX() + ci.getCenterX();
-            double Ry = event.getY() + ci.getCenterY();
+            ci.setCenterX(centerX - deltaX);
+            ci.setCenterY(centerY - deltaY);
 
-            ci.setCenterX(Rx);
-            ci.setCenterY(Ry);
-
-            SetPoints(this.getCenterX(), this.getCenterY(), ci.getCenterX(), ci.getCenterY());
+            SetPoints( getCenterX(), getCenterY(), ci.getCenterX(), ci.getCenterY());
 
         });
         ci.setOnMouseReleased((event) -> {
 
-            if (event.getX() + ci.getLayoutX() < 0 || event.getX() > Parent.getWidth()) {
-                return;
-            }
-            if (event.getY() + ci.getLayoutY() < 0 || event.getY() > Parent.getHeight()) {
-                return;
-            }
-
             ci.setRadius(6);
             
-            SetPoints(this.getCenterX(), this.getCenterY(), ci.getCenterX(), ci.getCenterY());
-
             RefreshCircle();
         });
     }
 
     public void SetPoints(double x, double y, double i, double j) {
 
-        this.setCenterX(x);
-        this.setCenterY(y);
-        this.setRadiusX(Math.abs(x - i));
-        this.setRadiusY(Math.abs(j - y));
+        MoveTo(x, y);
+        ResizeTo(Math.abs(x - i),Math.abs(j - y));
 
     }
 
+    private void ResizeTo(double w, double h) {
+        
+        try {
+            if (getRadiusX() + w > Parent.getWidth()) {
+                w = Parent.getWidth() - getRadiusX();
+                System.out.println("a");
+            }
+            if (getRadiusY() + w > Parent.getHeight()) {
+                h = Parent.getHeight() - getRadiusY();
+                System.out.println("b");
+            }
+            if (getCenterX() - w < 0) {
+            w = getRadiusX();
+            }
+            if (getCenterY() - h < 0) {
+            h = getRadiusY();
+            }
+            
+        } catch (Exception e) {
+        }
+            this.setRadiusX(w);
+            this.setRadiusY(h);
+    }
+
+
+    @Override
+    public void MoveTo(double X, double Y) {
+
+        try {
+            if (X < 0) {
+                X = getRadiusX();
+            }
+            if (X + getRadiusX() > Parent.getWidth()) {
+                X = Parent.getWidth() - getRadiusX();
+            }
+            
+            if (Y < 0) {
+                Y = getRadiusY();
+            }
+            if (Y + getRadiusY() > Parent.getHeight()) {
+                Y = Parent.getHeight() - getRadiusY();
+            }
+            
+            setCenterX(X);
+            setCenterY(Y);
+        } catch (Exception e) {
+            
+            setCenterX(X);
+            setCenterY(Y);
+        }
+        
+        RefreshCircle();
+
+    }
     @Override
     public void AddTo(AnchorPane p) {
         
@@ -174,29 +218,16 @@ public class DrawCircle extends Ellipse implements DrawableShape{
         p.getChildren().add(ci);
         this.Parent = p;
     }
-
     @Override
-    public void MoveTo(double X, double Y) {
+    public void remove(AnchorPane p) {
+        p.getChildren().remove(this);
+        p.getChildren().remove(ci);
 
-        /*if (X < 0) {
-        return;
+        for (Annotation annotation : image.ANNOTATIONS) {
+            
+            annotation.Shapes.remove(this);
+            
         }
-        if (X + getRadiusX()> Parent.getWidth()) {
-        return;
-        }
-        
-        if (Y < 0) {
-        return;
-        }
-        if (Y + getRadiusY() > Parent.getHeight()) {
-        return;
-        }*/
-        
-        setCenterX(X);
-        setCenterY(Y);
-        
-        RefreshCircle();
-
     }
 
     @Override
@@ -222,18 +253,6 @@ public class DrawCircle extends Ellipse implements DrawableShape{
         
         RefreshCircle();
 
-    }
-
-    @Override
-    public void remove(AnchorPane p) {
-        p.getChildren().remove(this);
-        p.getChildren().remove(ci);
-
-        for (Annotation annotation : image.ANNOTATIONS) {
-            
-            annotation.Shapes.remove(this);
-            
-        }
     }
 
     public void RefreshCircle() {

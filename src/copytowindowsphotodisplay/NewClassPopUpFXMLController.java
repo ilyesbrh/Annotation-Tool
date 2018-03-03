@@ -7,6 +7,7 @@ package copytowindowsphotodisplay;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import copytowindowsphotodisplay.Model.CLASS;
 import copytowindowsphotodisplay.Model.Project;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
@@ -14,6 +15,8 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import strongannotationtool.AddToFXMLController;
+import strongannotationtool.Shapes.VisualShapes.AddShapeToController;
 
 /**
  * FXML Controller class
@@ -30,6 +33,7 @@ public class NewClassPopUpFXMLController implements Initializable {
     private FontAwesomeIconView glyp;
 
     private final Project project;
+    private Object ctr;
     
     /**
      * Initializes the controller class.
@@ -67,12 +71,26 @@ public class NewClassPopUpFXMLController implements Initializable {
             
         });
     }    
+    public void setController(AddShapeToController ctr){
+        
+        this.ctr=ctr;
+    }
+    public void setController(AddToFXMLController ctr){
+        
+        this.ctr=ctr;
+    }
 
     @FXML
     private void addClass(ActionEvent event) {
         
-        new copytowindowsphotodisplay.Model.CLASS(ClassNameField.getText(), project);
+        CLASS aCLASS = new copytowindowsphotodisplay.Model.CLASS(ClassNameField.getText(), project);
         
+        if(ctr == null) return;
+        
+        if(ctr instanceof AddShapeToController)
+            ((AddShapeToController)ctr).AddClass(aCLASS);
+        if(ctr instanceof AddToFXMLController)
+            ((AddToFXMLController)ctr).AddClass(aCLASS);
     }
     
 }
