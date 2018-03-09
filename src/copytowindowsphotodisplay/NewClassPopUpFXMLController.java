@@ -8,6 +8,7 @@ package copytowindowsphotodisplay;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import copytowindowsphotodisplay.Model.CLASS;
+import copytowindowsphotodisplay.Model.Images;
 import copytowindowsphotodisplay.Model.Project;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
@@ -32,15 +33,15 @@ public class NewClassPopUpFXMLController implements Initializable {
     @FXML
     private FontAwesomeIconView glyp;
 
-    private final Project project;
+    private final Images image;
     private Object ctr;
     
     /**
      * Initializes the controller class.
      */
     
-    public NewClassPopUpFXMLController(Project project) {
-        this.project=project;
+    public NewClassPopUpFXMLController(Images I) {
+        this.image=I;
     }    
 
     @Override
@@ -51,7 +52,7 @@ public class NewClassPopUpFXMLController implements Initializable {
             
             boolean equals=false;
                      
-            for (copytowindowsphotodisplay.Model.CLASS C : project.CLASSES) {
+            for (copytowindowsphotodisplay.Model.CLASS C : image.CLASSES) {
                 
                 if(C.getName().equals(newValue))
                 equals = true;
@@ -83,7 +84,7 @@ public class NewClassPopUpFXMLController implements Initializable {
     @FXML
     private void addClass(ActionEvent event) {
         
-        CLASS aCLASS = new copytowindowsphotodisplay.Model.CLASS(ClassNameField.getText(), project);
+        CLASS aCLASS = new copytowindowsphotodisplay.Model.CLASS(ClassNameField.getText(), image);
         
         if(ctr == null) return;
         

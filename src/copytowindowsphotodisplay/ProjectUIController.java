@@ -9,6 +9,7 @@ import com.jfoenix.controls.JFXDialog;
 import copytowindowsphotodisplay.Model.Project;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -24,6 +25,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
+import org.dom4j.DocumentException;
 
 /**
  *
@@ -49,18 +51,15 @@ public class ProjectUIController implements Initializable {
             GridViewINI(Gridview);
             
     }    
-
+    
     @FXML
     private void NewProject(ActionEvent event) {
         
         try {
             // New Project PopUp INI
-            NewFXMLController newController=new NewFXMLController();
             
-            FXMLLoader Newload=new FXMLLoader(getClass().getResource("NewFXML.fxml"));
-            Newload.setController(newController);
+            AnchorPane load = FXMLLoader.load(getClass().getResource("NewFXML.fxml"));
             
-            AnchorPane load = Newload.load();
             JFXDialog  NewProject = new JFXDialog(NoteStackPane, load, JFXDialog.DialogTransition.CENTER);    
             
             NewProject.show();
@@ -72,13 +71,15 @@ public class ProjectUIController implements Initializable {
     }
 
     @FXML
-    private void Open(ActionEvent event) throws IOException {
+    private void Open(ActionEvent event) throws IOException, DocumentException {
         
         DirectoryChooser choser=new DirectoryChooser();
         
         File URL = choser.showDialog(new Stage());
         
-        Project.LoadProject(URL);
+        File xml=new File(URL, URL.getName()+".xml");
+        
+        new Project(URL);
         
         
     }
@@ -123,7 +124,7 @@ public class ProjectUIController implements Initializable {
         }
 
         @Override
-        protected void updateItem(Project item, boolean empty) {
+        protected void updateItem(Project item, boolean empty) { 
             
             try {
                 
@@ -131,21 +132,24 @@ public class ProjectUIController implements Initializable {
                 
                 super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
                 
+                ProjectViewFXMLController controller;
+                try {
+                    FXMLLoader loader=new FXMLLoader(getClass().getResource("ProjectViewFXML.fxml"));
+                    controller = new  ProjectViewFXMLController( item, NoteStack);
+                    loader.setController(controller);
+
+                    AnchorPane root = loader.load();
+
+                    /*
+                    root.setPrefHeight(Grid.getCellHeight());
+                    root.setPrefWidth(Grid.getCellWidth());
+                    */
+
+                    setGraphic(root);
+                } catch (URISyntaxException ex) {
+                    Logger.getLogger(ProjectUIController.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
-                FXMLLoader loader=new FXMLLoader(getClass().getResource("ProjectViewFXML.fxml"));
-                
-                ProjectViewFXMLController controller =new  ProjectViewFXMLController( item, NoteStack);
-                
-                loader.setController(controller);
-                
-                AnchorPane root = loader.load();
-                
-                /*
-                root.setPrefHeight(Grid.getCellHeight());
-                root.setPrefWidth(Grid.getCellWidth());
-                */
-                
-                setGraphic(root);
                 
             } catch (IOException ex) {
             }

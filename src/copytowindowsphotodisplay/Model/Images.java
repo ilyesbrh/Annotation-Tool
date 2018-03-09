@@ -7,8 +7,12 @@
 package copytowindowsphotodisplay.Model;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
+import javafx.beans.property.BooleanProperty;
 import javafx.scene.image.Image;
+import org.dom4j.Attribute;
+import org.dom4j.Element;
+import org.dom4j.Node;
 
 /**
  *
@@ -16,122 +20,72 @@ import javafx.scene.image.Image;
  */
 public class Images {
 
+    public Element imageElement;
 
-    public final ArrayList<Annotation> ANNOTATIONS = new ArrayList<>();
+    public Attribute Name;
 
-    private String Name;
+    public Attribute Path;
 
-    private File Dir;
+    private Attribute Type;
 
-    private Project project;
+    private Attribute Width;
+    
+    private Attribute Height;
+    
+    public BooleanProperty Labled;
 
-    public Images(File Dir, Project project) {
-        System.out.println(Dir.toURI().toString());
-        int pos = Dir.getName().lastIndexOf(".");
-        System.out.println(pos);
-        if (pos == -1) {
-            return;
-        }
-        String name = Dir.getName().substring(0, pos);
-        System.out.println(name);    
-        for (Images i : project.IMAGES) {
-
-            if (i.Name.equals(name)) {
-                return;
-            }
-
-        }
-
-        this.Name = name;
-        this.Dir = Dir;
-        this.project = project;
-
-        project.IMAGES.add(this);
+    public Images(Element item) {
+        
+        imageElement = item;
+        
+        Name = item.attribute(0);
+        Path = item.attribute(1);
+        Type = item.attribute(2);
+        Width = item.attribute(3);
+        Height = item.attribute(4);
+        
     }
-
-    public Images(Project project, String name) {
-
-        for (Images i : project.IMAGES) {
-
-            if (i.Name.equals(name)) {
-                return;
-            }
-
-        }
-
-        this.Name = name;
-        this.project = project;
-        this.Dir = new File(project.getImagesDir(), name+".jpg");
-
-        project.IMAGES.add(this);
-    }
-
+   
     public void Save() {
 
-        Project.saveImageToFile(new Image(Dir.toURI().toString()), project.getImagesDir(), Name);
-    }
-    static void Load(Project aThis, File imgFile) {
         
-        int pos = imgFile.getName().lastIndexOf(".");
-            if (pos == -1) {
-                return;
-            }
-        new Images(aThis, imgFile.getName().substring(0 , pos ));
+        Element rootElement = imageElement.getDocument().getRootElement();
+        
+        if(Boolean.valueOf(rootElement.attributeValue("SaveImages"))){
+            
+            String dir = rootElement.attributeValue("ImagesDir");
+            
+            File Dir=new File(dir);
+            if(!Dir.exists())
+                Dir.mkdir();
+            
+        Project.saveImageToFile(new Image(Path.getValue()),Dir, Name.getValue());
+        }
+        
     }
-    public boolean isLabled() {
-
-        for (Annotation x : ANNOTATIONS) {
-            if (x.isLabled()) {
-                return true;
+    public boolean isClassified(String Class) {
+        
+        List<Node> content = imageElement.content();
+        
+        if(content.isEmpty()) 
+            return false ;
+        
+        for (Node node : content) {
+            
+            Element DrawShape = (Element)node;
+            
+            for (Node C : DrawShape.content()) {
+                
+                if(((Element)C).attributeValue("Name").equals(Class)) 
+                    return true;
             }
         }
-        return false;
-    }
-
-    public boolean isClassified(CLASS x) {
-
-        for (Annotation Y : ANNOTATIONS) {
-            if (Y.getClasse().equals(x)) {
-                return true;
-            }
-        }
-
-        return false;
+        return false ;
     }
 
     public boolean isClassified() {
 
-        return !ANNOTATIONS.isEmpty();
+        return ! imageElement.content().isEmpty();
     }
 
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String Name) {
-        this.Name = Name;
-    }
-
-    public File getDir() {
-        return Dir;
-    }
-
-    public void setDir(File Dir) {
-        this.Dir = Dir;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    @Override
-    public String toString() {
-        return this.Name; //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
 }

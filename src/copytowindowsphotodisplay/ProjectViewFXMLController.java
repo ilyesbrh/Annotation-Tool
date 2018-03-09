@@ -9,6 +9,7 @@ import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXRippler;
 import copytowindowsphotodisplay.Model.Project;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -22,6 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
+import javax.imageio.IIOImage;
 
 /**
  * FXML Controller class
@@ -47,14 +49,18 @@ public class ProjectViewFXMLController implements Initializable {
     
     StackPane NoteStack;
     
-    public ProjectViewFXMLController(Project project , StackPane NoteStack) {
+    public ProjectViewFXMLController(Project project , StackPane NoteStack) throws URISyntaxException {
         
         this.project=project;
         
-        this.name=project.getName();
+        this.name=project.Name.getValue();
         
-        this.image=project.getImage();
-        
+        try {
+            this.image = new Image(project.ImagePath.getValue());
+            
+        } catch (Exception e) {
+            this.image = new Image(getClass().getResource("img.JPG").toURI().toString(),true);
+        }
         this.NoteStack= NoteStack;
     }
 

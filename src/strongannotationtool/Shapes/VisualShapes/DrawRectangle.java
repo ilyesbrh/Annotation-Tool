@@ -5,17 +5,19 @@
  */
 package strongannotationtool.Shapes.VisualShapes;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPopup;
 import copytowindowsphotodisplay.Model.Annotation;
 import copytowindowsphotodisplay.Model.Images;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.dom4j.Element;
 import strongannotationtool.Shapes.CustomRectangle;
 
 /**
@@ -46,6 +48,7 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
     public JFXPopup AddToPopup;
     private double CenterX;
     private double CenterY;
+
     
     public DrawRectangle(double x, double y, double i, double j,double xk,double yk,Images image) throws IOException {
 
@@ -53,8 +56,7 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         xK=xk;
         yK=yk;
         
-        ci = new Circle(10, Color.rgb(114, 137, 218, 0.6));
-        JFXButton btn = new JFXButton("", this);
+        ci = new Circle(6, Color.rgb(114, 137, 218, 0.6));
         ci.setEffect(new DropShadow());
 
         setFill(Color.web("blue", 0.4));
@@ -66,31 +68,25 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
 
         //Rectangle Actions
         
-        try {
-            FXMLLoader loaderOption = new FXMLLoader(getClass().getResource("RectOption.fxml"));
-            this.OptionPopup = new JFXPopup(loaderOption.load());
-            RectOptionCTR controller = loaderOption.getController();
-            controller.setShape(image.getProject().CLASSES,this);
-            
-            FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"));
-            this.AddToPopup = new JFXPopup(loaderAddTo.load());
-            AddShapeToController controller2 = loaderAddTo.getController();
-            controller2.setImage(image,this);
-            
-        } catch (Exception e) {
-        }
-        
         setOnMouseClicked((event) -> {
 
             if (event.getButton() == MouseButton.SECONDARY) {
+                if(OptionPopup == null)
+                try {
+                    FXMLLoader loaderOption = new FXMLLoader(getClass().getResource("RectOption.fxml"));
+                    this.OptionPopup = new JFXPopup(loaderOption.load());
+                    RectOptionCTR controller = loaderOption.getController();
+                    controller.setShape(image.getProject().CLASSES,this);
 
-                
+                } catch (Exception e) {
+                }
+
                 OptionPopup.show(this);
-
             }
             if(event.getClickCount()==2){
                 
-                AddToPopup.show(this);
+                AddToPopup();
+                    AddToPopup.show(this);
                 
             }
 
@@ -141,6 +137,20 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
 
             SetPoints(this.getLayoutX(), this.getLayoutY(), ci.getLayoutX(), ci.getLayoutY());
         });
+    }
+
+    public void AddToPopup() {
+        if(AddToPopup == null)
+            try {
+                System.out.println("AddShapeTo");
+                FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"));
+                this.AddToPopup = new JFXPopup(loaderAddTo.load());
+                AddShapeToController controller2 = loaderAddTo.getController();
+                controller2.setImage(image,this);
+                
+            } catch (IOException ex) {
+                Logger.getLogger(DrawRectangle.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
 
     public void SetPoints(double x, double y, double i, double j) {
@@ -232,8 +242,22 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         for (Annotation annotation : image.ANNOTATIONS) {
             
             annotation.Shapes.remove(this);
-            
         }
     }
 
+    @Override
+    public String toString() {
+        return "Rectangle,"+getLayoutX()+","+getLayoutY()+","+getWidth()+","+getHeight()+","+xK+","+yK+"\r\n"; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void addElement(Element addAttribute , Annotation note) {
+        
+        addAttribute.addElement("Rectangle")
+                .addAttribute("Class", note.getClasse().getName())
+                .addAttribute("LayoutX", String.valueOf(getLayoutX()*xK))
+                .addAttribute("LayoutY", String.valueOf(getLayoutY()*yK))
+                .addAttribute("Width", String.valueOf(getWidth()*xK))
+                .addAttribute("Height", String.valueOf(getHeight()*yK));
+    }
 }

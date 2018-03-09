@@ -7,7 +7,6 @@ package strongannotationtool.Shapes.VisualShapes;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXColorPicker;
-import copytowindowsphotodisplay.Model.CLASS;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;

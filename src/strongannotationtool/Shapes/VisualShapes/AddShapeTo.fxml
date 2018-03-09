@@ -19,9 +19,9 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Separator layoutX="11.0" layoutY="63.0" prefHeight="3.0" prefWidth="240.0" />
-            <Separator layoutX="21.0" layoutY="307.0" prefHeight="3.0" prefWidth="228.0" />
-            <JFXButton focusTraversable="false" layoutX="30.0" layoutY="323.0" onAction="#AddTo" prefHeight="37.0" prefWidth="203.0" text="Create a new playlist" textOverrun="CENTER_ELLIPSIS" underline="true" wrapText="true">
+            <Separator layoutX="11.0" layoutY="63.0" prefHeight="3.0" prefWidth="266.0" />
+            <Separator layoutX="10.0" layoutY="322.0" prefHeight="3.0" prefWidth="266.0" />
+            <JFXButton layoutX="30.0" layoutY="323.0" onAction="#AddTo" prefHeight="37.0" prefWidth="203.0" text="Create a new playlist" textOverrun="CENTER_ELLIPSIS" underline="true" wrapText="true">
                <font>
                   <Font size="16.0" />
                </font>
@@ -29,9 +29,9 @@
                   <MaterialDesignIconView glyphName="PLUS" size="30" wrappingWidth="27.0" />
                </graphic>
             </JFXButton>
-            <ScrollPane hbarPolicy="NEVER" layoutX="36.0" layoutY="78.0" pannable="true" prefHeight="224.0" prefWidth="228.0" style="-fx-background-color: white;" vbarPolicy="NEVER">
+            <ScrollPane hbarPolicy="NEVER" layoutX="18.0" layoutY="75.0" prefHeight="230.0" prefWidth="252.0" style="-fx-background-color: white;" vbarPolicy="NEVER">
                <content>
-                  <VBox fx:id="vbox" maxWidth="-Infinity" prefHeight="223.0" prefWidth="228.0" style="-fx-background-color: white;" />
+                  <VBox fx:id="vbox"  maxWidth="-Infinity" prefHeight="243.0" prefWidth="253.0" style="-fx-background-color: white;" />
                </content>
             </ScrollPane>
          </children>

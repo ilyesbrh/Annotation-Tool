@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -7,8 +7,6 @@ package strongannotationtool.Shapes.VisualShapes;
 
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXDialog;
-import copytowindowsphotodisplay.Model.Annotation;
-import copytowindowsphotodisplay.Model.CLASS;
 import copytowindowsphotodisplay.Model.Images;
 import copytowindowsphotodisplay.NewClassPopUpFXMLController;
 import java.io.IOException;
@@ -21,7 +19,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Shape;
 
 /**
  * FXML Controller class
@@ -31,7 +28,7 @@ import javafx.scene.shape.Shape;
 public class AddShapeToController implements Initializable {
 
     private Images image;
-    private Shape shape;
+    private DrawableShape shape;
     @FXML
     private VBox vbox;
     @FXML
@@ -48,7 +45,7 @@ public class AddShapeToController implements Initializable {
         
     }   
       
-     public void setImage(Images image ,Shape Athis ) {
+     public void setImage(Images image ,DrawableShape Athis ) {
          
         this.image=image;
         this.shape=Athis;
@@ -59,7 +56,7 @@ public class AddShapeToController implements Initializable {
             box.setMinHeight(50);
             box.setPrefHeight(60);
             vbox.getChildren().add(box);
-            
+            CheckIt(x,Athis);
             box.setOnAction((event) -> {
                 
                 if(box.isSelected())
@@ -70,7 +67,7 @@ public class AddShapeToController implements Initializable {
         }
     }
 
-    private void CheckIt(CLASS x, Shape Athis) {
+    private void CheckIt(CLASS x, DrawableShape Athis) {
         for (Annotation N : x.ANNOTATIONS) {
             
             if(N.getImage().getName().equals(image.getName())){
@@ -83,7 +80,7 @@ public class AddShapeToController implements Initializable {
         (new Annotation(x, image)).Shapes.add(Athis);
     }
 
-    private void UnCheckIt(CLASS x, Shape Athis) {
+    private void UnCheckIt(CLASS x, DrawableShape Athis) {
         
         for (Annotation N : x.ANNOTATIONS) {
             
@@ -102,7 +99,7 @@ public class AddShapeToController implements Initializable {
     @FXML
     private void AddTo(ActionEvent event) throws IOException {
         
-        NewClassPopUpFXMLController newController=new NewClassPopUpFXMLController(image.getProject());
+        NewClassPopUpFXMLController newController=new NewClassPopUpFXMLController(image);
             
         FXMLLoader Newload=new FXMLLoader(getClass().getResource("/copytowindowsphotodisplay/NewClassPopUpFXML.fxml"));
         Newload.setController(newController);

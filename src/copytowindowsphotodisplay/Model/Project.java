@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -7,8 +7,11 @@ package copytowindowsphotodisplay.Model;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -16,6 +19,13 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
+import org.dom4j.Attribute;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.io.SAXReader;
 
 /**
  *
@@ -24,107 +34,135 @@ import javax.imageio.ImageIO;
 public class Project {
 
     public static final ObservableList<Project> LIST_OF_PROJECTS = FXCollections.observableArrayList();
+    
+    private Element Root;
 
-    public final ObservableList<CLASS> CLASSES = FXCollections.observableArrayList();
+    public Attribute Name;
 
-    public final ObservableList<Images> IMAGES = FXCollections.observableArrayList();
+    private Attribute Path;
+    
+    public Attribute ImagePath;
+    
+    private Attribute ImagesDir;
+    
+    private Attribute AutoSave;
+    
+    private Attribute SaveImages;
 
-    private Image image;
-
-    private String Name;
-
-    private File Directory;
-    private File ClassifiedDir;
-    private File ImagesDir;
-
-    //next version nchlh
-    private Boolean AutoSave;
-    private Boolean SaveImages;
-
-    public Project(String Name, Image image, File directory, Boolean AutoSave, Boolean SaveImages) throws IOException {
+    public Project(File inputFile) throws DocumentException {
+        
+        try {
+            SAXReader sa = new SAXReader();
+            Document document = sa.read(inputFile);
+            
+            System.out.println("Root element :" + document.getRootElement().getName());
+            
+            Root = document.getRootElement();
+            
+            List<Attribute> attributes = Root.attributes();
+            
+            Name = attributes.get(0);
+            Path = attributes.get(1);
+            ImagePath = attributes.get(2);
+            ImagesDir = attributes.get(3);
+            AutoSave = attributes.get(4);
+            SaveImages = attributes.get(5);
+            
+            LIST_OF_PROJECTS.add(this);
+        } catch (DocumentException documentException) {
+            System.err.println("Error :') ");
+        }
         
         
-        Directory = new File(directory, Name);
+    }
 
-        ImagesDir = new File(directory, "Images");
+    public Project(String name , File path , File imagePath , Boolean autoSave , Boolean saveImages , File imagesDir ) throws Exception {
+        
+         for (Project p : LIST_OF_PROJECTS) {
 
-        ClassifiedDir = new File(directory, "Classified");
-
-        this.Name = Name;
-
-        this.image = image;
-
-        for (Project p : LIST_OF_PROJECTS) {
-
-            if (this.Name.equals(p.Name)) {
-                return;
+            if (name.equals(p.Name.getValue())) {
+                throw new Exception("exist");
             }
         }
-
-        LIST_OF_PROJECTS.add(this);
-
-        /*this.AutoSave = AutoSave;
-        this.SaveImages = SaveImages;*/
-    }
-    public Project(Image image, File directory, Boolean AutoSave, Boolean SaveImages) throws IOException {
+        Document document = DocumentHelper.createDocument();
         
-        Directory = directory;
+        Root = document.addElement("Project")
+                .addAttribute("Name", name)
+                .addAttribute("Path", path.toURI().toString())
+                .addAttribute("ImagePath", imagePath.toURI().toString())
+                .addAttribute("ImagesDir", imagesDir.toURI().toString())
+                .addAttribute("AutoSave", String.valueOf(autoSave))
+                .addAttribute("SaveImages", String.valueOf(saveImages))
+                ;
 
-        ImagesDir = new File(directory, "Images");
+        List<Attribute> attributes = Root.attributes();
+        
+        Name = attributes.get(0);
+        Path = attributes.get(1);
+        ImagePath = attributes.get(2);
+        ImagesDir = attributes.get(3);
+        AutoSave = attributes.get(4);
+        SaveImages = attributes.get(5);
+        
+        for (Node node : Root.content()) {
+            
+        }
+        
+        LIST_OF_PROJECTS.add(this);
+        
+    }
+   
+    public void AddImage(File url) throws IOException{
+        
+        SimpleImageInfo simpleImageInfo = new SimpleImageInfo(url);
+        
+        Element addElement = Root.addElement("Image")
+                
+                .addAttribute("Name", url.getName().split(".")[0])
+                .addAttribute("Path", url.toURI().toString())
+                .addAttribute("Type", simpleImageInfo.getMimeType())
+                .addAttribute("Width", String.valueOf(simpleImageInfo.getWidth()))
+                .addAttribute("Height", String.valueOf(simpleImageInfo.getHeight()))
+                ;
+        
+    }
+    
+    public Integer getClassNumber() {
 
-        ClassifiedDir = new File(directory, "Classified");
-
-        this.Name = directory.getName();
-
-        this.image = image;
-
-        for (Project p : LIST_OF_PROJECTS) {
-
-            if (this.Name.equals(p.Name)) {
-                return;
+        Set<String> ret = new HashSet<>();
+        
+        for (Node I : Root.content()) {
+            
+            for (Node S : ((Element)I).content()) {
+                
+                for (Node C : ((Element)S).content()) {
+                    
+                    ret.add(((Element) C).attributeValue("Name"));
+                }
             }
         }
+        return ret.size();
+    }
+    public Integer getImagesNumber() {
 
-        LIST_OF_PROJECTS.add(this);
+        return Root.nodeCount();
+    }
+    public Integer getLabledNumber() {
 
-        /*this.AutoSave = AutoSave;
-        this.SaveImages = SaveImages;*/
+        int cpt = 0;
+
+        return cpt;
+    }
+    public Integer getClassifiedNumber() {
+
+        int cpt = 0;
+
         
+        return cpt;
     }
-
-    public void Save() throws IOException {
-
-        if (!Directory.exists()) {
-            Directory.mkdir();
-        }
-        // saving Image of project
-        saveImageToFile(image, Directory, "Image");
-
-        Project.SavingFile(Directory, "config.xml");
-
-        Project.SavingDir(Directory, "Images");
-
-        Project.SavingDir(Directory, "Classified");
-
-        for (CLASS x : CLASSES) {
-
-            x.Save();
-
-        }
-        for (Images y : IMAGES) {
-
-            y.Save();
-        }
-
-        // next version
-        /*
-        FileWriter fw = new FileWriter(configFile, false);
-        fw.write(this.AutoSave.toString() + '\n');
-        fw.write(this.SaveImages.toString() + '\n');
-        fw.close();
-         */
+    
+    public void Save() throws IOException {   
     }
-
     /**
      *
      * @param image
@@ -145,204 +183,6 @@ public class Project {
         }
         return outputFile;
     }
-
-    public static void LoadProject(File ProjectDir) throws FileNotFoundException, IOException {
-
-        if (!isProject(ProjectDir)) {
-            return;
-        }
-        String Name = ProjectDir.getName();
-        for (Project project : LIST_OF_PROJECTS) {
-
-            if (project.Name.equals(Name)) {
-                return;
-            }
-        }
-        // Loading Image
-        Image image = LoadProjectImage(ProjectDir);
-
-        //Creating Project
-        Project project = new Project( image, ProjectDir, false, false);
-        project.LoadProjectImages();
-        project.LoadClasses();
-        /*
-        //finding config file
-        File configFile = new File(ProjectDir, "config.txt");
-        
-        // 1 -> AUTO SAVE Next version
-        
-        //extract Project config
-        Scanner sc = new Scanner(configFile);
-        Boolean autoSave = true;
-        Boolean saveImages = true;
-        try {
-        if (sc.hasNextLine()) {
-        
-        final String nextLine = sc.nextLine();
-        autoSave = Boolean.getBoolean(nextLine);
-        }
-        
-        // 2 -> SAVE IMAGES
-        if (sc.hasNextLine()) {
-        
-        final String nextLine = sc.nextLine();
-        saveImages = Boolean.getBoolean(nextLine);
-        }
-        } catch (Exception e) {
-        }
-        */
-    }
-
-    public static boolean isProject(File project) {
-
-        File ImagesFile = new File(project, "Images");
-        File ClassFile = new File(project, "Classified");
-        File Image = new File(project, "Image.jpg");
-        File Config = new File(project, "config.xml");
-        
-        if (!ImagesFile.exists()) {
-            return false;
-        }
-        
-        if (!ClassFile.exists()) {
-            return false;
-        }
-
-        if (!Image.exists()) {
-            return false;
-        }
-
-        if (!Config.exists()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private static Image LoadProjectImage(File ProjectDir) {
-
-        //finding Image and config file
-        File imageFile = new File(ProjectDir, "Image.jpg");
-
-        // extract Project Image
-        return new Image(imageFile.toURI().toString());
-
-    }
-
-    private void LoadProjectImages() {
-        
-        for (File imgFile : ImagesDir.listFiles()) {
-
-            Images.Load(this, imgFile);
-
-        }
-
-    }
-
-    private void LoadClasses() {
-
-        //loading Classes
-        for (File x : ClassifiedDir.listFiles()) {
-
-            CLASS.Load(x.getName(), this);
-
-        }
-
-    }
-    
-    public File getClassifiedDir() {
-        return ClassifiedDir;
-    }
-
-    public void setClassifiedDir(File ClassifiedDir) {
-        this.ClassifiedDir = ClassifiedDir;
-    }
-
-    public File getImagesDir() {
-        return ImagesDir;
-    }
-
-    public void setImagesDir(File ImagesDir) {
-        this.ImagesDir = ImagesDir;
-    }
-
-    public Integer getClassNumber() {
-
-        return CLASSES.size();
-    }
-
-    public Integer getImagesNumber() {
-
-        return IMAGES.size();
-    }
-
-    public Integer getLabledNumber() {
-
-        int cpt = 0;
-
-        for (Images x : IMAGES) {
-
-            if (x.isLabled()) {
-                cpt++;
-            }
-        }
-        return cpt;
-    }
-
-    public Integer getClassifiedNumber() {
-
-        int cpt = 0;
-
-        for (Images x : IMAGES) {
-
-            if (x.isClassified()) {
-                cpt++;
-            }
-
-        }
-        return cpt;
-    }
-
-    public Image getImage() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String Name) {
-        this.Name = Name;
-    }
-
-    public File getDirectory() {
-        return Directory;
-    }
-
-    public void setDirectory(File Directory) {
-        this.Directory = Directory;
-    }
-
-    public Boolean getAutoSave() {
-        return AutoSave;
-    }
-
-    public void setAutoSave(Boolean AutoSave) {
-        this.AutoSave = AutoSave;
-    }
-
-    public Boolean getSaveImages() {
-        return SaveImages;
-    }
-
-    public void setSaveImages(Boolean SaveImages) {
-        this.SaveImages = SaveImages;
-    }
-
     public static File SavingFile(File Dir, String Name) {
 
         if (!Dir.exists()) {
@@ -365,7 +205,6 @@ public class Project {
         return file;
 
     }
-
     public static File SavingDir(File Dir, String Name) {
 
         if (!Dir.exists()) {
@@ -384,4 +223,42 @@ public class Project {
         return file;
 
     }
+    
+    public void ProjectCSV(File url) {
+        
+        try {
+            // Pretty print the document to System.out
+            url.createNewFile();
+            FileWriter fileWriter = new FileWriter(url);
+
+            for (Node node : Root.content()) {
+
+                
+                Element e = (Element) node;
+                String name = e.attributeValue("name");
+                String type = e.attributeValue("Type");
+                String W = e.attributeValue("Width");
+                String H = e.attributeValue("Height");
+
+                for (Node childs : e.content()) {
+
+                    Element eChild = (Element) childs;
+                    fileWriter.write(name + "," + type + "," + W + "," + H + "," + eChild.getName());
+
+                    for (Attribute attribute : eChild.attributes()) {
+
+                        fileWriter.write("," + attribute.getValue());
+                    }
+                    fileWriter.write("\n");
+                }
+
+            }
+
+            fileWriter.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+    }
+
 }

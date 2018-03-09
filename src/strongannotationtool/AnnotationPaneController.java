@@ -7,21 +7,15 @@ package strongannotationtool;
 
 import strongannotationtool.Shapes.VisualShapes.DrawRectangle;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPopup;
 import strongannotationtool.Shapes.CustomGrid;
-import copytowindowsphotodisplay.Model.Annotation;
 import copytowindowsphotodisplay.Model.Images;
-import copytowindowsphotodisplay.Model.CLASS;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -42,9 +36,9 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 import jfxtras.labs.scene.control.Magnifier;
 import jfxtras.scene.menu.CirclePopupMenu;
+import org.dom4j.Element;
 import strongannotationtool.Shapes.VisualShapes.DrawCircle;
 import strongannotationtool.Shapes.VisualShapes.DrawableShape;
 
@@ -61,12 +55,10 @@ public class AnnotationPaneController implements Initializable {
     @FXML
     private AnchorPane imgParent;
     @FXML
-    public JFXComboBox<CLASS> ClassSelecor;
-    @FXML
     private Magnifier magnifier;
 
     //DATA
-    public ObjectProperty<Images> image = new SimpleObjectProperty<>();
+    public Images image;
 
     //State
     private boolean GridOn = false;
@@ -87,9 +79,7 @@ public class AnnotationPaneController implements Initializable {
     CirclePopupMenu CirclePopUpMenu2;
 
     MenuItem menuItem[];
-    MenuItem menuItem1[];
-    MenuItem menuItem2[];
-
+    
     public AnnotationPaneController() {
 
         this.img = new ImageView();
@@ -103,7 +93,7 @@ public class AnnotationPaneController implements Initializable {
         menuItem[0] = createItem(MaterialDesignIcon.CHECKBOX_BLANK_CIRCLE_OUTLINE, Color.web("#96ceb4"), "Circle");
         menuItem[1] = createItem(MaterialDesignIcon.OCTAGON_OUTLINE, Color.web("#96ceb4"), "Polygone");
         //menuItem[] = createItem(MaterialDesignIcon.PENCIL, Color.web("#96ceb4"), "Pen", CirclePopUpMenu);
-        menuItem[2] = createItem(MaterialDesignIcon.CHECKBOX_BLANK_OUTLINE, Color.web("#96ceb4"), "Rectangle");
+        menuItem[2] = createItem(MaterialDesignIcon.CHECKBOX_BLANK_OUTLINE, Color.web("#66B032"), "Rectangle");
 
         // circle menu X
         //menuItem1 = new MenuItem[1];
@@ -239,7 +229,7 @@ public class AnnotationPaneController implements Initializable {
             double xk= img.getImage().getWidth()/img.getFitWidth();
             double yk= img.getImage().getHeight()/img.getFitHeight();
             
-            onCreate = new DrawRectangle(event.getX(), event.getY(), event.getX() + 1, event.getY() + 1,xk,yk,this.image.getValue());
+            onCreate = new DrawRectangle(event.getX(), event.getY(), event.getX() + 1, event.getY() + 1,xk,yk,this.image);
             onCreate.AddTo(imgParent);
         } catch (IOException iOException) {
         }
@@ -273,8 +263,12 @@ public class AnnotationPaneController implements Initializable {
     private void RectOnRelease(MouseEvent event) {
         
         DrawRectangle rect = (DrawRectangle)onCreate;
-        if(rect.getWidth()>10 && rect.getHeight() >10)
+        if(rect.getWidth()>10 && rect.getHeight() >10){
+            rect.AddToPopup();
             rect.AddToPopup.show(rect);
+        }
+            
+        
         else
             onCreate.remove(imgParent);
         onCreate = null;
@@ -287,7 +281,7 @@ public class AnnotationPaneController implements Initializable {
             double xk= img.getImage().getWidth()/img.getFitWidth();
             double yk= img.getImage().getHeight()/img.getFitHeight();
             
-            onCreate = new DrawCircle(event.getX(), event.getY(), event.getX() + 1, event.getY() + 1,xk,yk,this.image.getValue());
+            onCreate = new DrawCircle(event.getX(), event.getY(), event.getX() + 1, event.getY() + 1,xk,yk,this.image);
             onCreate.AddTo(imgParent);
         } catch (IOException exception) {
         }
@@ -324,9 +318,10 @@ public class AnnotationPaneController implements Initializable {
     private void CIrcleOnRelease(MouseEvent event) {
     
         DrawCircle DCircle = (DrawCircle)onCreate;
-        if(DCircle.getRadiusX()>10 && DCircle.getRadiusY()>10)
+        if(DCircle.getRadiusX()>10 && DCircle.getRadiusY()>10){
+            DCircle.AddToPopUpSetup();
             DCircle.AddToPopup.show(imgParent, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, DCircle.getCenterX(),DCircle.getCenterY());
-        else
+        }else
             onCreate.remove(imgParent);
         onCreate = null;
     
@@ -371,7 +366,7 @@ public class AnnotationPaneController implements Initializable {
             ShapeMode = S;
             for (MenuItem mi : this.menuItem) {
                 //reset all items Color
-                ((JFXButton)mi.getGraphic()).setBackground(new Background(new BackgroundFill(p, CornerRadii.EMPTY, Insets.EMPTY)));
+                ((JFXButton)mi.getGraphic()).setBackground(new Background(new BackgroundFill(Color.web("#96ceb4"), CornerRadii.EMPTY, Insets.EMPTY)));
                 //change clicked item color
                 jfxButton.setBackground(new Background(new BackgroundFill(Color.web("#66B032"), CornerRadii.EMPTY, Insets.EMPTY)));
             }
@@ -425,48 +420,38 @@ public class AnnotationPaneController implements Initializable {
      */
     public void setimage(Images image) {
 
-        for (Node x : imgParent.getChildren()) {
-            
-            if(x instanceof Shape)
-                imgParent.getChildren().remove(x);
-        }
+        imgParent.getChildren().clear();
+        imgParent.getChildren().add(magnifier);
+        magnifier.prefWidthProperty().bind(imgParent.widthProperty());
+        magnifier.prefHeightProperty().bind(imgParent.heightProperty());
         
-        this.image.set(image);
+        this.image= image;
 
-        Image im = new Image(image.getDir().toURI().toString(), 0, 0, false, true);
+        Image im = new Image(image.Path.getValue(), 0, 0, false, true);
 
         img.setImage(im);
 
-        ClassSelecor.getItems().clear();
-
-        if (!image.ANNOTATIONS.isEmpty()) {
-            for (Annotation annotation : image.ANNOTATIONS) {
-
-                if (!ClassSelecor.getItems().contains(annotation.getClasse())) {
-                     ClassSelecor.getItems().add(annotation.getClasse());
-                }
-            }
-        }
-        
-        for (Annotation note : image.ANNOTATIONS) {
-            
-            System.out.println("annotation "+note.getClasse());
-            
-            for(Shape shape : note.Shapes){
-                
-                DrawableShape Dshape= (DrawableShape) shape;
-                Dshape.AddTo(imgParent);   
-            }
-        }
         
     }
 
     @FXML
     private void prevImage(ActionEvent event) {
         
+        ObservableList<Images> IMAGES = image.getProject().IMAGES;
+        int indexOf = IMAGES.indexOf(image) - 1;
+        setimage(IMAGES.get(Integer.remainderUnsigned(indexOf, IMAGES.size() ) ) );
+        
     }
     @FXML
     private void NextImage(ActionEvent event) {
+        Element parent = image.imageElement.getParent();
+        int index = parent.indexOf((org.dom4j.Node) image);
+        int indexOf = index + 1;
+        
+        Element img = (Element)parent.node(Integer.remainderUnsigned(indexOf, parent.nodeCount()));
+        
+        setimage();
+        
     }
     @FXML
     private void OptionPop(ActionEvent event) {
@@ -474,16 +459,6 @@ public class AnnotationPaneController implements Initializable {
     @FXML
     private void SettingPop(ActionEvent event) {
     }
-    @FXML
-    private void remove(ActionEvent event) {
-        if (!ClassSelecor.getItems().isEmpty()) {
-            CLASS selectedItem = ClassSelecor.getSelectionModel().getSelectedItem();
-            ClassSelecor.getItems().remove(selectedItem);
-            Annotation findAnnotation = Annotation.findAnnotation(selectedItem, image.get());
-            findAnnotation.remove();
-        }
-    }
-    @FXML
     private void AddClassPop(ActionEvent event) throws IOException {
 
         final AnnotationPaneController x = this;

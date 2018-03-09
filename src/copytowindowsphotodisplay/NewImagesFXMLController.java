@@ -5,10 +5,10 @@
  */
 package copytowindowsphotodisplay;
 
-import copytowindowsphotodisplay.Model.Images;
 import copytowindowsphotodisplay.Model.Project;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +16,6 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -28,9 +27,7 @@ import javafx.stage.Stage;
  */
 public class NewImagesFXMLController implements Initializable {
 
-    @FXML
-    private AnchorPane LeftDrawerAnchor;
-
+    
     /**
      * Initializes the controller class.
      */
@@ -44,12 +41,12 @@ public class NewImagesFXMLController implements Initializable {
     }
 
     @FXML
-    private void DirOpen(ActionEvent event) throws FileNotFoundException {
+    private void DirOpen(ActionEvent event) throws FileNotFoundException, IOException {
         
         List<File> openDirectoryImagesChooser = openDirectoryImagesChooser();
         for (File file : openDirectoryImagesChooser) {
 
-            new Images(file, project);
+            project.AddImage(file);
 
         }
 
@@ -57,13 +54,13 @@ public class NewImagesFXMLController implements Initializable {
     }
 
     @FXML
-    private void ImagesOpen(ActionEvent event) {
+    private void ImagesOpen(ActionEvent event) throws IOException {
         
         List<File> openImagesChooser = OpenImagesChooser();
         if(openImagesChooser== null) return;
         for (File file : openImagesChooser) {
             
-            new Images(file, project);
+            project.AddImage(file);
             
         }
         

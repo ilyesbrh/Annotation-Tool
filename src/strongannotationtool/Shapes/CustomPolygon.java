@@ -5,7 +5,6 @@
  */
 package strongannotationtool.Shapes;
 
-import copytowindowsphotodisplay.Model.Annotation;
 import java.util.ArrayList;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -30,7 +29,6 @@ public class CustomPolygon extends Polygon {
     
     private final ArrayList<Circle> circleListe=new ArrayList<>();
     
-    private Annotation annotation;
     private AnchorPane Parent;
     private ImageView parentImg;
     
@@ -50,7 +48,7 @@ public class CustomPolygon extends Polygon {
         });
     }
     
-    public CustomPolygon(AnchorPane parent, Annotation annotation) {
+    public CustomPolygon(AnchorPane parent) {
         
         this.setFill(selectedColor);
         this.setStroke(strokeColor);
@@ -62,7 +60,6 @@ public class CustomPolygon extends Polygon {
             
         });
         
-        this.annotation=annotation;
         addTo(parent);
         
     }

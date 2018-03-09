@@ -25,7 +25,7 @@
          <font>
             <Font name="System Bold" size="18.0" />
          </font></Label>
-      <Label alignment="CENTER" layoutX="139.0" layoutY="405.0" prefHeight="21.0" prefWidth="56.0" text="Images " textFill="#fcfcfc" />
+      <Label alignment="CENTER" layoutX="133.0" layoutY="405.0" prefHeight="21.0" prefWidth="56.0" text="Images " textFill="#fcfcfc" />
       <Label alignment="CENTER" layoutX="197.0" layoutY="405.0" prefHeight="21.0" prefWidth="76.0" text="Classified " textFill="#fcfcfc" />
       <Label alignment="CENTER" layoutX="277.0" layoutY="405.0" prefHeight="21.0" prefWidth="56.0" text="Labled " textFill="#fcfcfc" />
       <Label fx:id="classNumber" layoutX="54.0" layoutY="288.0" text="6" textFill="WHITE">
@@ -33,17 +33,17 @@
             <Font name="Tahoma" size="70.0" />
          </font>
       </Label>
-      <Label fx:id="imageNumber" layoutX="150.0" layoutY="339.0" text="6" textFill="#fcfcfc">
+      <Label fx:id="imageNumber" alignment="CENTER" layoutX="127.0" layoutY="335.0" prefHeight="71.0" prefWidth="68.0" text="6" textFill="#fcfcfc">
          <font>
             <Font name="System Bold" size="49.0" />
          </font>
       </Label>
-      <Label fx:id="classifiedNumber" layoutX="220.0" layoutY="339.0" text="6" textFill="#fcfcfc">
+      <Label fx:id="classifiedNumber" alignment="CENTER" layoutX="197.0" layoutY="335.0" prefHeight="71.0" prefWidth="76.0" text="6" textFill="#fcfcfc">
          <font>
             <Font name="System Bold" size="49.0" />
          </font>
       </Label>
-      <Label fx:id="labledNumber" layoutX="290.0" layoutY="339.0" text="6" textFill="#fcfcfc">
+      <Label fx:id="labledNumber" alignment="CENTER" layoutX="267.0" layoutY="335.0" prefHeight="71.0" prefWidth="76.0" text="6" textFill="#fcfcfc">
          <font>
             <Font name="System Bold" size="49.0" />
          </font>

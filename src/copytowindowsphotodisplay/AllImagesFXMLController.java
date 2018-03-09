@@ -6,7 +6,6 @@
 package copytowindowsphotodisplay;
 
 import com.jfoenix.controls.JFXDialog;
-import copytowindowsphotodisplay.Model.Images;
 import copytowindowsphotodisplay.Model.Project;
 import java.io.IOException;
 import java.net.URL;
@@ -28,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
+import org.dom4j.Element;
 
 /**
  * FXML Controller class
@@ -41,7 +41,7 @@ public class AllImagesFXMLController implements Initializable {
      */
     
     @FXML
-    GridView<Images> ImagesGrid;
+    GridView<Element> ImagesGrid;
     
     Project project;
     StackPane DialogPane;
@@ -80,7 +80,7 @@ public class AllImagesFXMLController implements Initializable {
             Logger.getLogger(ProjectUIController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private void GridViewINI(GridView<Images> Gridview) {
+    private void GridViewINI(GridView<Element> Gridview) {
         
         Gridview.setCacheHint(CacheHint.SPEED);
         Gridview.setItems(project.IMAGES);
@@ -90,10 +90,10 @@ public class AllImagesFXMLController implements Initializable {
         Gridview.setCellWidth(200);
         Gridview.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         
-        Gridview.setCellFactory(new Callback<GridView<Images>, GridCell<Images>>() {
+        Gridview.setCellFactory(new Callback<GridView<Element>, GridCell<Element>>() {
             
             @Override 
-            public GridCell<Images> call(GridView<Images> arg0) {
+            public GridCell<Element> call(GridView<Element> arg0) {
                 
                 cell cell = new cell(Gridview,DialogPane);
                 cell.setCacheHint(CacheHint.SPEED);
@@ -101,12 +101,12 @@ public class AllImagesFXMLController implements Initializable {
             }
         });
     }
-    public class cell extends GridCell<Images>{
+    public class cell extends GridCell<Element>{
 
-        private final GridView<Images> Grid;
+        private final GridView<Element> Grid;
         private ImageViewFXMLController controller;
 
-        private cell(GridView<Images> arg0 ,StackPane NoteStack) {
+        private cell(GridView<Element> arg0 ,StackPane NoteStack) {
             
             Grid=arg0;
            
@@ -133,7 +133,7 @@ public class AllImagesFXMLController implements Initializable {
         }
 
         @Override
-        protected void updateItem(Images item, boolean empty) {
+        protected void updateItem(Element item, boolean empty) {
             
             try {
                 

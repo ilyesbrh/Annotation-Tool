@@ -5,9 +5,14 @@
  */
 package copytowindowsphotodisplay;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import copytowindowsphotodisplay.Model.Project;
+import static copytowindowsphotodisplay.Model.Project.LIST_OF_PROJECTS;
+import static copytowindowsphotodisplay.Model.Project.SavingDir;
+import static copytowindowsphotodisplay.Model.Project.SavingFile;
+import static copytowindowsphotodisplay.Model.Project.saveImageToFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -36,53 +41,93 @@ public class NewFXMLController implements Initializable {
     private JFXTextField Name;
     @FXML
     private ImageView Imageview;
-    
+    @FXML
+    private JFXButton Demand;
+
     File Directory;
 
-    File Image;
-    
+    File image;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        Name.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (image == null) {
+                Demand.setDisable(true);
+                return;
+            }
+
+            if (Directory == null) {
+                Demand.setDisable(true);
+                return;
+            }
+
+            if (Name.getText().equals("")) {
+                Demand.setDisable(true);
+                return;
+            }
+
+            for (File f : Directory.listFiles()) {
+
+                if (Name.getText().equals(f.getName())) {
+                    Demand.setDisable(true);
+                    return;
+                }
+
+            }
+            for (Project p : LIST_OF_PROJECTS) {
+
+                if (Name.getText().equals(p.Name.getValue())) {
+
+                    Demand.setDisable(true);
+                    return;
+                }
+            }
+            Demand.setDisable(false);
+            
+        });
+    }
 
     @FXML
     private void Demande(ActionEvent event) throws IOException {
-        
-        if(Image ==null) return;
-        
-        if(Directory ==null) return;
-        
-        if(Name.getText().equals("") ) return;
-        
-        for(File f:Directory.listFiles()) {
-            
-            if(Name.getText().equals(f.getName()) ) return;
-            
+
+        String name = Name.getText();
+        boolean autoSave = AutoSave.isSelected();
+        boolean saveImages = SaveImages.isSelected();
+
+        File projectDir = SavingDir(Directory, name);
+
+        File path = SavingFile(projectDir, name + ".xml");
+
+        File imagesDir = SavingDir(projectDir, "Images");
+
+        File imagePath = saveImageToFile(new Image(image.toURI().toString()), projectDir, name);
+
+        try {
+            new Project(name, path, imagePath, autoSave, saveImages, imagesDir);
+        } catch (Exception ex) {
+            System.err.println("cant be created");
         }
-        
-        new Project(Name.getText(), new Image(Image.toURI().toString()), Directory,AutoSave.isSelected(),SaveImages.isSelected());
-        
     }
 
     @FXML
     private void directoryChooser(ActionEvent event) {
-        DirectoryChooser cs=new DirectoryChooser();
-        Directory=cs.showDialog(new Stage());
+        DirectoryChooser cs = new DirectoryChooser();
+        Directory = cs.showDialog(new Stage());
     }
 
     @FXML
     private void imageChooser(ActionEvent event) {
-        
-        Image = new FileChooser().showOpenDialog(new Stage());
-        Imageview.setImage(new Image(Image.toURI().toString()));
+
+        image = new FileChooser().showOpenDialog(new Stage());
+        Imageview.setImage(new Image(image.toURI().toString()));
     }
 
     @FXML
     private void Cancel(ActionEvent event) {
     }
-    
+
 }

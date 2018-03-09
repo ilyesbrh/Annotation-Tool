@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXDrawer;
 import copytowindowsphotodisplay.Model.Project;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +21,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -43,15 +46,10 @@ public class MainFXMLController implements Initializable {
     Project project;
     private JFXDialog Jfxdialog;
 
-    public MainFXMLController() {
-    }
-    
     public MainFXMLController(Project project) {
         this.project = project;
         
     }
-    
-    
     /**
      * Initializes the controller class.
      */
@@ -64,7 +62,9 @@ public class MainFXMLController implements Initializable {
             Drawer.setVisible(false);
             
         });
-        ClassesPopUpINI();
+        this.Jfxdialog = new JFXDialog(); 
+        this.Jfxdialog.setDialogContainer(DialogPane);
+        this.Jfxdialog.setTransitionType(JFXDialog.DialogTransition.CENTER);
         ALLImagesINI();
     }    
 
@@ -98,8 +98,8 @@ public class MainFXMLController implements Initializable {
             Newload.setController(newController);
             
             AnchorPane load = Newload.load();
-            JFXDialog  NewProject = new JFXDialog(DialogPane, load, JFXDialog.DialogTransition.CENTER);    
-            this.Jfxdialog=NewProject;
+            
+            this.Jfxdialog.setContent(load);
             
             
         } catch (IOException ex) {
@@ -125,6 +125,7 @@ public class MainFXMLController implements Initializable {
     @FXML
     private void ClassesPane(ActionEvent event) throws IOException {
         
+        ClassesPopUpINI();
         Jfxdialog.show();
     }
 
@@ -138,5 +139,35 @@ public class MainFXMLController implements Initializable {
         } catch (IOException ex) {
         }
     }
+    private void ExportINI() throws IOException {
+        ResourceBundle resourceBundle = new ResourceBundle() {
+            @Override
+            protected Object handleGetObject(String key) {
+                
+                return project;
+            }
+
+            @Override
+            public Enumeration<String> getKeys() {
+                return null;
+            }
+        };
+        URL resource = getClass().getResource("ExportFXML.fxml");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ExportFXML.fxml"));
+        loader.setResources(resourceBundle);
+        AnchorPane load = loader.load();
+        
+        Jfxdialog.setContent(load);
+    }
     
+
+    @FXML
+    private void Export(ActionEvent event) throws IOException {
+        
+        ExportINI();
+        Jfxdialog.show();
+        
+        
+    }
+
 }

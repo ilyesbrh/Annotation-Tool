@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="LeftDrawerAnchor" cache="true" prefHeight="322.0" prefWidth="389.0" style="-fx-background-color: rgb(0, 191, 255);" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane cache="true" prefHeight="322.0" prefWidth="389.0" style="-fx-background-color: rgb(0, 191, 255);" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label focusTraversable="false" layoutX="67.0" layoutY="49.0" prefHeight="58.0" prefWidth="248.0" text="New  Images" textFill="WHITE">
          <font>
@@ -20,7 +20,7 @@
       </JFXButton>
       <JFXButton buttonType="RAISED" contentDisplay="CENTER" layoutX="67.0" layoutY="194.0" onAction="#ImagesOpen" prefHeight="61.0" prefWidth="67.0" ripplerFill="#6b6b6b" style="-fx-background-color: a8d0e7;" text=" ">
          <graphic>
-            <FontAwesomeIconView fill="WHITE" fontSmoothingType="LCD" glyphName="PICTURE_ALT" size="40" wrappingWidth="37.714284896850586" />
+            <FontAwesomeIconView fill="WHITE" fontSmoothingType="LCD" glyphName="PICTURE_ALT" size="40" wrappingWidth="42.714284896850586" />
          </graphic>
       </JFXButton>
    </children>

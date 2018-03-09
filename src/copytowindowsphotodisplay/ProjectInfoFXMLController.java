@@ -62,7 +62,7 @@ public class ProjectInfoFXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         imageview.setImage(image);
-        name.setText(project.getName());
+        name.setText(project.Name.getValue());
         classNumber.setText(project.getClassNumber().toString());
         classifiedNumber.setText(project.getClassifiedNumber().toString());
         labledNumber.setText(project.getLabledNumber().toString());

@@ -25,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import org.dom4j.Element;
 import strongannotationtool.AnnotationPaneController;
 
 /**
@@ -92,21 +93,17 @@ public class ImageViewFXMLController implements Initializable {
             MouseEntred.setStrokeWidth(0);
         });
     }    
-    public void UpdateItem(Images item){
+    public void UpdateItem(Element item){
         
-        this.image=item;
+        this.image=new Images(item);
         
-        Name.setText(image.getName());
+        Name.setText(image.Name.getValue());
         
         Selected.setVisible(false);
         
-        if(image.isClassified()) Classified.setVisible(true);
-        else                     Classified.setVisible(false);
+        Classified.visibleProperty().bind(image.Labled);
         
-        if(image.isLabled()) Labled.setVisible(true);
-        else                 Labled.setVisible(false);
-        
-        Image img=new Image(image.getDir().toURI().toString(),200, 200, false, false, false);
+        Image img=new Image(image.Path.getValue(),200, 200, false, false, true);
         imageView.setImage(img);
         
     }
