@@ -6,12 +6,14 @@
 package copytowindowsphotodisplay;
 
 import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXToggleButton;
 import copytowindowsphotodisplay.Model.Project;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,10 +43,12 @@ public class AllImagesFXMLController implements Initializable {
      */
     
     @FXML
-    GridView<Element> ImagesGrid;
+    public GridView<Element> ImagesGrid;
     
-    Project project;
-    StackPane DialogPane;
+    public Project project;
+    public StackPane DialogPane;
+    @FXML
+    private JFXToggleButton LabledCheckBox;
     
     
     public AllImagesFXMLController(Project project, StackPane dialogPane) {
@@ -58,6 +62,7 @@ public class AllImagesFXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
        
         GridViewINI(ImagesGrid);
+        
 
     }    
 
@@ -66,7 +71,7 @@ public class AllImagesFXMLController implements Initializable {
         
         try {
             // New Project PopUp INI
-            NewImagesFXMLController newController=new NewImagesFXMLController(project);
+            NewImagesFXMLController newController=new NewImagesFXMLController(project,this);
             
             FXMLLoader Newload=new FXMLLoader(getClass().getResource("NewImagesFXML.fxml"));
             Newload.setController(newController);
@@ -83,7 +88,7 @@ public class AllImagesFXMLController implements Initializable {
     private void GridViewINI(GridView<Element> Gridview) {
         
         Gridview.setCacheHint(CacheHint.SPEED);
-        Gridview.setItems(project.IMAGES);
+        Gridview.setItems(FXCollections.observableArrayList(project.Root.elements()));
         Gridview.setVerticalCellSpacing(20);
         Gridview.setHorizontalCellSpacing(20);
         Gridview.setCellHeight(200);
@@ -137,7 +142,9 @@ public class AllImagesFXMLController implements Initializable {
             
             try {
                 
-                if(empty==true) return;
+                if(empty==true ) return;
+                
+                
                 
                 super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
                 

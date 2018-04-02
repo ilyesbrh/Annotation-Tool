@@ -69,7 +69,7 @@ public class ProjectInfoFXMLController implements Initializable {
         imageNumber.setText(project.getImagesNumber().toString());
         // image number div labled images = progress
         if(project.getLabledNumber()==0) Progress.setProgress(0);
-        else Progress.setProgress(project.getImagesNumber()/project.getLabledNumber());
+        else Progress.setProgress(project.getLabledNumber().doubleValue()/project.getImagesNumber().doubleValue());
 
     }
 

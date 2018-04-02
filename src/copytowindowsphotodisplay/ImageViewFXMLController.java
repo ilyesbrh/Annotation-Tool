@@ -19,11 +19,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.dom4j.Element;
 import strongannotationtool.AnnotationPaneController;
@@ -98,14 +101,21 @@ public class ImageViewFXMLController implements Initializable {
         this.image=new Images(item);
         
         Name.setText(image.Name.getValue());
+        Tooltip tooltip = new Tooltip(image.Name.getValue());
+        tooltip.setFont(new Font(16));
+        Name.setTooltip(tooltip);
+        
+        
         
         Selected.setVisible(false);
         
         Classified.visibleProperty().bind(image.Labled);
         
-        Image img=new Image(image.Path.getValue(),200, 200, false, false, true);
-        imageView.setImage(img);
+        if(imageView.getImage() != null && imageView.getImage().isBackgroundLoading())
+            imageView.getImage().cancel();
         
+        Image img=image.getImage(200, 200, false, false, true);
+        imageView.setImage(img);
     }
 
     @FXML

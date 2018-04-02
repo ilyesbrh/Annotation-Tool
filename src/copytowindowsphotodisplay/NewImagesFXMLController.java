@@ -19,6 +19,8 @@ import javafx.fxml.Initializable;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.controlsfx.control.GridView;
+import org.dom4j.Element;
 
 /**
  * FXML Controller class
@@ -32,7 +34,11 @@ public class NewImagesFXMLController implements Initializable {
      * Initializes the controller class.
      */
     Project project;
-    public NewImagesFXMLController(Project project) {
+    GridView<Element> ImagesGrid;
+            
+    public NewImagesFXMLController(Project project, AllImagesFXMLController gridImages) {
+        
+        ImagesGrid = gridImages.ImagesGrid;
        this.project=project;
     }    
 
@@ -46,7 +52,7 @@ public class NewImagesFXMLController implements Initializable {
         List<File> openDirectoryImagesChooser = openDirectoryImagesChooser();
         for (File file : openDirectoryImagesChooser) {
 
-            project.AddImage(file);
+            ImagesGrid.getItems().add(project.AddImage(file));
 
         }
 
@@ -60,7 +66,7 @@ public class NewImagesFXMLController implements Initializable {
         if(openImagesChooser== null) return;
         for (File file : openImagesChooser) {
             
-            project.AddImage(file);
+            ImagesGrid.getItems().add(project.AddImage(file));
             
         }
         

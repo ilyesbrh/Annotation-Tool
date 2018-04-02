@@ -55,7 +55,8 @@ public class NewFXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         Name.textProperty().addListener((observable, oldValue, newValue) -> {
 
-            if (image == null) {
+            new Thread(() -> {
+                if (image == null) {
                 Demand.setDisable(true);
                 return;
             }
@@ -87,6 +88,7 @@ public class NewFXMLController implements Initializable {
                 }
             }
             Demand.setDisable(false);
+            }).run();
             
         });
     }
@@ -101,7 +103,7 @@ public class NewFXMLController implements Initializable {
         File projectDir = SavingDir(Directory, name);
 
         File path = SavingFile(projectDir, name + ".xml");
-
+        
         File imagesDir = SavingDir(projectDir, "Images");
 
         File imagePath = saveImageToFile(new Image(image.toURI().toString()), projectDir, name);
@@ -117,13 +119,79 @@ public class NewFXMLController implements Initializable {
     private void directoryChooser(ActionEvent event) {
         DirectoryChooser cs = new DirectoryChooser();
         Directory = cs.showDialog(new Stage());
+        
+        if (image == null) {
+                Demand.setDisable(true);
+                return;
+            }
+
+            if (Directory == null) {
+                Demand.setDisable(true);
+                return;
+            }
+
+            if (Name.getText().equals("")) {
+                Demand.setDisable(true);
+                return;
+            }
+
+            for (File f : Directory.listFiles()) {
+
+                if (Name.getText().equals(f.getName())) {
+                    Demand.setDisable(true);
+                    return;
+                }
+
+            }
+            for (Project p : LIST_OF_PROJECTS) {
+
+                if (Name.getText().equals(p.Name.getValue())) {
+
+                    Demand.setDisable(true);
+                    return;
+                }
+            }
+            Demand.setDisable(false);
     }
 
     @FXML
     private void imageChooser(ActionEvent event) {
 
         image = new FileChooser().showOpenDialog(new Stage());
+        
+        if (image == null) {
+                Demand.setDisable(true);
+                return;
+            }
         Imageview.setImage(new Image(image.toURI().toString()));
+
+            if (Directory == null) {
+                Demand.setDisable(true);
+                return;
+            }
+
+            if (Name.getText().equals("")) {
+                Demand.setDisable(true);
+                return;
+            }
+
+            for (File f : Directory.listFiles()) {
+
+                if (Name.getText().equals(f.getName())) {
+                    Demand.setDisable(true);
+                    return;
+                }
+
+            }
+            for (Project p : LIST_OF_PROJECTS) {
+
+                if (Name.getText().equals(p.Name.getValue())) {
+
+                    Demand.setDisable(true);
+                    return;
+                }
+            }
+            Demand.setDisable(false);
     }
 
     @FXML

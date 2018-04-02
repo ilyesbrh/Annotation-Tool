@@ -6,26 +6,23 @@
 package copytowindowsphotodisplay;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
-import copytowindowsphotodisplay.Model.CLASS;
 import copytowindowsphotodisplay.Model.Project;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -40,7 +37,7 @@ import javafx.scene.paint.Color;
 public class ClassesFXMLController implements Initializable {
 
     @FXML
-    private JFXListView<copytowindowsphotodisplay.Model.CLASS> ImagesListView;
+    private JFXListView<String> ImagesListView;
     @FXML
     private Label imageNumber;
     @FXML
@@ -49,11 +46,11 @@ public class ClassesFXMLController implements Initializable {
     private ProgressIndicator Progress;
     @FXML
     private JFXTextField Name;
-    private final Project project;
     @FXML
     private FontAwesomeIconView Icon;
     
-    private CLASS selectedItem;
+    private final Project project;
+    private String selectedItem;
     private final StackPane notePane;
     
     /**
@@ -69,7 +66,7 @@ public class ClassesFXMLController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ImagesListView.setItems(project.CLASSES);
+        ImagesListView.setItems(FXCollections.observableArrayList(project.getClasses(project.Root)));
         ImagesListView.setCellHorizontalMargin(10.0);
         ImagesListView.setExpanded(true);
         ImagesListView.setCellFactory((param) -> {
@@ -83,12 +80,12 @@ public class ClassesFXMLController implements Initializable {
     private void showpop(MouseEvent event) {
         selectedItem = ImagesListView.getSelectionModel().getSelectedItem();
         Name.setText(selectedItem.toString());
-        imageNumber.setText(Double.toString(selectedItem.IMAGES.size()));
-        LabledNumber.setText(Double.toString(selectedItem.getLabledNumber()));
+        //imageNumber.setText(Double.toString(selectedItem.IMAGES.size()));
+        //LabledNumber.setText(Double.toString(selectedItem.getLabledNumber()));
         try {
             
-            Double progress = selectedItem.IMAGES.size() / selectedItem.getLabledNumber().doubleValue();
-            Progress.setProgress(progress);
+            //Double progress = selectedItem.IMAGES.size() / selectedItem.getLabledNumber().doubleValue();
+            //Progress.setProgress(progress);
         } catch (Exception e) {
             Progress.setProgress(0.0);
         }
@@ -102,10 +99,10 @@ public class ClassesFXMLController implements Initializable {
             btn.setBackground(null);
             Icon.setGlyphName("EDIT");
             Name.setEditable(false);
-            selectedItem.setName(Name.getText());
-            File classified = selectedItem.getProject().getClassifiedDir();
-            File file = new File(classified, Name.getText());
-            selectedItem.getClassDir().renameTo(file);
+            //selectedItem.setName(Name.getText());
+            //File classified = selectedItem.getProject().getClassifiedDir();
+            //File file = new File(classified, Name.getText());
+            //selectedItem.getClassDir().renameTo(file);
             
         }else{
             JFXButton btn = (JFXButton) event.getSource();
@@ -119,24 +116,19 @@ public class ClassesFXMLController implements Initializable {
     @FXML
     private void AddClass(ActionEvent event) throws IOException {
         
-        NewClassPopUpFXMLController newController=new NewClassPopUpFXMLController(project);
-            
-        FXMLLoader Newload=new FXMLLoader(getClass().getResource("NewClassPopUpFXML.fxml"));
-        Newload.setController(newController);
-
-        AnchorPane load = Newload.load();
-        JFXDialog  NewProject = new JFXDialog(notePane, load, JFXDialog.DialogTransition.CENTER);    
-        NewProject.show();
+        
+        //JFXDialog  NewProject = new JFXDialog(notePane, load, JFXDialog.DialogTransition.CENTER);    
+        //NewProject.show();
     }
 
-    public class Cell extends ListCell<CLASS>{
+    public class Cell extends ListCell<String>{
 
         public Cell() {
         }
         @Override
-        protected void updateItem(CLASS item, boolean empty) {
+        protected void updateItem(String item, boolean empty) {
             super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
-            if(!empty) textProperty().bind(item.Name);
+            if(!empty) setText(item);
         }
 
     }

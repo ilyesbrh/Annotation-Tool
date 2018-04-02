@@ -4,17 +4,17 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" prefHeight="474.0" prefWidth="451.0" style="-fx-background-color: #7289da;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fx:id="imageview" fitHeight="197.0" fitWidth="197.0" layoutX="122.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../Pictures/Divers/300px-TSM_Logo.jpg" />
-         </image>
+      <ImageView fx:id="imageview" fitHeight="197.0" fitWidth="197.0" layoutX="122.0" layoutY="52.0" pickOnBounds="true">
+         <effect>
+            <DropShadow />
+         </effect>
       </ImageView>
       <Label fx:id="name" alignment="CENTER" layoutX="133.0" layoutY="265.0" prefHeight="30.0" prefWidth="174.0" text="Project Name" textFill="#fcfcfc">
          <font>
@@ -26,7 +26,7 @@
             <Font name="System Bold" size="18.0" />
          </font></Label>
       <Label alignment="CENTER" layoutX="133.0" layoutY="405.0" prefHeight="21.0" prefWidth="56.0" text="Images " textFill="#fcfcfc" />
-      <Label alignment="CENTER" layoutX="197.0" layoutY="405.0" prefHeight="21.0" prefWidth="76.0" text="Classified " textFill="#fcfcfc" />
+      <Label alignment="CENTER" disable="true" layoutX="197.0" layoutY="405.0" prefHeight="21.0" prefWidth="76.0" text="Classified " textFill="#fcfcfc" />
       <Label alignment="CENTER" layoutX="277.0" layoutY="405.0" prefHeight="21.0" prefWidth="56.0" text="Labled " textFill="#fcfcfc" />
       <Label fx:id="classNumber" layoutX="54.0" layoutY="288.0" text="6" textFill="WHITE">
          <font>
@@ -38,7 +38,7 @@
             <Font name="System Bold" size="49.0" />
          </font>
       </Label>
-      <Label fx:id="classifiedNumber" alignment="CENTER" layoutX="197.0" layoutY="335.0" prefHeight="71.0" prefWidth="76.0" text="6" textFill="#fcfcfc">
+      <Label fx:id="classifiedNumber" alignment="CENTER" disable="true" layoutX="197.0" layoutY="335.0" prefHeight="71.0" prefWidth="76.0" text="0" textFill="#fcfcfc">
          <font>
             <Font name="System Bold" size="49.0" />
          </font>

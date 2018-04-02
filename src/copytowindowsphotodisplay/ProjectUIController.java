@@ -18,9 +18,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
@@ -73,13 +81,37 @@ public class ProjectUIController implements Initializable {
     @FXML
     private void Open(ActionEvent event) throws IOException, DocumentException {
         
-        DirectoryChooser choser=new DirectoryChooser();
+        Stage stage = new Stage();
+        stage.setAlwaysOnTop(true);
+        FileChooser fileChooser;
+        // filechooser
+        fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home"))
+        );
+        FileChooser.ExtensionFilter extFilter
+                = new FileChooser.ExtensionFilter("Project filter", "*.xml");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File URL = fileChooser.showOpenDialog(new Stage());
         
-        File URL = choser.showDialog(new Stage());
+        if(URL == null ) return;
         
-        File xml=new File(URL, URL.getName()+".xml");
-        
-        new Project(URL);
+        try {
+            new Project(URL);
+        } catch (Exception ex) {
+           
+            StackPane pane = new StackPane();
+            pane.setPrefSize(200, 100);
+            pane.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
+            Label label = new Label("existe");
+            label.setFont(new Font(60));
+            pane.getChildren().add(label);
+            JFXDialog  NewProject = new JFXDialog(NoteStackPane,pane , JFXDialog.DialogTransition.CENTER);    
+            
+            NewProject.show();
+            
+        }
         
         
     }

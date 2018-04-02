@@ -37,6 +37,10 @@ public class ExportFXMLController implements Initializable {
     @FXML
     private void Csv(ActionEvent event) {
         
+        FileChooser chooser= new FileChooser();
+        
+        project.SaveAs(chooser.showSaveDialog(new Stage()),"CSV");
+        
         
     }
 
@@ -45,7 +49,7 @@ public class ExportFXMLController implements Initializable {
         
         FileChooser chooser= new FileChooser();
         
-        project.ProjectCSV(chooser.showSaveDialog(new Stage()));
+        project.SaveAs(chooser.showSaveDialog(new Stage()),"XML");
         
     }
     

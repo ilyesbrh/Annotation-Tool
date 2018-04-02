@@ -21,8 +21,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -134,10 +132,7 @@ public class MainFXMLController implements Initializable {
     }
     @FXML
     private void SaveProject(ActionEvent event) {
-        try {
-            project.Save();
-        } catch (IOException ex) {
-        }
+        project.save();
     }
     private void ExportINI() throws IOException {
         ResourceBundle resourceBundle = new ResourceBundle() {
