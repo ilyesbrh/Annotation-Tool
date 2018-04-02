@@ -1,4 +1,4 @@
- /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -9,7 +9,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -25,7 +28,9 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
 
 /**
  *
@@ -34,135 +39,149 @@ import org.dom4j.io.SAXReader;
 public class Project {
 
     public static final ObservableList<Project> LIST_OF_PROJECTS = FXCollections.observableArrayList();
-    
-    private Element Root;
+
+    public Element Root;
 
     public Attribute Name;
 
     private Attribute Path;
-    
-    public Attribute ImagePath;
-    
-    private Attribute ImagesDir;
-    
-    private Attribute AutoSave;
-    
-    private Attribute SaveImages;
 
-    public Project(File inputFile) throws DocumentException {
+    public Attribute ImagePath;
+
+    private Attribute ImagesDir;
+
+    private Attribute AutoSave;
+
+    private Attribute SaveImages;
+    
+    public HashSet<String> ClassArrays;
         
-        try {
-            SAXReader sa = new SAXReader();
-            Document document = sa.read(inputFile);
-            
-            System.out.println("Root element :" + document.getRootElement().getName());
-            
-            Root = document.getRootElement();
-            
-            List<Attribute> attributes = Root.attributes();
-            
-            Name = attributes.get(0);
-            Path = attributes.get(1);
-            ImagePath = attributes.get(2);
-            ImagesDir = attributes.get(3);
-            AutoSave = attributes.get(4);
-            SaveImages = attributes.get(5);
-            
-            LIST_OF_PROJECTS.add(this);
-        } catch (DocumentException documentException) {
-            System.err.println("Error :') ");
+    public Project(File inputFile) throws DocumentException, Exception {
+        
+        this.ClassArrays = new HashSet<>();
+
+        SAXReader sa = new SAXReader();
+        Document document = sa.read(inputFile);
+
+        System.out.println("Root element :" + document.getRootElement().getName());
+
+        Root = document.getRootElement();
+        
+        List<Attribute> attributes = Root.attributes();
+
+        Name = attributes.get(0);
+        for (Project List : LIST_OF_PROJECTS) {
+
+            if (Name.getValue().equals(List.Name.getValue())) {
+                throw new Exception("exist");
+            }
+
         }
-        
-        
+        Path = attributes.get(1);
+        ImagePath = attributes.get(2);
+        ImagesDir = attributes.get(3);
+        AutoSave = attributes.get(4);
+        SaveImages = attributes.get(5);
+
+        LIST_OF_PROJECTS.add(this);
+        Root.setData(this);
+        getClasses(Root);
+
     }
 
-    public Project(String name , File path , File imagePath , Boolean autoSave , Boolean saveImages , File imagesDir ) throws Exception {
+    public Project(String name, File path, File imagePath, Boolean autoSave, Boolean saveImages, File imagesDir) throws Exception {
         
-         for (Project p : LIST_OF_PROJECTS) {
+        this.ClassArrays = new HashSet<>();
+        
+        for (Project p : LIST_OF_PROJECTS) {
 
             if (name.equals(p.Name.getValue())) {
                 throw new Exception("exist");
             }
         }
         Document document = DocumentHelper.createDocument();
-        
+
         Root = document.addElement("Project")
                 .addAttribute("Name", name)
                 .addAttribute("Path", path.toURI().toString())
                 .addAttribute("ImagePath", imagePath.toURI().toString())
                 .addAttribute("ImagesDir", imagesDir.toURI().toString())
                 .addAttribute("AutoSave", String.valueOf(autoSave))
-                .addAttribute("SaveImages", String.valueOf(saveImages))
-                ;
+                .addAttribute("SaveImages", String.valueOf(saveImages));
 
         List<Attribute> attributes = Root.attributes();
-        
+
         Name = attributes.get(0);
         Path = attributes.get(1);
         ImagePath = attributes.get(2);
         ImagesDir = attributes.get(3);
         AutoSave = attributes.get(4);
         SaveImages = attributes.get(5);
-        
-        for (Node node : Root.content()) {
-            
-        }
-        
+
         LIST_OF_PROJECTS.add(this);
+        Root.setData(this);
         
+        System.out.println(document.asXML());
     }
-   
-    public void AddImage(File url) throws IOException{
-        
+
+    public Element AddImage(File url) throws IOException {
+
         SimpleImageInfo simpleImageInfo = new SimpleImageInfo(url);
-        
+
         Element addElement = Root.addElement("Image")
-                
-                .addAttribute("Name", url.getName().split(".")[0])
+                .addAttribute("Name", url.getName().split("\\.")[0])
                 .addAttribute("Path", url.toURI().toString())
                 .addAttribute("Type", simpleImageInfo.getMimeType())
                 .addAttribute("Width", String.valueOf(simpleImageInfo.getWidth()))
-                .addAttribute("Height", String.valueOf(simpleImageInfo.getHeight()))
-                ;
-        
+                .addAttribute("Height", String.valueOf(simpleImageInfo.getHeight()));
+
+        return addElement;
+
     }
-    
+
     public Integer getClassNumber() {
 
         Set<String> ret = new HashSet<>();
-        
-        for (Node I : Root.content()) {
-            
-            for (Node S : ((Element)I).content()) {
-                
-                for (Node C : ((Element)S).content()) {
-                    
-                    ret.add(((Element) C).attributeValue("Name"));
+
+        for (Element I : Root.elements()) {
+
+            for (Element S : I.elements()) {
+
+                for (Element C : S.elements()) {
+
+                    ret.add(C.attributeValue("Name"));
                 }
             }
         }
         return ret.size();
     }
+
     public Integer getImagesNumber() {
 
-        return Root.nodeCount();
+        return Root.elements().size();
     }
+
     public Integer getLabledNumber() {
 
-        int cpt = 0;
-
-        return cpt;
+        HashSet<Node> hashSet = new HashSet<>(Root.selectNodes("//Image/Shape/Class"));
+        HashSet<String> hashSetS = new HashSet<>();
+        
+        for (Iterator<Node> it = hashSet.iterator(); it.hasNext();) {
+            
+            Element node = (Element) it.next();
+            hashSetS.add(node.getParent().getParent().attribute(0).getValue());
+        }
+        
+        return hashSetS.size();
     }
+
     public Integer getClassifiedNumber() {
 
         int cpt = 0;
 
-        
         return cpt;
     }
-    
-    public void Save() throws IOException {   
-    }
+
     /**
      *
      * @param image
@@ -183,6 +202,7 @@ public class Project {
         }
         return outputFile;
     }
+
     public static File SavingFile(File Dir, String Name) {
 
         if (!Dir.exists()) {
@@ -205,6 +225,7 @@ public class Project {
         return file;
 
     }
+
     public static File SavingDir(File Dir, String Name) {
 
         if (!Dir.exists()) {
@@ -223,9 +244,9 @@ public class Project {
         return file;
 
     }
-    
+
     public void ProjectCSV(File url) {
-        
+
         try {
             // Pretty print the document to System.out
             url.createNewFile();
@@ -233,7 +254,6 @@ public class Project {
 
             for (Node node : Root.content()) {
 
-                
                 Element e = (Element) node;
                 String name = e.attributeValue("name");
                 String type = e.attributeValue("Type");
@@ -258,7 +278,101 @@ public class Project {
         } catch (IOException ex) {
             Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
+    }
+
+    public static HashSet<String> getClasses(Element root) {
+
+        List<Node> selectNodes = root.selectNodes("//Class");
+        
+        HashSet<String> hashSet = new HashSet<String>();
+        
+        for (Iterator<Node> it = selectNodes.iterator(); it.hasNext();) {
+            Element img = (Element) it.next();
+            hashSet.add(img.attribute(0).getValue().toLowerCase().replaceAll("\\s+",""));
+        }
+        System.out.println("selected nodes hashset ="+hashSet);
+        return hashSet;
+
+    }
+    
+    public void save() {
+
+        new Thread(() -> {
+
+            try {
+                File file = new File(new URI(Path.getValue()));
+                file.createNewFile();
+                FileWriter os = new FileWriter(file);
+                OutputFormat format = OutputFormat.createPrettyPrint();
+                XMLWriter writer = new XMLWriter(os, format);
+                writer.write(Root.getDocument());
+                writer.close();
+                for (Element element : Root.elements()) {
+                    new Images(element).Save();
+                    
+                }
+            } catch (URISyntaxException uRISyntaxException) {
+            } catch (IOException iOException) {
+            }
+        }).run();
+
+    }
+
+    public void SaveAs(File file, String type) {
+        
+        if(type.equals("XML"))
+            this.saveXML(file);
+        else if(type.equals("CSV"))
+            this.saveCSV(file);
+        
+    }
+    public void saveXML(File file) {
+        
+        new Thread(() -> {
+
+            try {
+                file.createNewFile();
+                FileWriter os = new FileWriter(file);
+                OutputFormat format = OutputFormat.createPrettyPrint();
+                XMLWriter writer = new XMLWriter(os, format);
+                writer.write(Root.getDocument());
+                writer.close();
+                
+            } catch (IOException iOException) {
+            }
+        }).run();
+        
+    }
+    public void saveCSV(File file) {
+        
+        new Thread(() -> {
+
+            try {
+                file.createNewFile();
+                FileWriter os = new FileWriter(file);
+                String STR="";
+                for (Element I : Root.elements()) {
+                    for (Element S : I.elements()) {
+                        for (Element C : S.elements()) {
+                            for(Attribute T : I.attributes()){
+                                
+                                STR= STR+T.getValue()+",";
+                            }
+                            for(Attribute T : S.attributes()){
+                                
+                                STR= STR+T.getValue()+",";       
+                            }
+                            STR= STR+C.attribute(0).getValue()+"\n";    
+                        }
+                    }                    
+                }
+                os.write(STR);
+                os.close();
+            } catch (IOException iOException) {
+            }
+        }).run();
+        
     }
 
 }

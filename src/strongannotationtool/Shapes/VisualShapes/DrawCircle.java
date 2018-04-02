@@ -6,10 +6,13 @@
 package strongannotationtool.Shapes.VisualShapes;
 
 import com.jfoenix.controls.JFXPopup;
-import copytowindowsphotodisplay.Model.Annotation;
+import copytowindowsphotodisplay.Model.CustomResourceBundle;
 import copytowindowsphotodisplay.Model.Images;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
@@ -25,8 +28,7 @@ import org.dom4j.Element;
 public class DrawCircle extends Ellipse implements DrawableShape {
 
     //Info
-    //Image
-    Images image;
+    private Element shapeElement;
 
     //Scale
     public double xK;
@@ -43,14 +45,74 @@ public class DrawCircle extends Ellipse implements DrawableShape {
     //UI
     public JFXPopup OptionPopup;
     public JFXPopup AddToPopup;
+    AddShapeToController controller2 = null;
 
-    public DrawCircle(double x, double y, double rx, double ry, double xk, double yk, Images image) throws IOException {
 
-        this.image = image;
+    public DrawCircle(double x, double y, double rx, double ry, double xk, double yk , Images image) throws IOException {
+
+        shapeElement = image.imageElement.addElement("Shape")
+                .addAttribute("Type", "Circle")
+                .addAttribute("LayoutX", "")
+                .addAttribute("LayoutY", "")
+                .addAttribute("Width", "")
+                .addAttribute("Height", "");
+       
         xK = xk;
         yK = yk;
-        ci = new Circle(6, Color.rgb(114, 137, 218, 0.6));
+       
+        ViewINI(x, y, rx, ry);
+        ShapeEventsHandle();
+        CircleEventHandle();
+        
+    }
+    public DrawCircle(Element S) {
+        
+        shapeElement=S;
+        
+        String x = S.attribute(1).getValue();
+        String y = S.attribute(2).getValue();
+        String w = S.attribute(3).getValue();
+        String h = S.attribute(4).getValue();
+        
+        double xx = Double.valueOf(S.attribute(1).getValue());
+        double yy = Double.valueOf(S.attribute(2).getValue());
+        double ww = Double.valueOf(S.attribute(3).getValue());
+        double hh = Double.valueOf(S.attribute(4).getValue());
+        
+        xK=1;
+        yK=1;
+        
+        ViewINI(xx, yy, xx+ww, yy+hh);
+        ShapeEventsHandle();
+        CircleEventHandle();
+        
+    }
 
+    public void AddToPopup() {
+        if(AddToPopup == null)
+            try {
+                System.out.println("AddShapeTo");
+                CustomResourceBundle customResourceBundle = new CustomResourceBundle();
+                customResourceBundle.addObject("element", this);
+                FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"),customResourceBundle);
+                this.AddToPopup = new JFXPopup(loaderAddTo.load());
+                controller2 = loaderAddTo.getController();
+                
+            } catch (IOException ex) {
+                Logger.getLogger(DrawRectangle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        else{
+            if(controller2 == null) {
+                System.err.println("Null Controller Add TO POPUp");
+            } else
+            controller2.refresh();
+        }
+    }
+
+
+    private void ViewINI(double x, double y, double rx, double ry) {
+        ci = new Circle(6, Color.rgb(114, 137, 218, 0.6));
+        
         setLayoutX(0);
         setLayoutY(0);
 
@@ -60,10 +122,40 @@ public class DrawCircle extends Ellipse implements DrawableShape {
 
         SetPoints(x, y, rx, ry);
         RefreshCircle();
+    }
+    private void CircleEventHandle() {
+        //Circle Actions
+        ci.setOnMousePressed((event) -> {
 
+            ci.setRadius(3);
+            X = event.getScreenX();
+            Y = event.getScreenY();
+            centerX = ci.getCenterX();
+            centerY = ci.getCenterY();
+
+        });
+        ci.setOnMouseDragged((event) -> {
+
+            double deltaX = X - event.getScreenX();
+            double deltaY = Y - event.getScreenY();
+
+            ci.setCenterX(centerX - deltaX);
+            ci.setCenterY(centerY - deltaY);
+
+            SetPoints(getCenterX(), getCenterY(), ci.getCenterX(), ci.getCenterY());
+
+        });
+        ci.setOnMouseReleased((event) -> {
+
+            ci.setRadius(6);
+
+            RefreshCircle();
+        });
+    }
+    private void ShapeEventsHandle() {
         //Circle Actions
         setOnMouseClicked((event) -> {
-
+            
             if (event.getButton() == MouseButton.SECONDARY) {
                 
                 if(OptionPopup == null)
@@ -74,9 +166,7 @@ public class DrawCircle extends Ellipse implements DrawableShape {
             }
             if (event.getClickCount() == 2) {
 
-                if(AddToPopup == null)
-                    AddToPopUpSetup();
-                
+                AddToPopup();
                 AddToPopup.show(Parent, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, getCenterX(), getCenterY());
 
             }
@@ -108,36 +198,8 @@ public class DrawCircle extends Ellipse implements DrawableShape {
             }
         });
         setOnMouseReleased((event) -> {
-
             
-        });
 
-        //Circle Actions
-        ci.setOnMousePressed((event) -> {
-
-            ci.setRadius(3);
-            X = event.getScreenX();
-            Y = event.getScreenY();
-            centerX = ci.getCenterX();
-            centerY = ci.getCenterY();
-
-        });
-        ci.setOnMouseDragged((event) -> {
-
-            double deltaX = X - event.getScreenX();
-            double deltaY = Y - event.getScreenY();
-
-            ci.setCenterX(centerX - deltaX);
-            ci.setCenterY(centerY - deltaY);
-
-            SetPoints(getCenterX(), getCenterY(), ci.getCenterX(), ci.getCenterY());
-
-        });
-        ci.setOnMouseReleased((event) -> {
-
-            ci.setRadius(6);
-
-            RefreshCircle();
         });
     }
 
@@ -146,20 +208,21 @@ public class DrawCircle extends Ellipse implements DrawableShape {
             FXMLLoader loaderOption = new FXMLLoader(getClass().getResource("RectOption.fxml"));
             this.OptionPopup = new JFXPopup(loaderOption.load());
             RectOptionCTR controller = loaderOption.getController();
-            controller.setShape(image.getProject().CLASSES, this);
+            controller.setShape(this);
             
         } catch (IOException e) {
         }
     }
-
-    public void AddToPopUpSetup() {
+    public AddShapeToController AddToPopUpSetup() {
         try {
             FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"));
             this.AddToPopup = new JFXPopup(loaderAddTo.load());
             AddShapeToController controller2 = loaderAddTo.getController();
-            controller2.setImage(image, this);
+            controller2.setElement(this);
+            return controller2;
         } catch (IOException iOException) {
         }
+        return null;
     }
 
     public void SetPoints(double x, double y, double i, double j) {
@@ -191,6 +254,11 @@ public class DrawCircle extends Ellipse implements DrawableShape {
         }
         this.setRadiusX(w);
         this.setRadiusY(h);
+        
+        shapeElement.attribute(3).setValue(String.valueOf(getRadiusX()*xK));
+        shapeElement.attribute(4).setValue(String.valueOf(getRadiusY()*yK));
+        
+
     }
 
     @Override
@@ -218,6 +286,11 @@ public class DrawCircle extends Ellipse implements DrawableShape {
             setCenterX(X);
             setCenterY(Y);
         }
+        shapeElement.attribute(1).setValue(String.valueOf(getCenterX()*xK));
+        shapeElement.attribute(2).setValue(String.valueOf(getCenterY()*yK));
+        shapeElement.attribute(3).setValue(String.valueOf(getRadiusX()*xK));
+        shapeElement.attribute(4).setValue(String.valueOf(getRadiusY()*yK));
+        
 
         RefreshCircle();
 
@@ -235,14 +308,12 @@ public class DrawCircle extends Ellipse implements DrawableShape {
 
     @Override
     public void remove(AnchorPane p) {
+        
         p.getChildren().remove(this);
         p.getChildren().remove(ci);
+        shapeElement.getParent().remove(shapeElement);
 
-        for (Annotation annotation : image.ANNOTATIONS) {
-
-            annotation.Shapes.remove(this);
-
-        }
+       
     }
 
     @Override
@@ -264,6 +335,11 @@ public class DrawCircle extends Ellipse implements DrawableShape {
         setRadiusX(getRadiusX() * DX);
         setRadiusY(getRadiusY() * DY);
 
+        shapeElement.attribute(1).setValue(String.valueOf(getCenterX()*xK));
+        shapeElement.attribute(2).setValue(String.valueOf(getCenterY()*yK));
+        shapeElement.attribute(3).setValue(String.valueOf(getRadiusX()*xK));
+        shapeElement.attribute(4).setValue(String.valueOf(getRadiusY()*yK));
+        
         RefreshCircle();
 
     }
@@ -291,19 +367,15 @@ public class DrawCircle extends Ellipse implements DrawableShape {
     }
 
     @Override
+    public Parent getParentNode() {
+        return Parent;
+    }
+    @Override
+    public Element getElement() {
+        return shapeElement;
+    }
+    @Override
     public String toString() {
         return "Circle," + getCenterX() + "," + getCenterY() + "," + getRadiusX() + "," + getRadiusY() + "," + xK + "," + yK + "\n";  //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public void addElement(Element addAttribute , Annotation note) {
-        
-        addAttribute.addElement("Circle")
-                .addAttribute("Class", note.getClasse().getName())
-                .addAttribute("CenterX", String.valueOf(getCenterX()*xK))
-                .addAttribute("CenterY", String.valueOf(getCenterY()*yK))
-                .addAttribute("RadiusX", String.valueOf(getRadiusX()*xK))
-                .addAttribute("RadiusY", String.valueOf(getRadiusY()*yK));
-    }
-
 }

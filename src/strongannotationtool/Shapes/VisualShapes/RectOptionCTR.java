@@ -36,7 +36,7 @@ public class RectOptionCTR implements Initializable {
         
     }    
 
-    public void setShape(ObservableList<CLASS> CLASSES,DrawRectangle aThis) {
+    public void setShape(DrawRectangle aThis) {
         
         Delete.setOnAction((event) -> {
             
@@ -54,7 +54,7 @@ public class RectOptionCTR implements Initializable {
             
         });
     }
-    public void setShape(ObservableList<CLASS> CLASSES,DrawCircle aThis) {
+    public void setShape(DrawCircle aThis) {
         
         Delete.setOnAction((event) -> {
             

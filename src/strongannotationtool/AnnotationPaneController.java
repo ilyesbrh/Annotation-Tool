@@ -15,11 +15,9 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -65,14 +63,11 @@ public class AnnotationPaneController implements Initializable {
     private boolean loopOn = false;
     private DrawableShape onCreate;
     private String ShapeMode = "Rectangle";
-    private double EventX;
-    private double EventY;
-
+    
     //design
     private final ImageView img;
     private final CustomGrid grid;
     private final AnchorPane MagnifierPane;
-    private JFXPopup fXPopup;
 
     CirclePopupMenu CirclePopUpMenu;
     CirclePopupMenu CirclePopUpMenu1;
@@ -113,7 +108,12 @@ public class AnnotationPaneController implements Initializable {
             GridOn(event);
         }
         if (!GridOn) {
-            GridOff(event);
+            try {
+                
+                GridOff(event);
+                
+            } catch (IOException iOException) {
+            }
         }
     };
 
@@ -128,7 +128,7 @@ public class AnnotationPaneController implements Initializable {
         }
     }
 
-    private void GridOff(MouseEvent event) {
+    private void GridOff(MouseEvent event) throws IOException {
 
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
 
@@ -144,7 +144,7 @@ public class AnnotationPaneController implements Initializable {
         }
     }
 
-    private void MousePressed_GridOff(MouseEvent event) {
+    private void MousePressed_GridOff(MouseEvent event) throws IOException {
 
         if (event.getButton().compareTo(MouseButton.PRIMARY) == 0) {
             PrimaryBtnPressed_GridOff(event);
@@ -174,7 +174,7 @@ public class AnnotationPaneController implements Initializable {
         }
     }
 
-    private void PrimaryBtnPressed_GridOff(MouseEvent event) {
+    private void PrimaryBtnPressed_GridOff(MouseEvent event) throws IOException {
         CirclePopUpMenu.hide();
         if (onCreate == null) {
 
@@ -275,16 +275,12 @@ public class AnnotationPaneController implements Initializable {
     }
     
     
-    private void CircleOnPress(MouseEvent event) {
+    private void CircleOnPress(MouseEvent event) throws IOException {
         
-        try {
-            double xk= img.getImage().getWidth()/img.getFitWidth();
-            double yk= img.getImage().getHeight()/img.getFitHeight();
-            
-            onCreate = new DrawCircle(event.getX(), event.getY(), event.getX() + 1, event.getY() + 1,xk,yk,this.image);
-            onCreate.AddTo(imgParent);
-        } catch (IOException exception) {
-        }
+        double xk= img.getImage().getWidth()/img.getFitWidth();
+        double yk= img.getImage().getHeight()/img.getFitHeight();
+        onCreate = new DrawCircle(event.getX(), event.getY(), event.getX() + 1, event.getY() + 1,xk,yk,this.image);
+        onCreate.AddTo(imgParent);
     }
 
     private void CircleOnDrag(MouseEvent event) {
@@ -427,30 +423,40 @@ public class AnnotationPaneController implements Initializable {
         
         this.image= image;
 
-        Image im = new Image(image.Path.getValue(), 0, 0, false, true);
+        Image im = image.getImage(0, 0, false, true, false);
 
         img.setImage(im);
-
+        
+        LoadShapes();
+        RefreshShapes();
         
     }
 
     @FXML
     private void prevImage(ActionEvent event) {
         
-        ObservableList<Images> IMAGES = image.getProject().IMAGES;
-        int indexOf = IMAGES.indexOf(image) - 1;
-        setimage(IMAGES.get(Integer.remainderUnsigned(indexOf, IMAGES.size() ) ) );
+        Element parent = image.imageElement.getParent();
+        int index = parent.elements().indexOf(image.imageElement);
         
+        int indexOf = index - 1;
+        
+        if(indexOf < 0) indexOf = parent.elements().size()-1;
+        
+        Element img = parent.elements().get(indexOf);
+        setimage(new Images(img));
     }
     @FXML
     private void NextImage(ActionEvent event) {
+        
         Element parent = image.imageElement.getParent();
-        int index = parent.indexOf((org.dom4j.Node) image);
+        int index = parent.elements().indexOf(image.imageElement);
+        
         int indexOf = index + 1;
+        if(indexOf > parent.elements().size()-1) indexOf = 0;
         
-        Element img = (Element)parent.node(Integer.remainderUnsigned(indexOf, parent.nodeCount()));
         
-        setimage();
+        Element img1 = parent.elements().get(indexOf);
+        setimage(new Images(img1));
         
     }
     @FXML
@@ -459,18 +465,7 @@ public class AnnotationPaneController implements Initializable {
     @FXML
     private void SettingPop(ActionEvent event) {
     }
-    private void AddClassPop(ActionEvent event) throws IOException {
-
-        final AnnotationPaneController x = this;
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("AddToFXML.fxml"));
-        this.fXPopup = new JFXPopup(loader.load());
-        AddToFXMLController controller = loader.getController();
-        controller.setAnnotationControler(this);
-
-        JFXButton source = (JFXButton) event.getSource();
-        fXPopup.show(root, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.RIGHT, 50, 50);
-    }
+    
     @FXML
     private void GridMode(ActionEvent event) {
 
@@ -519,5 +514,21 @@ public class AnnotationPaneController implements Initializable {
                 shape.ScaleTo( xk, yk);
             } 
         }   
+    }
+
+    private void LoadShapes() {
+        
+        for(Element S : image.imageElement.elements()){
+            
+            if(S.attribute(0).getValue().equals("Rectangle"))
+            {
+                new DrawRectangle(S).AddTo(imgParent);
+            }
+            else if(S.attribute(0).getValue().equals("Circle"))
+            {
+                new DrawCircle(S).AddTo(imgParent);
+            }
+        }
+        
     }
 }

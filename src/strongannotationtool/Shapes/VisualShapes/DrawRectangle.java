@@ -6,12 +6,15 @@
 package strongannotationtool.Shapes.VisualShapes;
 
 import com.jfoenix.controls.JFXPopup;
-import copytowindowsphotodisplay.Model.Annotation;
+import copytowindowsphotodisplay.Model.CustomResourceBundle;
 import copytowindowsphotodisplay.Model.Images;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
@@ -31,8 +34,8 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
     
         //Image
     
-        Images image;
-    
+        Element shapeElement;
+        
         //Scale
         public double xK;
         public double yK;
@@ -46,16 +49,30 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
     //UI
     public JFXPopup OptionPopup;
     public JFXPopup AddToPopup;
+    AddShapeToController controller2 = null;
+
     private double CenterX;
     private double CenterY;
 
     
     public DrawRectangle(double x, double y, double i, double j,double xk,double yk,Images image) throws IOException {
 
-        this.image=image;
+        
+        shapeElement = image.imageElement.addElement("Shape")
+                .addAttribute("Type", "Rectangle")
+                .addAttribute("LayoutX", "")
+                .addAttribute("LayoutY", "")
+                .addAttribute("Width", "")
+                .addAttribute("Height", "");
         xK=xk;
         yK=yk;
         
+        ViewINI(x, y, i, j);
+        ShapeEventsHandle();
+        CircleEventHandle();
+    }
+
+    private void ViewINI(double x, double y, double i, double j) {
         ci = new Circle(6, Color.rgb(114, 137, 218, 0.6));
         ci.setEffect(new DropShadow());
 
@@ -65,53 +82,8 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
 
         ci.setLayoutX(this.getLayoutX() + this.getWidth());
         ci.setLayoutY(this.getLayoutY() + this.getHeight());
-
-        //Rectangle Actions
-        
-        setOnMouseClicked((event) -> {
-
-            if (event.getButton() == MouseButton.SECONDARY) {
-                if(OptionPopup == null)
-                try {
-                    FXMLLoader loaderOption = new FXMLLoader(getClass().getResource("RectOption.fxml"));
-                    this.OptionPopup = new JFXPopup(loaderOption.load());
-                    RectOptionCTR controller = loaderOption.getController();
-                    controller.setShape(image.getProject().CLASSES,this);
-
-                } catch (Exception e) {
-                }
-
-                OptionPopup.show(this);
-            }
-            if(event.getClickCount()==2){
-                
-                AddToPopup();
-                    AddToPopup.show(this);
-                
-            }
-
-        });
-
-        setOnMousePressed((event) -> {
-
-            X = event.getScreenX();
-            Y = event.getScreenY();
-            CenterX = getLayoutX();
-            CenterY = getLayoutY();
-        });
-
-        setOnMouseDragged((event) -> {
-
-            double deltaX = X - event.getScreenX();
-            double deltaY = Y - event.getScreenY();
-
-            MoveTo(CenterX - deltaX, CenterY - deltaY);
-
-        });
-        setOnMouseReleased((event) -> {
-
-        });
-
+    }
+    private void CircleEventHandle() {
         //Circle Actions
         ci.setOnMousePressed((event) -> {
 
@@ -138,19 +110,97 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
             SetPoints(this.getLayoutX(), this.getLayoutY(), ci.getLayoutX(), ci.getLayoutY());
         });
     }
+    private void ShapeEventsHandle() {
+        //Rectangle Actions
+        
+        setOnMouseClicked((event) -> {
+            
+            if (event.getButton() == MouseButton.SECONDARY) {
+                if(OptionPopup == null)
+                    try {
+                        FXMLLoader loaderOption = new FXMLLoader(getClass().getResource("RectOption.fxml"));
+                        this.OptionPopup = new JFXPopup(loaderOption.load());
+                        RectOptionCTR controller = loaderOption.getController();
+                        controller.setShape(this);
+                        
+                    } catch (Exception e) {
+                    }
+                
+                OptionPopup.show(this);
+            }
+            if(event.getClickCount()==2){
+                
+                AddToPopup();
+                AddToPopup.show(this);
+                
+                
+            }
+            
+        });
+        
+        setOnMousePressed((event) -> {
+            
+            X = event.getScreenX();
+            Y = event.getScreenY();
+            CenterX = getLayoutX();
+            CenterY = getLayoutY();
+        });
+        
+        setOnMouseDragged((event) -> {
+            
+            double deltaX = X - event.getScreenX();
+            double deltaY = Y - event.getScreenY();
+            
+            MoveTo(CenterX - deltaX, CenterY - deltaY);
+            
+        });
+        setOnMouseReleased((event) -> {
+            
+        });
+    }
+
+    public DrawRectangle(Element S) {
+        
+        shapeElement=S;
+        
+        String x = S.attribute(1).getValue();
+        String y = S.attribute(2).getValue();
+        String w = S.attribute(3).getValue();
+        String h = S.attribute(4).getValue();
+        
+        double xx = Double.valueOf(S.attribute(1).getValue());
+        double yy = Double.valueOf(S.attribute(2).getValue());
+        double ww = Double.valueOf(S.attribute(3).getValue());
+        double hh = Double.valueOf(S.attribute(4).getValue());
+        
+        xK=1;
+        yK=1;
+        
+        ViewINI(xx, yy, xx+ww, yy+hh);
+        ShapeEventsHandle();
+        CircleEventHandle(); 
+    }
 
     public void AddToPopup() {
         if(AddToPopup == null)
             try {
                 System.out.println("AddShapeTo");
-                FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"));
+                
+                CustomResourceBundle customResourceBundle = new CustomResourceBundle();
+                customResourceBundle.addObject("element", this);
+                FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"),customResourceBundle);
                 this.AddToPopup = new JFXPopup(loaderAddTo.load());
-                AddShapeToController controller2 = loaderAddTo.getController();
-                controller2.setImage(image,this);
+                controller2 = loaderAddTo.getController();
                 
             } catch (IOException ex) {
                 Logger.getLogger(DrawRectangle.class.getName()).log(Level.SEVERE, null, ex);
             }
+        else{
+            if(controller2 == null) {
+                System.err.println("Null Controller Add TO POPUp");
+            } else
+            controller2.refresh();
+        }
     }
 
     public void SetPoints(double x, double y, double i, double j) {
@@ -169,6 +219,12 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
             this.setLayoutY(y);
             this.setHeight(j - y);
         }
+        
+        shapeElement.attribute(1).setValue(String.valueOf(getLayoutX()*xK));
+        shapeElement.attribute(2).setValue(String.valueOf(getLayoutY()*yK));
+        shapeElement.attribute(3).setValue(String.valueOf(getWidth()*xK));
+        shapeElement.attribute(4).setValue(String.valueOf(getHeight()*yK));
+        
         ci.setLayoutX(getLayoutX() + getWidth());
         ci.setLayoutY(getLayoutY() + getHeight());
 
@@ -203,6 +259,9 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
 
         this.setLayoutX(X);
         this.setLayoutY(Y);
+        shapeElement.attribute(1).setValue(String.valueOf(getLayoutX()*xK));
+        shapeElement.attribute(2).setValue(String.valueOf(getLayoutY()*yK));
+        
 
         ci.setLayoutX(getLayoutX() + getWidth());
         ci.setLayoutY(getLayoutY() + getHeight());
@@ -228,6 +287,12 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         setLayoutY(getLayoutY() * DY);
         setWidth(getWidth() * DX);
         setHeight(getHeight() * DY);
+        
+        shapeElement.attribute(1).setValue(String.valueOf(getLayoutX()*xK));
+        shapeElement.attribute(2).setValue(String.valueOf(getLayoutY()*yK));
+        shapeElement.attribute(3).setValue(String.valueOf(getWidth()*xK));
+        shapeElement.attribute(4).setValue(String.valueOf(getHeight()*yK));
+        
 
         ci.setLayoutX(getLayoutX() + getWidth());
         ci.setLayoutY(getLayoutY() + getHeight());
@@ -239,25 +304,19 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         
         p.getChildren().remove(this);
         p.getChildren().remove(ci);
-        for (Annotation annotation : image.ANNOTATIONS) {
-            
-            annotation.Shapes.remove(this);
-        }
+        shapeElement.getParent().remove(shapeElement);
+        
     }
-
+    @Override
+    public Parent getParentNode() {
+        return Parent;
+    }
+    @Override
+    public Element getElement() {
+        return shapeElement;
+    }
     @Override
     public String toString() {
         return "Rectangle,"+getLayoutX()+","+getLayoutY()+","+getWidth()+","+getHeight()+","+xK+","+yK+"\r\n"; //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void addElement(Element addAttribute , Annotation note) {
-        
-        addAttribute.addElement("Rectangle")
-                .addAttribute("Class", note.getClasse().getName())
-                .addAttribute("LayoutX", String.valueOf(getLayoutX()*xK))
-                .addAttribute("LayoutY", String.valueOf(getLayoutY()*yK))
-                .addAttribute("Width", String.valueOf(getWidth()*xK))
-                .addAttribute("Height", String.valueOf(getHeight()*yK));
     }
 }
