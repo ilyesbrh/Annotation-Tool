@@ -5,8 +5,10 @@
  */
 package copytowindowsphotodisplay;
 
+import com.jfoenix.controls.JFXButton;
 import copytowindowsphotodisplay.Model.Project;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -17,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -42,6 +45,8 @@ public class ProjectInfoFXMLController implements Initializable {
     private Label labledNumber;
     @FXML
     private ProgressIndicator Progress;
+    @FXML
+    private JFXButton Open;
 
     private final Image image;
 
@@ -61,6 +66,7 @@ public class ProjectInfoFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        Open.setTooltip(new Tooltip("Open Project"));
         imageview.setImage(image);
         name.setText(project.Name.getValue());
         classNumber.setText(project.getClassNumber().toString());
@@ -78,7 +84,7 @@ public class ProjectInfoFXMLController implements Initializable {
     }
 
     @FXML
-    private void Open(ActionEvent event) {
+    private void Open(ActionEvent event) throws URISyntaxException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainFXML.fxml"));
 
@@ -86,15 +92,18 @@ public class ProjectInfoFXMLController implements Initializable {
 
         loader.setController(controller);
 
-        Stage s = new Stage();
+        Stage stage = new Stage();
+        stage.getIcons().add(new Image(getClass().getResource("Annotation.png").toURI().toString()));
+        stage.setTitle("Annotation Tool");
+        
         try {
             Parent load = loader.load();
-            s.setScene(new Scene(load));
+            stage.setScene(new Scene(load));
 
         } catch (IOException ex) {
         }
 
-        s.show();
+        stage.show();
 
     }
 

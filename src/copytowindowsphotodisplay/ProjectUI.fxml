@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.GridView?>
 
-<StackPane fx:id="NoteStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="806.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="copytowindowsphotodisplay.ProjectUIController">
+<StackPane fx:id="NoteStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="copytowindowsphotodisplay.ProjectUIController">
    <children>
-      <AnchorPane id="AnchorPane" fx:id="MainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="803.0">
+      <AnchorPane id="AnchorPane" fx:id="MainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="603.0" prefWidth="803.0">
          <children>
-            <AnchorPane prefHeight="800.0" prefWidth="184.0" style="-fx-background-color: #7289da;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="LeftPane" disable="true" prefHeight="656.0" prefWidth="154.0" style="-fx-background-color: #7289da;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <JFXButton layoutY="100.0" onAction="#NewProject" prefHeight="68.0" prefWidth="184.0" style="-fx-background-color: rgb(114, 137, 180);" text="New" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <JFXButton layoutY="99.0" onAction="#NewProject" prefHeight="68.0" prefWidth="184.0" style="-fx-background-color: rgb(114, 137, 180);" text="New" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <font>
                         <Font name="System Bold" size="20.0" />
                      </font>
@@ -34,9 +35,41 @@
                   </JFXButton>
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="184.0" prefHeight="660.0" prefWidth="621.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="183.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="RightPane" layoutX="184.0" prefHeight="660.0" prefWidth="621.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <GridView fx:id="Gridview" cellHeight="200.0" cellWidth="200.0" horizontalCellSpacing="20.0" verticalCellSpacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <JFXButton fx:id="OpenBtn" contentDisplay="TOP" layoutX="408.0" layoutY="114.0" onAction="#Open" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #FBBC05;" text="Open" textFill="#ebf7e3" AnchorPane.rightAnchor="195.0" AnchorPane.topAnchor="114.0">
+                     <graphic>
+                        <FontAwesomeIconView fill="#ebf7e3" glyphName="FOLDER_OPEN_ALT" size="40" />
+                     </graphic>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="NewBtn" contentDisplay="TOP" layoutX="201.0" layoutY="114.0" onAction="#NewProject" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #4285F4;" text="New" textFill="#ebf7e3" AnchorPane.leftAnchor="201.0" AnchorPane.topAnchor="114.0">
+                     <graphic>
+                        <FontAwesomeIconView fill="#ebf7e3" glyphName="PLUS" size="40" />
+                     </graphic>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="HelpBtn" contentDisplay="TOP" layoutX="408.0" layoutY="302.0" onAction="#Help" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #EA4335;" text="Help" textFill="#ebf7e3" AnchorPane.bottomAnchor="121.0" AnchorPane.rightAnchor="195.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView fill="#ebf7e3" glyphName="QUESTION" size="40" />
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="SettingsBtn" contentDisplay="TOP" layoutX="201.0" layoutY="302.0" onAction="#Settings" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #34A853;" text="Settings" textFill="#ebf7e3" AnchorPane.bottomAnchor="121.0" AnchorPane.leftAnchor="201.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView fill="#ebf7e3" glyphName="GEAR" size="40" />
+                     </graphic>
+                  </JFXButton>
                </children>
             </AnchorPane>
          </children>

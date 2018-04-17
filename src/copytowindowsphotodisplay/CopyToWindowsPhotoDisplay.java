@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -24,9 +25,11 @@ public class CopyToWindowsPhotoDisplay extends Application {
         
         Scene scene = new Scene(root);
         
+        stage.getIcons().add(new Image(getClass().getResource("Annotation.png").toURI().toString()));
+        stage.setTitle("Anotation Tool");
         stage.setScene(scene);
-        stage.setWidth(800);
-        stage.setHeight(600);
+        stage.setWidth(840);
+        stage.setHeight(660);
         stage.show();
         
     }

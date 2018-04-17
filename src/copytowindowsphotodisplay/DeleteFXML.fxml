@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane cache="true" prefHeight="361.0" prefWidth="401.0" style="-fx-background-color: rgb(0, 191, 255);" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="copytowindowsphotodisplay.DeleteFXMLController">
+   <children>
+      <Label focusTraversable="false" layoutX="77.0" layoutY="7.0" prefHeight="58.0" prefWidth="248.0" text="Delete" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="62.0" />
+         </font>
+      </Label>
+      <JFXButton fx:id="yes" buttonType="RAISED" contentDisplay="CENTER" layoutX="92.0" layoutY="214.0" onAction="#yes" prefHeight="61.0" prefWidth="79.0" ripplerFill="#6b6b6b" style="-fx-background-color: red;" text="yes" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font></JFXButton>
+      <JFXButton fx:id="no" buttonType="RAISED" contentDisplay="CENTER" layoutX="210.0" layoutY="214.0" onAction="#no" prefHeight="61.0" prefWidth="79.0" ripplerFill="#6b6b6b" text="No">
+         <font>
+            <Font name="System Bold" size="19.0" />
+         </font></JFXButton>
+      <JFXCheckBox fx:id="delete" layoutX="21.0" layoutY="319.0" prefHeight="21.0" prefWidth="235.0" text="Delete Image in Drive" textFill="WHITE" unCheckedColor="WHITE" underline="true" wrapText="true">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </JFXCheckBox>
+      <Label fx:id="number" alignment="CENTER" layoutX="23.0" layoutY="97.0" prefHeight="101.0" prefWidth="99.0" text="1" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="69.0" />
+         </font>
+      </Label>
+      <Label layoutX="125.0" layoutY="127.0" prefHeight="71.0" prefWidth="130.0" text="image(s)" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

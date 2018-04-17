@@ -1,50 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXListView?>
-<?import com.jfoenix.controls.JFXTextField?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="503.0" prefWidth="652.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="269.0" prefWidth="350.0" style="-fx-background-color: #a8d0e7;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <JFXListView fx:id="ImagesListView" layoutY="75.0" onMouseClicked="#showpop" prefHeight="428.0" prefWidth="338.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="75.0" />
-      <JFXButton alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="566.0" layoutY="80.0" onAction="#EditClassName" prefHeight="38.0" prefWidth="21.0" text=" ">
+      <JFXButton fx:id="Close" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="287.0" layoutY="16.0" onAction="#EditClassName" prefHeight="52.0" prefWidth="56.0" text=" ">
          <graphic>
-            <FontAwesomeIconView fx:id="Icon" fontSmoothingType="LCD" glyphName="EDIT" size="20" wrappingWidth="15.0" />
+            <FontAwesomeIconView fx:id="Icon" fontSmoothingType="LCD" glyphName="CLOSE" size="35" wrappingWidth="34.0" />
          </graphic>
       </JFXButton>
-      <JFXButton alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" graphicTextGap="0.0" layoutY="14.0" onAction="#AddClass" prefHeight="57.0" prefWidth="338.0" style="-fx-background-color: a8d0e7;" text="Add Class" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="14.0">
+      <Label alignment="CENTER" layoutX="170.0" layoutY="200.0" prefHeight="28.0" prefWidth="89.0" text="Image(s) " textFill="WHITE">
          <font>
-            <Font name="System Bold Italic" size="27.0" />
+            <Font name="System Bold" size="19.0" />
+         </font></Label>
+      <Label fx:id="imageNumber" alignment="CENTER" contentDisplay="CENTER" layoutX="7.0" layoutY="102.0" prefHeight="141.0" prefWidth="182.0" text="000" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="96.0" />
          </font>
+      </Label>
+      <Separator layoutX="267.0" layoutY="12.0" opacity="0.54" orientation="VERTICAL" prefHeight="246.0" prefWidth="4.0" />
+      <Label fx:id="Name" alignment="CENTER" layoutX="7.0" layoutY="16.0" prefHeight="64.0" prefWidth="247.0" text="Class X">
+         <font>
+            <Font size="41.0" />
+         </font>
+      </Label>
+      <JFXButton fx:id="Edit" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="287.0" layoutY="102.0" onAction="#EditClassName" prefHeight="52.0" prefWidth="56.0" text=" ">
+         <graphic>
+            <FontAwesomeIconView fx:id="Icon1" fontSmoothingType="LCD" glyphName="EDIT" size="35" wrappingWidth="34.0" />
+         </graphic>
       </JFXButton>
-      <Label alignment="CENTER" layoutX="374.0" layoutY="251.0" prefHeight="21.0" prefWidth="56.0" text="Images " />
-      <Label alignment="CENTER" layoutX="511.0" layoutY="251.0" prefHeight="21.0" prefWidth="76.0" text="Labled" />
-      <Label fx:id="imageNumber" alignment="CENTER" contentDisplay="CENTER" layoutX="342.0" layoutY="169.0" prefHeight="71.0" prefWidth="118.0" text="0">
-         <font>
-            <Font name="System Bold" size="40.0" />
-         </font>
-      </Label>
-      <Label fx:id="LabledNumber" alignment="CENTER" contentDisplay="CENTER" layoutX="481.0" layoutY="169.0" prefHeight="71.0" prefWidth="136.0" text="0">
-         <font>
-            <Font name="System Bold" size="40.0" />
-         </font>
-      </Label>
-      <ProgressIndicator fx:id="Progress" layoutX="427.0" layoutY="343.0" prefHeight="106.0" prefWidth="92.0" progress="0.0" />
-      <Label layoutX="464.0" layoutY="174.0" text="/">
-         <font>
-            <Font size="45.0" />
-         </font>
-      </Label>
-      <Label layoutX="460.0" layoutY="280.0" text="=">
-         <font>
-            <Font size="38.0" />
-         </font>
-      </Label>
-      <JFXTextField fx:id="Name" editable="false" labelFloat="true" layoutX="367.0" layoutY="80.0" prefHeight="38.0" prefWidth="182.0" promptText="ClassName" />
+      <JFXButton fx:id="Delete" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="287.0" layoutY="188.0" onAction="#EditClassName" prefHeight="52.0" prefWidth="56.0" text=" ">
+         <graphic>
+            <FontAwesomeIconView fx:id="Icon11" fill="#c62525" fontSmoothingType="LCD" glyphName="TRASH_ALT" size="35" wrappingWidth="34.0" />
+         </graphic>
+      </JFXButton>
    </children>
+   <effect>
+      <DropShadow height="30.33" radius="14.665" width="30.33" />
+   </effect>
 </AnchorPane>

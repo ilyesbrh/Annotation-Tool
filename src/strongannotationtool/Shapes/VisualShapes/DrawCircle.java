@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
@@ -46,7 +47,7 @@ public class DrawCircle extends Ellipse implements DrawableShape {
     public JFXPopup OptionPopup;
     public JFXPopup AddToPopup;
     AddShapeToController controller2 = null;
-
+    Tooltip TT=new Tooltip();
 
     public DrawCircle(double x, double y, double rx, double ry, double xk, double yk , Images image) throws IOException {
 
@@ -86,17 +87,32 @@ public class DrawCircle extends Ellipse implements DrawableShape {
         ShapeEventsHandle();
         CircleEventHandle();
         
+        setOnMouseEntered((event) -> {
+            TT.setText("");
+            for (Element element : shapeElement.elements()) {
+                
+                TT.setText(TT.getText()+element.attribute(0).getValue()+'\n');
+            }
+            if(!TT.getText().isEmpty())
+                TT.show(this, event.getScreenX()-event.getX()+getCenterX()+getRadiusX(), event.getScreenY()+getCenterY()-event.getY()-getRadiusY());
+        });
+        setOnMouseExited((event) -> {
+            TT.hide();
+        });
+        
     }
 
     public void AddToPopup() {
         if(AddToPopup == null)
             try {
                 System.out.println("AddShapeTo");
+                
                 CustomResourceBundle customResourceBundle = new CustomResourceBundle();
                 customResourceBundle.addObject("element", this);
                 FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"),customResourceBundle);
+                controller2 = new AddShapeToController();
+                loaderAddTo.setController(controller2);
                 this.AddToPopup = new JFXPopup(loaderAddTo.load());
-                controller2 = loaderAddTo.getController();
                 
             } catch (IOException ex) {
                 Logger.getLogger(DrawRectangle.class.getName()).log(Level.SEVERE, null, ex);
@@ -213,16 +229,28 @@ public class DrawCircle extends Ellipse implements DrawableShape {
         } catch (IOException e) {
         }
     }
-    public AddShapeToController AddToPopUpSetup() {
-        try {
-            FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"));
-            this.AddToPopup = new JFXPopup(loaderAddTo.load());
-            AddShapeToController controller2 = loaderAddTo.getController();
-            controller2.setElement(this);
-            return controller2;
-        } catch (IOException iOException) {
+    public void AddToPopUpSetup() throws IOException {
+        
+        if(AddToPopup == null)
+            try {
+                System.out.println("AddShapeTo");
+                
+                CustomResourceBundle customResourceBundle = new CustomResourceBundle();
+                customResourceBundle.addObject("element", this);
+                FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"),customResourceBundle);
+                controller2 = new AddShapeToController();
+                loaderAddTo.setController(controller2);
+                this.AddToPopup = new JFXPopup(loaderAddTo.load());
+                
+            } catch (IOException ex) {
+                Logger.getLogger(DrawRectangle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        else{
+            if(controller2 == null) {
+                System.err.println("Null Controller Add TO POPUp");
+            } else
+            controller2.refresh();
         }
-        return null;
     }
 
     public void SetPoints(double x, double y, double i, double j) {

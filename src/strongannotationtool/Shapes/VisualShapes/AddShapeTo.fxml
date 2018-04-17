@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="notePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="379.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="strongannotationtool.Shapes.VisualShapes.AddShapeToController">
+<StackPane fx:id="notePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="379.0" prefWidth="222.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <AnchorPane id="AnchorPane" fx:id="mainPane" maxWidth="-Infinity" prefHeight="379.0" prefWidth="224.0" style="-fx-background-color: white;">
          <children>
@@ -19,7 +19,7 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <JFXButton layoutY="335.0" onAction="#AddTo" prefHeight="44.0" prefWidth="222.0" ripplerFill="#18e430" text="New playlist" textOverrun="CENTER_ELLIPSIS" underline="true" wrapText="true">
+            <JFXButton layoutY="335.0" onAction="#AddTo" prefHeight="44.0" prefWidth="222.0" ripplerFill="#18e430" text="New Class" textOverrun="CENTER_ELLIPSIS" underline="true" wrapText="true">
                <font>
                   <Font size="16.0" />
                </font>

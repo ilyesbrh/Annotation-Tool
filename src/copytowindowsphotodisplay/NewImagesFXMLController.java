@@ -5,6 +5,7 @@
  */
 package copytowindowsphotodisplay;
 
+import copytowindowsphotodisplay.Model.Images;
 import copytowindowsphotodisplay.Model.Project;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,7 +35,7 @@ public class NewImagesFXMLController implements Initializable {
      * Initializes the controller class.
      */
     Project project;
-    GridView<Element> ImagesGrid;
+    GridView<Images> ImagesGrid;
             
     public NewImagesFXMLController(Project project, AllImagesFXMLController gridImages) {
         
@@ -52,7 +53,7 @@ public class NewImagesFXMLController implements Initializable {
         List<File> openDirectoryImagesChooser = openDirectoryImagesChooser();
         for (File file : openDirectoryImagesChooser) {
 
-            ImagesGrid.getItems().add(project.AddImage(file));
+            ImagesGrid.getItems().add(new Images(project.AddImage(file)));
 
         }
 
@@ -66,7 +67,7 @@ public class NewImagesFXMLController implements Initializable {
         if(openImagesChooser== null) return;
         for (File file : openImagesChooser) {
             
-            ImagesGrid.getItems().add(project.AddImage(file));
+            ImagesGrid.getItems().add(new Images(project.AddImage(file)));
             
         }
         

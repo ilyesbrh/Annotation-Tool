@@ -60,12 +60,7 @@
             <Font name="System Bold" size="19.0" />
          </font>
       </JFXButton>
-      <ImageView fx:id="Imageview" fitHeight="162.0" fitWidth="225.0" layoutX="161.0" layoutY="32.0" pickOnBounds="true" AnchorPane.leftAnchor="161.0" />
-      <JFXButton contentDisplay="CENTER" layoutX="362.0" layoutY="14.0" onAction="#imageChooser" prefHeight="36.0" prefWidth="49.0" style="-fx-background-color: aqua;" text=" " AnchorPane.leftAnchor="362.0">
-         <graphic>
-            <FontAwesomeIconView glyphName="PHOTO" size="25" />
-         </graphic>
-      </JFXButton>
+      <ImageView fx:id="Imageview" fitHeight="162.0" fitWidth="225.0" layoutX="161.0" layoutY="32.0" onMouseClicked="#imageChooser" pickOnBounds="true" AnchorPane.leftAnchor="161.0" />
       <JFXButton layoutX="41.0" layoutY="490.0" onAction="#Cancel" prefHeight="47.0" prefWidth="77.0" text="Cancel" textFill="RED" underline="true" AnchorPane.rightAnchor="451.0" />
    </children>
 </AnchorPane>

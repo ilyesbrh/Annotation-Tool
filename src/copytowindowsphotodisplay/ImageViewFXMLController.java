@@ -5,10 +5,13 @@
  */
 package copytowindowsphotodisplay;
 
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXRippler;
 import copytowindowsphotodisplay.Model.Images;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -17,18 +20,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
-import org.dom4j.Element;
 import strongannotationtool.AnnotationPaneController;
 
 /**
@@ -47,7 +46,7 @@ public class ImageViewFXMLController implements Initializable {
     @FXML
     private Label Name;
     @FXML
-    private FontAwesomeIconView Selected;
+    private JFXCheckBox Selected;
     @FXML
     private AnchorPane RippleAnchor;
     @FXML
@@ -58,6 +57,7 @@ public class ImageViewFXMLController implements Initializable {
     private Images image;
     
     private StackPane NoteStack;
+    private JFXDialog Jfxdialog;
 
 
     ImageViewFXMLController(StackPane NoteStack) {
@@ -82,6 +82,8 @@ public class ImageViewFXMLController implements Initializable {
                 OpenStrongAnnotation();
             } catch (IOException ex) {
                 Logger.getLogger(ImageViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(ImageViewFXMLController.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             
@@ -96,18 +98,16 @@ public class ImageViewFXMLController implements Initializable {
             MouseEntred.setStrokeWidth(0);
         });
     }    
-    public void UpdateItem(Element item){
+    public void UpdateItem(Images item){
         
-        this.image=new Images(item);
+        this.image=item;
         
         Name.setText(image.Name.getValue());
         Tooltip tooltip = new Tooltip(image.Name.getValue());
         tooltip.setFont(new Font(16));
         Name.setTooltip(tooltip);
         
-        
-        
-        Selected.setVisible(false);
+        item.selected.bindBidirectional(Selected.selectedProperty());
         
         Classified.visibleProperty().bind(image.Labled);
         
@@ -123,7 +123,7 @@ public class ImageViewFXMLController implements Initializable {
         
     }
 
-    private void OpenStrongAnnotation() throws IOException {
+    private void OpenStrongAnnotation() throws IOException, URISyntaxException {
         
         AnnotationPaneController newController=new AnnotationPaneController();
             
@@ -134,10 +134,14 @@ public class ImageViewFXMLController implements Initializable {
         
         newController.setimage(image);
         
-        Stage s=new Stage();
-        s.setScene(new Scene(load));
+        load.prefWidthProperty().bind(NoteStack.widthProperty().subtract(100));
+        load.prefHeightProperty().bind(NoteStack.heightProperty().subtract(50));
         
-        s.show();
+        this.Jfxdialog = new JFXDialog(); 
+        this.Jfxdialog.setDialogContainer(NoteStack);
+        this.Jfxdialog.setTransitionType(JFXDialog.DialogTransition.CENTER);
+        this.Jfxdialog.setContent(load);
+        this.Jfxdialog.show();
     }
     
 }

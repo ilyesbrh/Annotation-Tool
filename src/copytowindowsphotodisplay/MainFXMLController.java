@@ -19,9 +19,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
+import org.dom4j.Element;
 
 /**
  * FXML Controller class
@@ -87,23 +90,26 @@ public class MainFXMLController implements Initializable {
         }
     }    
 
-    private void ClassesPopUpINI() {
-        try {
-            // New Project PopUp INI
-            ClassesFXMLController newController=new ClassesFXMLController(project,DialogPane);
-            
+    private void ClassesPopUpINI() throws IOException {
+        // New Project PopUp INI
+        FlowPane flowPane = new FlowPane();
+        ScrollPane scrollPane=new ScrollPane(flowPane);
+        scrollPane.prefWidthProperty().bind(Jfxdialog.getDialogContainer().widthProperty().subtract(100));
+        scrollPane.setFitToWidth(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        this.Jfxdialog.setContent(scrollPane);
+
+        for (Element object : project.getClasses()) {
+
+            ClassesFXMLController newController=new ClassesFXMLController(object,Jfxdialog);
+
             FXMLLoader Newload=new FXMLLoader(getClass().getResource("ClassesFXML.fxml"));
             Newload.setController(newController);
-            
             AnchorPane load = Newload.load();
-            
-            this.Jfxdialog.setContent(load);
-            
-            
-        } catch (IOException ex) {
-            Logger.getLogger(ProjectUIController.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("ERROR");
-        }
+            flowPane.getChildren().add(load);
+
+            }
     }    
 
     @FXML
@@ -135,6 +141,7 @@ public class MainFXMLController implements Initializable {
         project.save();
     }
     private void ExportINI() throws IOException {
+        
         ResourceBundle resourceBundle = new ResourceBundle() {
             @Override
             protected Object handleGetObject(String key) {
@@ -147,7 +154,6 @@ public class MainFXMLController implements Initializable {
                 return null;
             }
         };
-        URL resource = getClass().getResource("ExportFXML.fxml");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ExportFXML.fxml"));
         loader.setResources(resourceBundle);
         AnchorPane load = loader.load();

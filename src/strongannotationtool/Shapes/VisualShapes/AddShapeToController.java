@@ -15,7 +15,6 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,7 +24,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
-import org.dom4j.Node;
 
 /**
  * FXML Controller class
@@ -119,19 +117,23 @@ public class AddShapeToController implements Initializable {
 
         final String name = n.toLowerCase().replaceAll("\\s+", "");
 
-        List<Element> elements = shape.elements();
+        if(name.isEmpty())
+            return false;
+        
+        List<Element> elements = shape.getDocument().getRootElement().elements().get(1).elements();
         System.out.println(elements);
         elements.removeIf((t) -> {
 
-            Attribute attribute = t.attribute(0);
+            Attribute attribute = t.attribute(1);
 
             return !attribute.getValue().equals(name); 
         });
 
         if (elements.isEmpty()) {
-
-            shape.addElement("Class").addAttribute("Name", name);
-
+            Element rootElement = shape.getDocument().getRootElement();
+            String id=Project.GenerateId(rootElement,n,0);
+            rootElement.element("Classes").addElement("Class").addAttribute("id", id).addAttribute("Name", name);
+            
             states();
             return true;
         }
@@ -145,6 +147,7 @@ public class AddShapeToController implements Initializable {
         if (CreateClass(NameTextField.getText())) {
 
             NewClassPane.setVisible(false);
+            
         } else {
 
             WarmingLabel.setText("Used Class Name");
@@ -174,16 +177,20 @@ public class AddShapeToController implements Initializable {
         }
 
         @Override
-        public void updateItem(String name, boolean empty) {
-            super.updateItem(name, empty); //To change body of generated methods, choose Tools | Templates.
-
-            if (!empty) {
+        public void updateItem(String id, boolean empty) {
+            super.updateItem(id, empty); //To change body of generated methods, choose Tools | Templates.
+            
+            if(id == null) return;
+            String name = Project.getClassName(id,shape);
+            if(name == null) return;
+            
+            if (!empty && !name.isEmpty()) {
                 setGraphic(jfxCheckBox);
 
                 jfxCheckBox.setText(name);
 
                 for (Element E : shape.elements()) {
-                    if (E.attribute(0).getValue().equals(name)) {
+                    if (E.attribute(0).getValue().equals(id)) {
 
                         jfxCheckBox.selectedProperty().set(true);
                         break;
@@ -201,12 +208,12 @@ public class AddShapeToController implements Initializable {
                             
                             Attribute attribute = t.attribute(0);
                             
-                            return !attribute.getValue().equals(name); 
+                            return !attribute.getValue().equals(id); 
                         });
                         
                         if (elements.isEmpty()) {
                             
-                            shape.addElement("Class").addAttribute("Name", name);
+                            shape.addElement("Class").addAttribute("Name", id);
                             
                             states();
                         }

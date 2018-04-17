@@ -38,6 +38,7 @@ public class Images {
     private Attribute Height;
 
     public BooleanProperty Labled = new SimpleBooleanProperty(false);
+    public BooleanProperty selected = new SimpleBooleanProperty(false);
 
     public Images(Element item) {
 
@@ -93,10 +94,18 @@ public class Images {
         return false;
     }
 
-    public boolean isClassified() {
+    public boolean isLabled() {
 
-        Labled.setValue(!imageElement.content().isEmpty());
-        return Labled.getValue();
+        for (Element element : imageElement.elements()) {
+            
+            for (Element element1 : element.elements()) {
+                
+                if(!element1.elements().isEmpty())
+                    return true;
+            }
+        }
+        return false;
+        
     }
 
     public Image getImage( int i, int i0, boolean b, boolean b0, boolean b1) {
@@ -109,7 +118,7 @@ public class Images {
         }
         if(!f.exists())
         {
-                String dir = imageElement.getParent().attributeValue("ImagesDir");
+                String dir = imageElement.getParent().getParent().attributeValue("ImagesDir");
                 try {
                     f = new File(new File(new URI(dir)),Name.getValue());
                 } catch (URISyntaxException ex) {
@@ -124,5 +133,28 @@ public class Images {
         return new Image(f.toURI().toString(),i, i0, b, b0, b1);
 
     }
+
+    public void select() {
+        
+        selected.set(true);
+    }
+
+    public void UnSelect() {
+        
+        selected.set(false);
+    }
+
+    public void remove(boolean deleteFromProject) throws URISyntaxException {
+        
+        String dir = imageElement.getParent().getParent().attributeValue("ImagesDir");
+        if(deleteFromProject){
+            File delete = new File(new File(new URI(dir)),Name.getValue());
+            delete.delete();
+            
+            System.out.println(delete.exists());
+        }
+        imageElement.getParent().remove(imageElement);
+    }
+    
 
 }

@@ -40,7 +40,17 @@ public class Project {
 
     public static final ObservableList<Project> LIST_OF_PROJECTS = FXCollections.observableArrayList();
 
+    public static Integer getImagesNumberInClass(Element Class) {
+        
+        HashSet<Node> hashSet = new HashSet<>(Class.getDocument().getRootElement().selectNodes("//Images/Image/Shape/Class[@name = "+Class.attribute(0).getValue()+"]"));
+        
+        return hashSet.size();
+        
+    }
+
     public Element Root;
+    private Element images;
+    private Element Classes;
 
     public Attribute Name;
 
@@ -53,6 +63,7 @@ public class Project {
     private Attribute AutoSave;
 
     private Attribute SaveImages;
+    
     
     public HashSet<String> ClassArrays;
         
@@ -82,10 +93,11 @@ public class Project {
         ImagesDir = attributes.get(3);
         AutoSave = attributes.get(4);
         SaveImages = attributes.get(5);
-
+        
+        images = Root.element("Images");
+        Classes = Root.element("Classes");
+        
         LIST_OF_PROJECTS.add(this);
-        Root.setData(this);
-        getClasses(Root);
 
     }
 
@@ -118,8 +130,10 @@ public class Project {
         AutoSave = attributes.get(4);
         SaveImages = attributes.get(5);
 
+        images = Root.addElement("Images");
+        Classes = Root.addElement("Classes");
+        
         LIST_OF_PROJECTS.add(this);
-        Root.setData(this);
         
         System.out.println(document.asXML());
     }
@@ -128,7 +142,7 @@ public class Project {
 
         SimpleImageInfo simpleImageInfo = new SimpleImageInfo(url);
 
-        Element addElement = Root.addElement("Image")
+        Element addElement = images.addElement("Image")
                 .addAttribute("Name", url.getName().split("\\.")[0])
                 .addAttribute("Path", url.toURI().toString())
                 .addAttribute("Type", simpleImageInfo.getMimeType())
@@ -138,32 +152,45 @@ public class Project {
         return addElement;
 
     }
-
+    public List<Element> getClasses(){
+        
+        return Classes.elements();
+    }
+    public static String getClassName(String id1, Element shape) {
+        
+        final String id = id1.toLowerCase().replaceAll("\\s+", "");
+        
+        List<Element> elements = shape.getDocument().getRootElement().element("Classes").elements();
+        for (Element element : elements) {
+            
+            if(element.attribute(0).getValue().toLowerCase().replaceAll("\\s+", "").equals(id))
+                return element.attribute(1).getValue();
+            
+        }
+        return null;
+    }
     public Integer getClassNumber() {
 
-        Set<String> ret = new HashSet<>();
-
-        for (Element I : Root.elements()) {
-
-            for (Element S : I.elements()) {
-
-                for (Element C : S.elements()) {
-
-                    ret.add(C.attributeValue("Name"));
-                }
-            }
-        }
-        return ret.size();
+        return Classes.elements().size();
     }
 
+    public List<Images> getImages(){
+        
+         List<Images> list = FXCollections.observableArrayList();
+         for (Element element : Root.element("Images").elements()) {
+            
+             list.add(new Images(element));
+        }
+        return list;
+    }
     public Integer getImagesNumber() {
 
-        return Root.elements().size();
+        return images.elements().size();
     }
 
     public Integer getLabledNumber() {
 
-        HashSet<Node> hashSet = new HashSet<>(Root.selectNodes("//Image/Shape/Class"));
+        HashSet<Node> hashSet = new HashSet<>(Root.selectNodes("//Images/Image/Shape/Class"));
         HashSet<String> hashSetS = new HashSet<>();
         
         for (Iterator<Node> it = hashSet.iterator(); it.hasNext();) {
@@ -252,17 +279,17 @@ public class Project {
             url.createNewFile();
             FileWriter fileWriter = new FileWriter(url);
 
-            for (Node node : Root.content()) {
+            for (Element node : images.elements()) {
 
-                Element e = (Element) node;
+                Element e = node;
                 String name = e.attributeValue("name");
                 String type = e.attributeValue("Type");
                 String W = e.attributeValue("Width");
                 String H = e.attributeValue("Height");
 
-                for (Node childs : e.content()) {
+                for (Element childs : e.elements()) {
 
-                    Element eChild = (Element) childs;
+                    Element eChild = childs;
                     fileWriter.write(name + "," + type + "," + W + "," + H + "," + eChild.getName());
 
                     for (Attribute attribute : eChild.attributes()) {
@@ -283,19 +310,34 @@ public class Project {
 
     public static HashSet<String> getClasses(Element root) {
 
-        List<Node> selectNodes = root.selectNodes("//Class");
+        List<Element> selectNodes = root.elements().get(1).elements();
         
         HashSet<String> hashSet = new HashSet<String>();
         
-        for (Iterator<Node> it = selectNodes.iterator(); it.hasNext();) {
-            Element img = (Element) it.next();
-            hashSet.add(img.attribute(0).getValue().toLowerCase().replaceAll("\\s+",""));
+        for (Element selectNode : selectNodes) {
+            
+            hashSet.add(selectNode.attribute(0).getValue().toLowerCase().replaceAll("\\s+",""));
         }
         System.out.println("selected nodes hashset ="+hashSet);
         return hashSet;
 
     }
-    
+    public static String GenerateId(Element element,String n , int i) {
+        
+        List<Element> elements = element.getDocument().getRootElement().element("Classes").elements();
+        boolean exist= false;
+        for (Element elem : elements) {
+            
+            if(elem.attribute(0).getValue().equals(n)){
+                exist = true;
+                break;
+            }
+        }
+        if(!exist)
+            return n+i;
+        else
+            return GenerateId(element, n, i+1);
+    }
     public void save() {
 
         new Thread(() -> {
@@ -308,14 +350,13 @@ public class Project {
                 XMLWriter writer = new XMLWriter(os, format);
                 writer.write(Root.getDocument());
                 writer.close();
-                for (Element element : Root.elements()) {
+                for (Element element : images.elements()) {
                     new Images(element).Save();
                     
                 }
-            } catch (URISyntaxException uRISyntaxException) {
-            } catch (IOException iOException) {
+            } catch (URISyntaxException | IOException uRISyntaxException) {
             }
-        }).run();
+        }).start();
 
     }
 
@@ -341,7 +382,7 @@ public class Project {
                 
             } catch (IOException iOException) {
             }
-        }).run();
+        }).start();
         
     }
     public void saveCSV(File file) {
@@ -352,7 +393,7 @@ public class Project {
                 file.createNewFile();
                 FileWriter os = new FileWriter(file);
                 String STR="";
-                for (Element I : Root.elements()) {
+                for (Element I : images.elements()) {
                     for (Element S : I.elements()) {
                         for (Element C : S.elements()) {
                             for(Attribute T : I.attributes()){
@@ -363,7 +404,7 @@ public class Project {
                                 
                                 STR= STR+T.getValue()+",";       
                             }
-                            STR= STR+C.attribute(0).getValue()+"\n";    
+                            STR= STR+Project.getClassName(C.attribute(0).getValue(), S)+"\n";    
                         }
                     }                    
                 }

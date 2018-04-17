@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
@@ -53,6 +54,7 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
 
     private double CenterX;
     private double CenterY;
+    private Tooltip TT = new Tooltip();
 
     
     public DrawRectangle(double x, double y, double i, double j,double xk,double yk,Images image) throws IOException {
@@ -109,6 +111,7 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
 
             SetPoints(this.getLayoutX(), this.getLayoutY(), ci.getLayoutX(), ci.getLayoutY());
         });
+        
     }
     private void ShapeEventsHandle() {
         //Rectangle Actions
@@ -157,6 +160,19 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         setOnMouseReleased((event) -> {
             
         });
+        setOnMouseEntered((event) -> {
+            TT.setText("");
+            for (Element element : shapeElement.elements()) {
+                
+                TT.setText(TT.getText()+element.attribute(0).getValue()+'\n');
+            }
+            
+            if(!TT.getText().isEmpty())
+                TT.show(this, event.getScreenX()-event.getX()+getWidth(), event.getScreenY()-event.getY());
+        });
+        setOnMouseExited((event) -> {
+            TT.hide();
+        });
     }
 
     public DrawRectangle(Element S) {
@@ -189,8 +205,9 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
                 CustomResourceBundle customResourceBundle = new CustomResourceBundle();
                 customResourceBundle.addObject("element", this);
                 FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"),customResourceBundle);
+                controller2 = new AddShapeToController();
+                loaderAddTo.setController(controller2);
                 this.AddToPopup = new JFXPopup(loaderAddTo.load());
-                controller2 = loaderAddTo.getController();
                 
             } catch (IOException ex) {
                 Logger.getLogger(DrawRectangle.class.getName()).log(Level.SEVERE, null, ex);

@@ -6,6 +6,7 @@
 package copytowindowsphotodisplay;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 import copytowindowsphotodisplay.Model.Project;
@@ -22,12 +23,14 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import org.dom4j.Element;
 
 /**
  * FXML Controller class
@@ -36,59 +39,50 @@ import javafx.scene.paint.Color;
  */
 public class ClassesFXMLController implements Initializable {
 
-    @FXML
     private JFXListView<String> ImagesListView;
     @FXML
     private Label imageNumber;
-    @FXML
-    private Label LabledNumber;
-    @FXML
     private ProgressIndicator Progress;
     @FXML
-    private JFXTextField Name;
+    private Label Name;
     @FXML
     private FontAwesomeIconView Icon;
+    @FXML
+    private JFXButton Edit;
+    @FXML
+    private JFXButton Close;
+    @FXML
+    private FontAwesomeIconView Icon1;
+    @FXML
+    private JFXButton Delete;
+    @FXML
+    private FontAwesomeIconView Icon11;
     
-    private final Project project;
-    private String selectedItem;
-    private final StackPane notePane;
+    
+    private final Element Class;
+    private final JFXDialog notePane;
+
     
     /**
      * Initializes the controller class.
      * @param projet
      */
     
-    public ClassesFXMLController(Project projet,StackPane notePane) {
+    public ClassesFXMLController(Element element,JFXDialog notePane) {
         
         this.notePane=notePane;
-        this.project=projet;
+        this.Class=element;
     }    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ImagesListView.setItems(FXCollections.observableArrayList(project.getClasses(project.Root)));
-        ImagesListView.setCellHorizontalMargin(10.0);
-        ImagesListView.setExpanded(true);
-        ImagesListView.setCellFactory((param) -> {
-            
-            Cell listCell = new Cell();
-            return listCell; //To change body of generated lambdas, choose Tools | Templates.
-        });
+        
+        imageNumber.setText(Project.getImagesNumberInClass(Class).toString());
+        Name.setText(Class.attribute(1).getValue());
     }    
 
-    @FXML
     private void showpop(MouseEvent event) {
-        selectedItem = ImagesListView.getSelectionModel().getSelectedItem();
-        Name.setText(selectedItem.toString());
-        //imageNumber.setText(Double.toString(selectedItem.IMAGES.size()));
-        //LabledNumber.setText(Double.toString(selectedItem.getLabledNumber()));
-        try {
-            
-            //Double progress = selectedItem.IMAGES.size() / selectedItem.getLabledNumber().doubleValue();
-            //Progress.setProgress(progress);
-        } catch (Exception e) {
-            Progress.setProgress(0.0);
-        }
+        
     }
 
     @FXML
@@ -98,7 +92,6 @@ public class ClassesFXMLController implements Initializable {
             JFXButton btn = (JFXButton) event.getSource();
             btn.setBackground(null);
             Icon.setGlyphName("EDIT");
-            Name.setEditable(false);
             //selectedItem.setName(Name.getText());
             //File classified = selectedItem.getProject().getClassifiedDir();
             //File file = new File(classified, Name.getText());
@@ -108,29 +101,8 @@ public class ClassesFXMLController implements Initializable {
             JFXButton btn = (JFXButton) event.getSource();
             btn.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
             Icon.setGlyphName("CHECK_SQUARE_ALT");
-            Name.setEditable(true);
         }
         
     }
 
-    @FXML
-    private void AddClass(ActionEvent event) throws IOException {
-        
-        
-        //JFXDialog  NewProject = new JFXDialog(notePane, load, JFXDialog.DialogTransition.CENTER);    
-        //NewProject.show();
-    }
-
-    public class Cell extends ListCell<String>{
-
-        public Cell() {
-        }
-        @Override
-        protected void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
-            if(!empty) setText(item);
-        }
-
-    }
-    
 }
