@@ -2,14 +2,15 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.GridView?>
 
-<StackPane fx:id="NoteStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="copytowindowsphotodisplay.ProjectUIController">
+<StackPane fx:id="NoteStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="copytowindowsphotodisplay.ProjectUIController">
    <children>
-      <AnchorPane id="AnchorPane" fx:id="MainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="603.0" prefWidth="803.0">
+      <AnchorPane id="AnchorPane" fx:id="MainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0">
          <children>
             <AnchorPane fx:id="LeftPane" disable="true" prefHeight="656.0" prefWidth="154.0" style="-fx-background-color: #7289da;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
@@ -37,8 +38,16 @@
             </AnchorPane>
             <AnchorPane fx:id="RightPane" layoutX="184.0" prefHeight="660.0" prefWidth="621.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <GridView fx:id="Gridview" cellHeight="200.0" cellWidth="200.0" horizontalCellSpacing="20.0" verticalCellSpacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <JFXButton fx:id="OpenBtn" contentDisplay="TOP" layoutX="408.0" layoutY="114.0" onAction="#Open" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #FBBC05;" text="Open" textFill="#ebf7e3" AnchorPane.rightAnchor="195.0" AnchorPane.topAnchor="114.0">
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="550.0" prefWidth="453.0" style="-fx-border-color: white;" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="546.0" prefWidth="414.0">
+                           <children>
+                              <GridView fx:id="Gridview" cellHeight="200.0" cellWidth="200.0" horizontalCellSpacing="20.0" maxWidth="-Infinity" prefHeight="550.0" prefWidth="416.0" verticalCellSpacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </ScrollPane>
+                  <JFXButton fx:id="OpenBtn" contentDisplay="TOP" layoutX="304.0" layoutY="91.0" onAction="#Open" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #FBBC05;" text="Open" textFill="#ebf7e3" AnchorPane.leftAnchor="304.0" AnchorPane.topAnchor="91.0">
                      <graphic>
                         <FontAwesomeIconView fill="#ebf7e3" glyphName="FOLDER_OPEN_ALT" size="40" />
                      </graphic>
@@ -46,7 +55,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="NewBtn" contentDisplay="TOP" layoutX="201.0" layoutY="114.0" onAction="#NewProject" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #4285F4;" text="New" textFill="#ebf7e3" AnchorPane.leftAnchor="201.0" AnchorPane.topAnchor="114.0">
+                  <JFXButton fx:id="NewBtn" contentDisplay="TOP" layoutX="97.0" layoutY="91.0" onAction="#NewProject" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #4285F4;" text="New" textFill="#ebf7e3" AnchorPane.leftAnchor="97.0" AnchorPane.topAnchor="91.0">
                      <graphic>
                         <FontAwesomeIconView fill="#ebf7e3" glyphName="PLUS" size="40" />
                      </graphic>
@@ -54,7 +63,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="HelpBtn" contentDisplay="TOP" layoutX="408.0" layoutY="302.0" onAction="#Help" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #EA4335;" text="Help" textFill="#ebf7e3" AnchorPane.bottomAnchor="121.0" AnchorPane.rightAnchor="195.0">
+                  <JFXButton fx:id="HelpBtn" contentDisplay="TOP" layoutX="304.0" layoutY="279.0" onAction="#Help" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #EA4335;" text="Help" textFill="#ebf7e3" AnchorPane.leftAnchor="304.0" AnchorPane.topAnchor="279.0">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -62,7 +71,7 @@
                         <FontAwesomeIconView fill="#ebf7e3" glyphName="QUESTION" size="40" />
                      </graphic>
                   </JFXButton>
-                  <JFXButton fx:id="SettingsBtn" contentDisplay="TOP" layoutX="201.0" layoutY="302.0" onAction="#Settings" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #34A853;" text="Settings" textFill="#ebf7e3" AnchorPane.bottomAnchor="121.0" AnchorPane.leftAnchor="201.0">
+                  <JFXButton fx:id="SettingsBtn" contentDisplay="TOP" layoutX="97.0" layoutY="279.0" onAction="#Settings" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #34A853;" text="Settings" textFill="#ebf7e3" AnchorPane.leftAnchor="97.0" AnchorPane.topAnchor="279.0">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>

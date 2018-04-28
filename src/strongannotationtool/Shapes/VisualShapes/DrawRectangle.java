@@ -9,14 +9,11 @@ import com.jfoenix.controls.JFXPopup;
 import copytowindowsphotodisplay.Model.CustomResourceBundle;
 import copytowindowsphotodisplay.Model.Images;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Tooltip;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -52,9 +49,10 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
     public JFXPopup AddToPopup;
     AddShapeToController controller2 = null;
 
-    private double CenterX;
-    private double CenterY;
+    private double centerX;
+    private double centerY;
     private Tooltip TT = new Tooltip();
+    private FocusRect focus;
 
     
     public DrawRectangle(double x, double y, double i, double j,double xk,double yk,Images image) throws IOException {
@@ -71,20 +69,65 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         
         ViewINI(x, y, i, j);
         ShapeEventsHandle();
-        CircleEventHandle();
+        //CircleEventHandle();
+    }
+    public DrawRectangle(Element S) {
+        
+        shapeElement=S;
+        
+        String x = S.attribute(1).getValue();
+        String y = S.attribute(2).getValue();
+        String w = S.attribute(3).getValue();
+        String h = S.attribute(4).getValue();
+        
+        double xx = Double.valueOf(S.attribute(1).getValue());
+        double yy = Double.valueOf(S.attribute(2).getValue());
+        double ww = Double.valueOf(S.attribute(3).getValue());
+        double hh = Double.valueOf(S.attribute(4).getValue());
+        
+        xK=1;
+        yK=1;
+        
+        ViewINI(xx, yy, xx+ww, yy+hh);
+        ShapeEventsHandle();
+        //CircleEventHandle(); 
     }
 
     private void ViewINI(double x, double y, double i, double j) {
-        ci = new Circle(6, Color.rgb(114, 137, 218, 0.6));
-        ci.setEffect(new DropShadow());
+        //ci = new Circle(6, Color.rgb(114, 137, 218, 0.6));
+        //ci.setEffect(new DropShadow());
 
         setFill(Color.web("blue", 0.4));
         SetPoints(x, y, i, j);
         
 
-        ci.setLayoutX(this.getLayoutX() + this.getWidth());
-        ci.setLayoutY(this.getLayoutY() + this.getHeight());
+        //ci.setLayoutX(this.getLayoutX() + this.getWidth());
+        //ci.setLayoutY(this.getLayoutY() + this.getHeight());
+        
+    }   
+    public void AddToPopup() {
+        if(AddToPopup == null)
+            try {
+                System.out.println("AddShapeTo");
+                
+                CustomResourceBundle customResourceBundle = new CustomResourceBundle();
+                customResourceBundle.addObject("element", this);
+                FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"),customResourceBundle);
+                controller2 = new AddShapeToController();
+                loaderAddTo.setController(controller2);
+                this.AddToPopup = new JFXPopup(loaderAddTo.load());
+                
+            } catch (IOException ex) {
+                Logger.getLogger(DrawRectangle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        else{
+            if(controller2 == null) {
+                System.err.println("Null Controller Add TO POPUp");
+            } else
+            controller2.refresh();
+        }
     }
+
     private void CircleEventHandle() {
         //Circle Actions
         ci.setOnMousePressed((event) -> {
@@ -99,7 +142,7 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
 
             ci.setLayoutX(Rx);
             ci.setLayoutY(Ry);
-
+            
             SetPoints(this.getLayoutX(), this.getLayoutY(), ci.getLayoutX(), ci.getLayoutY());
 
         });
@@ -135,18 +178,22 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
                 
                 AddToPopup();
                 AddToPopup.show(this);
-                
-                
+            }else{
+                if(!focus.isFocused(this))
+                    focus.focusOn(this);
             }
-            
         });
         
         setOnMousePressed((event) -> {
             
-            X = event.getScreenX();
-            Y = event.getScreenY();
-            CenterX = getLayoutX();
-            CenterY = getLayoutY();
+            if (event.getButton() != MouseButton.SECONDARY) {
+
+                X = event.getScreenX();
+                Y = event.getScreenY();
+                centerX = getLayoutX();
+                centerY = getLayoutY();
+
+            }
         });
         
         setOnMouseDragged((event) -> {
@@ -154,7 +201,7 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
             double deltaX = X - event.getScreenX();
             double deltaY = Y - event.getScreenY();
             
-            MoveTo(CenterX - deltaX, CenterY - deltaY);
+            MoveTo(centerX - deltaX, centerY - deltaY);
             
         });
         setOnMouseReleased((event) -> {
@@ -175,86 +222,35 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         });
     }
 
-    public DrawRectangle(Element S) {
-        
-        shapeElement=S;
-        
-        String x = S.attribute(1).getValue();
-        String y = S.attribute(2).getValue();
-        String w = S.attribute(3).getValue();
-        String h = S.attribute(4).getValue();
-        
-        double xx = Double.valueOf(S.attribute(1).getValue());
-        double yy = Double.valueOf(S.attribute(2).getValue());
-        double ww = Double.valueOf(S.attribute(3).getValue());
-        double hh = Double.valueOf(S.attribute(4).getValue());
-        
-        xK=1;
-        yK=1;
-        
-        ViewINI(xx, yy, xx+ww, yy+hh);
-        ShapeEventsHandle();
-        CircleEventHandle(); 
-    }
-
-    public void AddToPopup() {
-        if(AddToPopup == null)
-            try {
-                System.out.println("AddShapeTo");
-                
-                CustomResourceBundle customResourceBundle = new CustomResourceBundle();
-                customResourceBundle.addObject("element", this);
-                FXMLLoader loaderAddTo = new FXMLLoader(getClass().getResource("AddShapeTo.fxml"),customResourceBundle);
-                controller2 = new AddShapeToController();
-                loaderAddTo.setController(controller2);
-                this.AddToPopup = new JFXPopup(loaderAddTo.load());
-                
-            } catch (IOException ex) {
-                Logger.getLogger(DrawRectangle.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        else{
-            if(controller2 == null) {
-                System.err.println("Null Controller Add TO POPUp");
-            } else
-            controller2.refresh();
-        }
-    }
-
+    @Override
     public void SetPoints(double x, double y, double i, double j) {
 
-        if (x > i) {
-            this.setLayoutX(i);
-            this.setWidth(x - i);
-        } else {
-            this.setLayoutX(x);
-            this.setWidth(i - x);
-        }
-        if (y > j) {
-            this.setLayoutY(j);
-            this.setHeight(y - j);
-        } else {
-            this.setLayoutY(y);
-            this.setHeight(j - y);
-        }
+        
+        this.setLayoutX(Math.min(x, i));
+        this.setWidth(Math.abs(x - i));
+        this.setLayoutY(Math.min(y, j));
+        this.setHeight(Math.abs(y - j));
+        
         
         shapeElement.attribute(1).setValue(String.valueOf(getLayoutX()*xK));
         shapeElement.attribute(2).setValue(String.valueOf(getLayoutY()*yK));
         shapeElement.attribute(3).setValue(String.valueOf(getWidth()*xK));
         shapeElement.attribute(4).setValue(String.valueOf(getHeight()*yK));
         
-        ci.setLayoutX(getLayoutX() + getWidth());
-        ci.setLayoutY(getLayoutY() + getHeight());
+        //ci.setLayoutX(getLayoutX() + getWidth());
+        //ci.setLayoutY(getLayoutY() + getHeight());
 
     }
 
     @Override
-    public void AddTo(AnchorPane p) {
+    public void AddTo(AnchorPane p,FocusRect f) {
         
         if(!p.getChildren().contains(this))
             p.getChildren().add(this);
-        if(!p.getChildren().contains(ci))
-            p.getChildren().add(ci);
+        //if(!p.getChildren().contains(ci))
+        //    p.getChildren().add(ci);
         this.Parent = p;
+        this.focus =f;
     }
 
     @Override
@@ -264,14 +260,14 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
             X=0;
         }
         if (X + getWidth() > Parent.getWidth()) {
-            X= Parent.getWidth() - getWidth();
+            X= Parent.getWidth() - getWidth()-1;
         }
 
         if (Y < 0) {
             Y=0;
         }
         if (Y + getHeight() > Parent.getHeight()) {
-            Y=Parent.getHeight() - getHeight();
+            Y=Parent.getHeight() - getHeight()-1;
         }
 
         this.setLayoutX(X);
@@ -280,8 +276,8 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         shapeElement.attribute(2).setValue(String.valueOf(getLayoutY()*yK));
         
 
-        ci.setLayoutX(getLayoutX() + getWidth());
-        ci.setLayoutY(getLayoutY() + getHeight());
+        //ci.setLayoutX(getLayoutX() + getWidth()-5);
+        //ci.setLayoutY(getLayoutY() + getHeight()-5);
 
     }
 
@@ -311,8 +307,8 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
         shapeElement.attribute(4).setValue(String.valueOf(getHeight()*yK));
         
 
-        ci.setLayoutX(getLayoutX() + getWidth());
-        ci.setLayoutY(getLayoutY() + getHeight());
+        //ci.setLayoutX(getLayoutX() + getWidth());
+        //ci.setLayoutY(getLayoutY() + getHeight());
 
     }
 
@@ -320,8 +316,9 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
     public void remove(AnchorPane p) {
         
         p.getChildren().remove(this);
-        p.getChildren().remove(ci);
+        //p.getChildren().remove(ci);
         shapeElement.getParent().remove(shapeElement);
+        focus.removeFrom(focus.imgparent);
         
     }
     @Override

@@ -28,8 +28,10 @@ public class CopyToWindowsPhotoDisplay extends Application {
         stage.getIcons().add(new Image(getClass().getResource("Annotation.png").toURI().toString()));
         stage.setTitle("Anotation Tool");
         stage.setScene(scene);
-        stage.setWidth(840);
-        stage.setHeight(660);
+        stage.setWidth(650);
+        stage.setHeight(600);
+        stage.setResizable(false);
+        stage.setFullScreen(false);
         stage.show();
         
     }

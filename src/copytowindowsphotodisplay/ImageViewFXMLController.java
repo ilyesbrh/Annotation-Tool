@@ -5,9 +5,10 @@
  */
 package copytowindowsphotodisplay;
 
-import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.JFXToggleButton;
 import copytowindowsphotodisplay.Model.Images;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.io.IOException;
@@ -16,7 +17,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,9 +25,11 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import org.controlsfx.control.GridView;
 import strongannotationtool.AnnotationPaneController;
 
 /**
@@ -37,16 +39,13 @@ import strongannotationtool.AnnotationPaneController;
  */
 public class ImageViewFXMLController implements Initializable {
 
-    @FXML
     private Rectangle MouseEntred;
-    @FXML
-    private FontAwesomeIconView Classified;
     @FXML
     private FontAwesomeIconView Labled;
     @FXML
     private Label Name;
     @FXML
-    private JFXCheckBox Selected;
+    private JFXToggleButton Selected;
     @FXML
     private AnchorPane RippleAnchor;
     @FXML
@@ -54,15 +53,18 @@ public class ImageViewFXMLController implements Initializable {
     @FXML
     private ImageView imageView;
 
+    @FXML
+    private JFXButton Details;
+
     private Images image;
-    
-    private StackPane NoteStack;
     private JFXDialog Jfxdialog;
+    private StackPane NoteStack;
+    private final GridView<Images> grid;
 
-
-    ImageViewFXMLController(StackPane NoteStack) {
+    ImageViewFXMLController(StackPane NoteStack ,GridView<Images> grid ) {
 
         this.NoteStack=NoteStack;
+        this.grid = grid;
     }
 
     /**
@@ -89,14 +91,6 @@ public class ImageViewFXMLController implements Initializable {
             
         });
         
-        RippleAnchor.setOnMouseEntered((event) -> {
-            
-            MouseEntred.setStrokeWidth(8);
-        });
-        RippleAnchor.setOnMouseExited((event) -> {
-            
-            MouseEntred.setStrokeWidth(0);
-        });
     }    
     public void UpdateItem(Images item){
         
@@ -109,23 +103,23 @@ public class ImageViewFXMLController implements Initializable {
         
         item.selected.bindBidirectional(Selected.selectedProperty());
         
-        Classified.visibleProperty().bind(image.Labled);
+        Labled.setVisible(image.isLabled());
         
         if(imageView.getImage() != null && imageView.getImage().isBackgroundLoading())
             imageView.getImage().cancel();
         
-        Image img=image.getImage(200, 200, false, false, true);
+        Image img=image.getImage(250, 250, false, true, true);
         imageView.setImage(img);
     }
 
-    @FXML
-    private void ImageInfo(ActionEvent event) {
-        
-    }
 
     private void OpenStrongAnnotation() throws IOException, URISyntaxException {
-        
-        AnnotationPaneController newController=new AnnotationPaneController();
+        if(Jfxdialog == null){
+            this.Jfxdialog = new JFXDialog(); 
+            this.Jfxdialog.setDialogContainer(NoteStack);
+            this.Jfxdialog.setTransitionType(JFXDialog.DialogTransition.CENTER);
+        }
+        AnnotationPaneController newController=new AnnotationPaneController(Jfxdialog,grid);
             
         FXMLLoader Newload=new FXMLLoader(getClass().getResource("/strongannotationtool/AnnotationPane.fxml"));
         Newload.setController(newController);
@@ -136,10 +130,6 @@ public class ImageViewFXMLController implements Initializable {
         
         load.prefWidthProperty().bind(NoteStack.widthProperty().subtract(100));
         load.prefHeightProperty().bind(NoteStack.heightProperty().subtract(50));
-        
-        this.Jfxdialog = new JFXDialog(); 
-        this.Jfxdialog.setDialogContainer(NoteStack);
-        this.Jfxdialog.setTransitionType(JFXDialog.DialogTransition.CENTER);
         this.Jfxdialog.setContent(load);
         this.Jfxdialog.show();
     }

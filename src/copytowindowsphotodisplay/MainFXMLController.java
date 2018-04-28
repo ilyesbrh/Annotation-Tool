@@ -18,12 +18,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import org.dom4j.Element;
 
 /**
@@ -139,6 +142,12 @@ public class MainFXMLController implements Initializable {
     @FXML
     private void SaveProject(ActionEvent event) {
         project.save();
+        Notifications.create()
+                        .position(Pos.BOTTOM_RIGHT)
+                        .hideAfter(Duration.seconds(3))
+                        .title("New")
+                        .text("New Project is created")
+                        .showInformation();
     }
     private void ExportINI() throws IOException {
         

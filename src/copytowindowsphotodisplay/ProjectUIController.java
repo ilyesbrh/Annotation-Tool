@@ -20,21 +20,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.control.Label;
+import javafx.geometry.Pos;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
+import org.controlsfx.control.Notifications;
 import org.dom4j.DocumentException;
 
 /**
@@ -76,43 +71,46 @@ public class ProjectUIController implements Initializable {
     @FXML
     private void NewProject(ActionEvent event) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // New Project PopUp INI
-
-                    final JFXDialog NewProject = new JFXDialog();
-                    AnchorPane load = FXMLLoader.load(getClass().getResource("NewFXML.fxml"),new ResourceBundle() {
-                        @Override
-                        protected Object handleGetObject(String key) {
-                            
-                            if(key=="p")
-                                return NewProject;
-                            if(key=="t")
-                                return new Thread(() -> {
-                                    
-                                    ShowSidePane();
-                                });
-                            
-                            return null;
-                        }
-
-                        @Override
-                        public Enumeration<String> getKeys() {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-                    });
+        new Thread(() -> {
+            try {
+                // New Project PopUp INI
+                
+                final JFXDialog NewProject = new JFXDialog();
+                AnchorPane load = FXMLLoader.load(getClass().getResource("NewFXML.fxml"),new ResourceBundle() {
+                    @Override
+                    protected Object handleGetObject(String key) {
+                        
+                        if(key=="p")
+                            return NewProject;
+                        if(key=="t")
+                            return new Thread(() -> {
+                                
+                                ShowSidePane();
+                            });
+                        
+                        return null;
+                    }
                     
-                    NewProject.setDialogContainer(NoteStackPane);
-                    NewProject.setContent(load);
-                    NewProject.setTransitionType(JFXDialog.DialogTransition.TOP);
-
-                    NewProject.show();
-                    
-                } catch (IOException ex) {
-                    Logger.getLogger(ProjectUIController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    @Override
+                    public Enumeration<String> getKeys() {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+                });
+                
+                NewProject.setDialogContainer(NoteStackPane);
+                NewProject.setContent(load);
+                NewProject.setTransitionType(JFXDialog.DialogTransition.TOP);
+                
+                NewProject.show();
+                
+                Notifications.create()
+                        .position(Pos.BOTTOM_RIGHT)
+                        .hideAfter(Duration.seconds(3))
+                        .title("New")
+                        .text("New Project is created")
+                        .showInformation();
+            } catch (IOException ex) {
+                Logger.getLogger(ProjectUIController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }).run();
 
@@ -121,47 +119,48 @@ public class ProjectUIController implements Initializable {
     @FXML
     private void Open(ActionEvent event) throws IOException, DocumentException {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                Stage stage = new Stage();
-                stage.setAlwaysOnTop(true);
-                FileChooser fileChooser;
-                // filechooser
-                fileChooser = new FileChooser();
-                fileChooser.setTitle("Open Resource File");
-                fileChooser.setInitialDirectory(
-                        new File(System.getProperty("user.home"))
-                );
-                FileChooser.ExtensionFilter extFilter
-                        = new FileChooser.ExtensionFilter("Project filter", "*.xml");
-                fileChooser.getExtensionFilters().add(extFilter);
-
-                File URL = fileChooser.showOpenDialog(new Stage());
-
-                if (URL == null) {
-                    return;
-                }
-
-                try {
-                    new Project(URL);
-
-                    ShowSidePane();
-
-                } catch (Exception ex) {
-
-                    StackPane pane = new StackPane();
-                    pane.setPrefSize(200, 100);
-                    pane.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
-                    Label label = new Label("existe");
-                    label.setFont(new Font(60));
-                    pane.getChildren().add(label);
-                    JFXDialog NewProject = new JFXDialog(NoteStackPane, pane, JFXDialog.DialogTransition.CENTER);
-
-                    NewProject.show();
-                }
-
+        new Thread(() -> {
+            Stage stage = new Stage();
+            stage.setAlwaysOnTop(true);
+            FileChooser fileChooser;
+            // filechooser
+            fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Resource File");
+            fileChooser.setInitialDirectory(
+                    new File(System.getProperty("user.home"))
+            );
+            FileChooser.ExtensionFilter extFilter
+                    = new FileChooser.ExtensionFilter("Project filter", "*.xml");
+            fileChooser.getExtensionFilters().add(extFilter);
+            
+            File URL = fileChooser.showOpenDialog(new Stage());
+            
+            if (URL == null) {
+                return;
+            }
+            
+            try {
+                Project project = new Project(URL);
+                
+                ShowSidePane();
+                
+                Notifications.create()
+                        .position(Pos.BOTTOM_RIGHT)
+                        .hideAfter(Duration.seconds(3))
+                        .title("Open")
+                        .text("Project loaded")
+                        .showInformation();
+            } catch (Exception ex) {
+                
+                /*StackPane pane = new StackPane();
+                pane.setPrefSize(200, 100);
+                pane.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
+                Label label = new Label("existe");
+                label.setFont(new Font(60));
+                pane.getChildren().add(label);
+                JFXDialog NewProject = new JFXDialog(NoteStackPane, pane, JFXDialog.DialogTransition.CENTER);
+                
+                NewProject.show();*/
             }
         }).run();
     }
@@ -184,14 +183,7 @@ public class ProjectUIController implements Initializable {
         Gridview.setCellHeight(200);
         Gridview.setCellWidth(200);
 
-        Gridview.setCellFactory(new Callback<GridView<Project>, GridCell<Project>>() {
-
-            @Override
-            public GridCell<Project> call(GridView<Project> arg0) {
-
-                return new cell(Gridview, NoteStackPane);
-            }
-        });
+        Gridview.setCellFactory((GridView<Project> arg0) -> new cell(Gridview, NoteStackPane));
 
     }
 

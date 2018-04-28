@@ -8,27 +8,20 @@ package copytowindowsphotodisplay;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXTextField;
 import copytowindowsphotodisplay.Model.Project;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.dom4j.Element;
 
@@ -45,12 +38,9 @@ public class ClassesFXMLController implements Initializable {
     private ProgressIndicator Progress;
     @FXML
     private Label Name;
-    @FXML
     private FontAwesomeIconView Icon;
     @FXML
     private JFXButton Edit;
-    @FXML
-    private JFXButton Close;
     @FXML
     private FontAwesomeIconView Icon1;
     @FXML
@@ -65,7 +55,8 @@ public class ClassesFXMLController implements Initializable {
     
     /**
      * Initializes the controller class.
-     * @param projet
+     * @param element
+     * @param notePane
      */
     
     public ClassesFXMLController(Element element,JFXDialog notePane) {

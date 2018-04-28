@@ -14,14 +14,16 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 import javax.imageio.ImageIO;
+import org.controlsfx.control.Notifications;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -98,6 +100,7 @@ public class Project {
         Classes = Root.element("Classes");
         
         LIST_OF_PROJECTS.add(this);
+        
 
     }
 
@@ -134,6 +137,7 @@ public class Project {
         Classes = Root.addElement("Classes");
         
         LIST_OF_PROJECTS.add(this);
+        save();
         
         System.out.println(document.asXML());
     }
@@ -398,7 +402,7 @@ public class Project {
                         for (Element C : S.elements()) {
                             for(Attribute T : I.attributes()){
                                 
-                                STR= STR+T.getValue()+",";
+                                STR= STR+T.getValue().replaceAll("file:/", "")+",";
                             }
                             for(Attribute T : S.attributes()){
                                 
@@ -410,9 +414,15 @@ public class Project {
                 }
                 os.write(STR);
                 os.close();
+                Notifications.create()
+                        .position(Pos.BOTTOM_RIGHT)
+                        .hideAfter(Duration.seconds(3))
+                        .title("Done")
+                        .text("Changes saved")
+                        .showInformation();
             } catch (IOException iOException) {
             }
-        }).run();
+        }).start();
         
     }
 

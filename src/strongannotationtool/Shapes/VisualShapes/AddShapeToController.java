@@ -18,10 +18,13 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 
@@ -217,6 +220,12 @@ public class AddShapeToController implements Initializable {
                             
                             states();
                         }
+                        Notifications.create()
+                        .position(Pos.BOTTOM_RIGHT)
+                        .hideAfter(Duration.seconds(3))
+                        .title("")
+                        .text("Added To "+name)
+                        .showInformation();
                     } else {
                         List<Element> elements = shape.elements();
                         for (Element element : elements) {
@@ -225,8 +234,12 @@ public class AddShapeToController implements Initializable {
                                 System.out.println(shape.remove((Element) element)+"Deleted !");
                             }
                         }
-                        
-                        states();
+                        Notifications.create()
+                        .position(Pos.BOTTOM_RIGHT)
+                        .hideAfter(Duration.seconds(3))
+                        .title("")
+                        .text("Deleted From "+name)
+                        .showInformation();
                     }
                 });
             }

@@ -16,7 +16,7 @@
          <font>
             <Font name="System Bold" size="20.0" />
          </font></JFXButton>
-      <JFXButton buttonType="RAISED" contentDisplay="CENTER" layoutX="248.0" layoutY="194.0" onAction="#Xml" prefHeight="61.0" prefWidth="79.0" ripplerFill="#6b6b6b" style="-fx-background-color: a8d0e7;" text=".XML">
+      <JFXButton buttonType="RAISED" contentDisplay="CENTER" disable="true" layoutX="248.0" layoutY="194.0" onAction="#Xml" prefHeight="61.0" prefWidth="79.0" ripplerFill="#6b6b6b" style="-fx-background-color: a8d0e7;" text=".XML">
          <font>
             <Font name="System Bold" size="19.0" />
          </font></JFXButton>

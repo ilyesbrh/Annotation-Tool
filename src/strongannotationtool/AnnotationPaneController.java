@@ -7,6 +7,7 @@ package strongannotationtool;
 
 import strongannotationtool.Shapes.VisualShapes.DrawRectangle;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXPopup;
 import strongannotationtool.Shapes.CustomGrid;
 import copytowindowsphotodisplay.Model.Images;
@@ -23,11 +24,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -36,10 +42,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import jfxtras.labs.scene.control.Magnifier;
-import jfxtras.scene.menu.CirclePopupMenu;
+import org.controlsfx.control.GridView;
 import org.dom4j.Element;
 import strongannotationtool.Shapes.VisualShapes.DrawCircle;
 import strongannotationtool.Shapes.VisualShapes.DrawableShape;
+import strongannotationtool.Shapes.VisualShapes.FocusRect;
 
 /**
  * FXML Controller class
@@ -67,7 +74,10 @@ public class AnnotationPaneController implements Initializable {
     private JFXButton PolyBtn;
     @FXML
     private JFXButton CircleBtn;
+    @FXML
+    private ScrollPane scrollPane;
 
+    JFXDialog jfxDialog1;
     //DATA
     public Images image;
 
@@ -78,13 +88,18 @@ public class AnnotationPaneController implements Initializable {
     private String ShapeMode = "Rectangle";
 
     //design
+    private FocusRect focus;
     private final ImageView img;
     private final CustomGrid grid;
     private final AnchorPane MagnifierPane;
+    private final GridView<Images> ImagesGrid;
 
-    public AnnotationPaneController() {
+    public AnnotationPaneController(JFXDialog jfxDialog, GridView<Images> grid) {
 
+        this.ImagesGrid = grid;
+        jfxDialog1 = jfxDialog;
         this.img = new ImageView();
+
         this.grid = new CustomGrid();
         this.MagnifierPane = new AnchorPane(img);
 
@@ -110,6 +125,13 @@ public class AnnotationPaneController implements Initializable {
      * @param rb
      */
     //.......... events
+    EventHandler<ScrollEvent> ScrollEvents = (ScrollEvent event) -> {
+
+        if (event.isControlDown()) {
+            System.out.println(event.getDeltaY());
+        }
+
+    };
     EventHandler<MouseEvent> MouseEvents = (MouseEvent event) -> {
 
         if (GridOn) {
@@ -236,7 +258,8 @@ public class AnnotationPaneController implements Initializable {
             double yk = img.getImage().getHeight() / img.getFitHeight();
 
             onCreate = new DrawRectangle(event.getX(), event.getY(), event.getX() + 1, event.getY() + 1, xk, yk, this.image);
-            onCreate.AddTo(imgParent);
+            onCreate.AddTo(imgParent, focus);
+            focus.focusOn((DrawRectangle) onCreate);
         } catch (IOException iOException) {
         }
     }
@@ -280,10 +303,16 @@ public class AnnotationPaneController implements Initializable {
 
     private void CircleOnPress(MouseEvent event) throws IOException {
 
-        double xk = img.getImage().getWidth() / img.getFitWidth();
-        double yk = img.getImage().getHeight() / img.getFitHeight();
-        onCreate = new DrawCircle(event.getX(), event.getY(), event.getX() + 1, event.getY() + 1, xk, yk, this.image);
-        onCreate.AddTo(imgParent);
+        try {
+            double xk = img.getImage().getWidth() / img.getFitWidth();
+            double yk = img.getImage().getHeight() / img.getFitHeight();
+
+            onCreate = new DrawCircle(event.getX(), event.getY(), event.getX() + 15, event.getY() + 15, xk, yk, this.image);
+            onCreate.AddTo(imgParent, focus);
+            focus.focusOn((DrawCircle) onCreate);
+
+        } catch (IOException iOException) {
+        }
     }
 
     private void CircleOnDrag(MouseEvent event) {
@@ -294,23 +323,24 @@ public class AnnotationPaneController implements Initializable {
         } else {
             System.err.println("not instance of drawable rectangle");
         }
-        double x = 0, y = 0;
+
+        double x, y;
         if (event.getX() < 0) {
             x = 0;
-        } else if (event.getX() > imgParent.getWidth()) {
-            x = imgParent.getWidth();
+        } else if (event.getX() > MagnifierPane.getWidth()) {
+            x = MagnifierPane.getWidth();
         } else {
             x = event.getX();
         }
         if (event.getY() < 0) {
             y = 0;
-        } else if (event.getY() > imgParent.getHeight()) {
-            y = imgParent.getHeight();
+        } else if (event.getY() > MagnifierPane.getHeight()) {
+            y = MagnifierPane.getHeight();
         } else {
             y = event.getY();
         }
-        DCircle.SetPoints(DCircle.getCenterX(), DCircle.getCenterY(), x, y);
-        DCircle.RefreshCircle();
+        DCircle.SetPoints(DCircle.getLayoutX() - DCircle.getRadiusX(), DCircle.getLayoutY() - DCircle.getRadiusY(), x, y);
+        //DCircle.RefreshCircle();
 
     }
 
@@ -319,7 +349,7 @@ public class AnnotationPaneController implements Initializable {
         DrawCircle DCircle = (DrawCircle) onCreate;
         if (DCircle.getRadiusX() > 10 && DCircle.getRadiusY() > 10) {
             DCircle.AddToPopUpSetup();
-            DCircle.AddToPopup.show(imgParent, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, DCircle.getCenterX(), DCircle.getCenterY());
+            DCircle.AddToPopup.show(imgParent, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, DCircle.getLayoutX(), DCircle.getLayoutY());
         } else {
             onCreate.remove(imgParent);
         }
@@ -330,33 +360,84 @@ public class AnnotationPaneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        this.focus = new FocusRect(imgParent);
+        jfxDialog1.setOnDialogClosed((jevent) -> {
+            System.out.println(jfxDialog1.getDialogContainer().getChildren());
+        });
         N.setTooltip(new Tooltip("Next"));
         P.setTooltip(new Tooltip("Previous"));
         Zoom.setTooltip(new Tooltip("Zoom"));
-        
-        img.fitWidthProperty().bind(imgParent.widthProperty());
-        img.fitHeightProperty().bind(imgParent.heightProperty());
 
-        MagnifierPane.prefWidthProperty().bind(imgParent.widthProperty());
-        MagnifierPane.prefHeightProperty().bind(imgParent.heightProperty());
+        img.fitWidthProperty().bind(scrollPane.widthProperty());
+        img.fitHeightProperty().bind(scrollPane.heightProperty());
 
-        magnifier.prefWidthProperty().bind(imgParent.widthProperty());
-        magnifier.prefHeightProperty().bind(imgParent.heightProperty());
+        MagnifierPane.prefWidthProperty().bind(magnifier.widthProperty());
+        MagnifierPane.prefHeightProperty().bind(magnifier.heightProperty());
+
+        magnifier.prefWidthProperty().bind(scrollPane.widthProperty());
+        magnifier.prefHeightProperty().bind(scrollPane.heightProperty());
+
+        imgParent.prefWidthProperty().bind(scrollPane.widthProperty());
+        imgParent.prefHeightProperty().bind(scrollPane.heightProperty());
 
         magnifier.setContent(MagnifierPane);
         magnifier.addEventFilter(MouseEvent.ANY, MouseEvents);
+        magnifier.addEventFilter(ScrollEvent.SCROLL, ScrollEvents);
 
+        root.sceneProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (newValue != null) {
+                newValue.addEventFilter(KeyEvent.KEY_PRESSED, (event) -> {
+
+                    try {
+                        if (event.getCode().equals(KeyCode.DELETE)&& focus != null) {
+                            
+                            focus.removeFrom(imgParent);
+                            focus.shapeOnFocus.remove(imgParent);
+                        }
+                    } catch (Exception e) {
+                    }
+                    if (event.getCode().equals(KeyCode.LEFT)) {
+
+                        Element parent = image.imageElement.getParent();
+                        int index = parent.elements().indexOf(image.imageElement);
+
+                        int indexOf = index - 1;
+
+                        if (indexOf < 0) {
+                            indexOf = parent.elements().size() - 1;
+                        }
+
+                        Element img = parent.elements().get(indexOf);
+                        setimage(new Images(img));
+                    }
+                    if (event.getCode().equals(KeyCode.RIGHT)) {
+
+                        Element parent = image.imageElement.getParent();
+                        int index = parent.elements().indexOf(image.imageElement);
+
+                        int indexOf = index + 1;
+                        
+                        if (indexOf > parent.elements().size() - 1) {
+                            indexOf = 0;
+                        }
+
+                        Element img = parent.elements().get(indexOf);
+                        setimage(new Images(img));
+                    }
+                });
+            }
+        });
         GridINI();
         imageParentINI();
-        
+
         root.widthProperty().addListener((observable, oldValue, newValue) -> {
-            
-            P.setTranslateX((newValue.doubleValue()-155)/2);
-            N.setTranslateX(P.getTranslateX()+155);
-            
+
+            P.setTranslateX((newValue.doubleValue() - 155) / 2);
+            N.setTranslateX(P.getTranslateX() + 155);
+
         });
-        
-         
+
     }
 
     private MenuItem createItem(MaterialDesignIcon PLUS, Paint p, String S) {
@@ -487,10 +568,6 @@ public class AnnotationPaneController implements Initializable {
     }
 
     @FXML
-    private void OptionPop(ActionEvent event) {
-    }
-
-    @FXML
     private void SettingPop(ActionEvent event) {
     }
 
@@ -498,13 +575,13 @@ public class AnnotationPaneController implements Initializable {
     private void ChangeMode(ActionEvent event) {
 
         if (event.getSource().equals(CircleBtn)) {
-            
+
             CircleBtn.setStyle("-fx-background-color : #96ceb4 ");
             RectBtn.setStyle("");
             ShapeMode = "Circle";
         }
         if (event.getSource().equals(RectBtn)) {
-            
+
             RectBtn.setStyle("-fx-background-color : #96ceb4 ");
             CircleBtn.setStyle("");
             ShapeMode = "Rectangle";
@@ -530,6 +607,8 @@ public class AnnotationPaneController implements Initializable {
 
     @FXML
     private void LOOP(ActionEvent event) {
+
+        onfocus();
 
         loopOn = !loopOn;
 
@@ -566,11 +645,28 @@ public class AnnotationPaneController implements Initializable {
         for (Element S : image.imageElement.elements()) {
 
             if (S.attribute(0).getValue().equals("Rectangle")) {
-                new DrawRectangle(S).AddTo(imgParent);
+                new DrawRectangle(S).AddTo(imgParent, focus);
             } else if (S.attribute(0).getValue().equals("Circle")) {
-                new DrawCircle(S).AddTo(imgParent);
+                new DrawCircle(S).AddTo(imgParent, focus);
             }
         }
+
+    }
+
+    private void onfocus() {
+
+    }
+
+    @FXML
+    private void ClosePopUp(ActionEvent event) {
+
+        focus.removeFrom(imgParent);
+        jfxDialog1.close();
+
+    }
+
+    @FXML
+    private void OnZoom(ZoomEvent event) {
 
     }
 

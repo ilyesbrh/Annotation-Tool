@@ -89,10 +89,10 @@ public class AllImagesFXMLController implements Initializable {
 
         Gridview.setCacheHint(CacheHint.SPEED);
         Gridview.setItems(FXCollections.observableArrayList(project.getImages()));
-        Gridview.setVerticalCellSpacing(20);
-        Gridview.setHorizontalCellSpacing(20);
-        Gridview.setCellHeight(200);
-        Gridview.setCellWidth(200);
+        Gridview.setVerticalCellSpacing(10);
+        Gridview.setHorizontalCellSpacing(10);
+        Gridview.setCellHeight(250);
+        Gridview.setCellWidth(250);
         Gridview.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 
         Gridview.setCellFactory((GridView<Images> arg0) -> {
@@ -100,6 +100,7 @@ public class AllImagesFXMLController implements Initializable {
             cell.setCacheHint(CacheHint.SPEED);
             return cell;
         });
+        
     }
 
     @FXML
@@ -166,7 +167,7 @@ public class AllImagesFXMLController implements Initializable {
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("ImageViewFXML.fxml"));
 
-                controller = new ImageViewFXMLController(NoteStack);
+                controller = new ImageViewFXMLController(NoteStack,arg0);
 
                 loader.setController(controller);
 

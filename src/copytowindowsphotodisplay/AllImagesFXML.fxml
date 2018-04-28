@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.GridView?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1203.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane prefHeight="800.0" prefWidth="1203.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane prefHeight="59.0" prefWidth="1203.0" style="-fx-background-color: #d5e1df;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -31,7 +31,7 @@
                <font>
                   <Font name="System Bold" size="16.0" />
                </font></JFXToggleButton>
-            <JFXToggleButton fx:id="LabledCheckBox" layoutX="596.0" layoutY="2.0" selected="true" text="Show LAbled" AnchorPane.rightAnchor="448.0">
+            <JFXToggleButton fx:id="LabledCheckBox" layoutX="596.0" layoutY="2.0" selected="true" text="Show Labled" AnchorPane.rightAnchor="448.0">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font></JFXToggleButton>
