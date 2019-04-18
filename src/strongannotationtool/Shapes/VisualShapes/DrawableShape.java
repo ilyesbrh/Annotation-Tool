@@ -17,7 +17,7 @@ public interface DrawableShape {
     
     abstract public Parent getParentNode();
     abstract public Element getElement();
-    public void SetPoints(double x1, double y1, double x2, double y2);
+    public void SetPoints(double MinX, double MinY, double MaxX, double MaxY);
     abstract public void AddTo(AnchorPane p,FocusRect s);
     abstract public void remove(AnchorPane p);
     abstract public void MoveTo(double deltaX, double deltaY);

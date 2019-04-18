@@ -11,13 +11,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
-import strongannotationtool.Shapes.CustomRectangle;
 
 /**
  *
  * @author ilies
  */
-public class FocusRect extends CustomRectangle {
+public class FocusRect extends Rectangle {
 
     public AnchorPane imgparent;
 
@@ -234,7 +233,6 @@ public class FocusRect extends CustomRectangle {
     public synchronized void focusOn(DrawRectangle shape) {
 
         shapeOnFocus = shape;
-
         imgparent.getChildren().remove(shape);
 
         removeFrom(imgparent);

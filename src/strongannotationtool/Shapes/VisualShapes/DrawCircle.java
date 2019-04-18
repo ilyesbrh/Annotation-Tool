@@ -8,13 +8,13 @@ package strongannotationtool.Shapes.VisualShapes;
 import com.jfoenix.controls.JFXPopup;
 import copytowindowsphotodisplay.Model.CustomResourceBundle;
 import copytowindowsphotodisplay.Model.Images;
+import copytowindowsphotodisplay.Model.Project;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Tooltip;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -220,7 +220,7 @@ public class DrawCircle extends Ellipse implements DrawableShape {
             TT.setText("");
             for (Element element : shapeElement.elements()) {
                 
-                TT.setText(TT.getText()+element.attribute(0).getValue()+'\n');
+                TT.setText(TT.getText()+Project.getClassName(element.attribute(0).getValue(), element)+'\n');
             }
             if(!TT.getText().isEmpty())
                 TT.show(this, event.getScreenX()-event.getX()+getCenterX()+getRadiusX(), event.getScreenY()+getCenterY()-event.getY()-getRadiusY());
@@ -327,10 +327,7 @@ public class DrawCircle extends Ellipse implements DrawableShape {
         p.getChildren().remove(this);
         //p.getChildren().remove(ci);
         shapeElement.getParent().remove(shapeElement);
-
-       
     }
-
     
     @Override
     public Parent getParentNode() {
@@ -344,86 +341,4 @@ public class DrawCircle extends Ellipse implements DrawableShape {
     public String toString() {
         return "Circle," + getLayoutX()+ "," + getLayoutY()+ "," + getRadiusX() + "," + getRadiusY() + "," + xK + "," + yK + "\n";  //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
-    private void RefreshCircle() {
-
-        double centerX = getCenterX();
-        double centerY = getCenterY();
-        double a = getRadiusX();
-        double b = getRadiusY();
-        double O = Math.PI / 4;
-        double Tan_O = Math.tan(O);
-        double X;
-        double Y;
-        if (-Math.PI / 2 < O || O < Math.PI / 2) {
-            X = a * b / Math.sqrt((b * b) + (a * a * Tan_O * Tan_O));
-            Y = a * b / Math.sqrt((a * a) + ((b * b) / (Tan_O * Tan_O)));
-        } else {
-            X = -a * b / Math.sqrt((b * b) + (a * a * Tan_O * Tan_O));
-            Y = -a * b / Math.sqrt((a * a) + ((b * b) / (Tan_O * Tan_O)));
-        }
-
-        ci.setCenterX(X + centerX);
-        ci.setCenterY(Y + centerY);
-    }
-    private void ResizeTo(double w, double h) {
-
-        try {
-            if (getRadiusX() + w > Parent.getWidth()) {
-                w = Parent.getWidth() - getRadiusX();
-                System.out.println("a");
-            }
-            if (getRadiusY() + w > Parent.getHeight()) {
-                h = Parent.getHeight() - getRadiusY();
-                System.out.println("b");
-            }
-            if (getCenterX() - w < 0) {
-                w = getRadiusX();
-            }
-            if (getCenterY() - h < 0) {
-                h = getRadiusY();
-            }
-
-        } catch (Exception e) {
-        }
-        this.setRadiusX(w);
-        this.setRadiusY(h);
-        
-        shapeElement.attribute(3).setValue(String.valueOf(getRadiusX()*xK));
-        shapeElement.attribute(4).setValue(String.valueOf(getRadiusY()*yK));
-        
-
-    }
-    private void CircleEventHandle() {
-    //Circle Actions
-    ci.setOnMousePressed((event) -> {
-    
-    ci.setRadius(3);
-    X = event.getScreenX();
-    Y = event.getScreenY();
-    centerX = ci.getCenterX();
-    centerY = ci.getCenterY();
-    
-    });
-    ci.setOnMouseDragged((event) -> {
-    
-    double deltaX = X - event.getScreenX();
-    double deltaY = Y - event.getScreenY();
-    
-    ci.setCenterX(centerX - deltaX);
-    ci.setCenterY(centerY - deltaY);
-    
-    SetPoints(getCenterX(), getCenterY(), ci.getCenterX(), ci.getCenterY());
-    
-    });
-    ci.setOnMouseReleased((event) -> {
-    
-    ci.setRadius(6);
-    
-    //RefreshCircle();
-    });
-    }
-    
-    
 }

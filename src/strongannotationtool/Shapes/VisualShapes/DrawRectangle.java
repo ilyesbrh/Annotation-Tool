@@ -8,6 +8,7 @@ package strongannotationtool.Shapes.VisualShapes;
 import com.jfoenix.controls.JFXPopup;
 import copytowindowsphotodisplay.Model.CustomResourceBundle;
 import copytowindowsphotodisplay.Model.Images;
+import copytowindowsphotodisplay.Model.Project;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.dom4j.Element;
-import strongannotationtool.Shapes.CustomRectangle;
+import strongannotationtool.Shapes.Model.CustomRectangle;
 
 /**
  *
@@ -211,7 +212,7 @@ public class DrawRectangle extends CustomRectangle implements DrawableShape {
             TT.setText("");
             for (Element element : shapeElement.elements()) {
                 
-                TT.setText(TT.getText()+element.attribute(0).getValue()+'\n');
+                TT.setText(TT.getText()+Project.getClassName(element.attribute(0).getValue(), element)+'\n');
             }
             
             if(!TT.getText().isEmpty())

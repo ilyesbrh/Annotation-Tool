@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane cache="true" prefHeight="322.0" prefWidth="389.0" style="-fx-background-color: rgb(0, 191, 255);" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="copytowindowsphotodisplay.ExportFXMLController">
+<AnchorPane cache="true" prefHeight="322.0" prefWidth="389.0" style="-fx-background-color: rgb(0, 191, 255);" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="copytowindowsphotodisplay.Design.ExportFXMLController">
    <children>
       <Label alignment="CENTER" focusTraversable="false" layoutX="71.0" layoutY="63.0" prefHeight="58.0" prefWidth="248.0" text="Save As.." textFill="WHITE">
          <font>
